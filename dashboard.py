@@ -520,24 +520,31 @@ def load_founder_posts(account_id):
         if likes == -1:
             likes = None
         normalized.append({
-            "account_id":    account_id,
-            "group":         "founder_brand",
-            "label":         meta.get("label", account_id),
-            "username":      meta.get("username", ""),
-            "post_id":       p.get("post_id"),
-            "post_url":      p.get("post_url"),
-            "date":          (p.get("timestamp") or "")[:10],
-            "type":          p.get("type") or "Unknown",
-            "product_type":  p.get("product_type") or "unknown",
-            "caption":       (p.get("caption") or "").strip(),
-            "hashtags":      p.get("hashtags", []),
-            "likes":         likes,
-            "comments":      p.get("comments_count"),
-            "video_views":   p.get("video_view_count"),
-            "video_plays":   p.get("video_play_count"),
-            "duration_sec":  p.get("video_duration_sec"),
-            "location":      p.get("location_name"),
-            "relative_score": None,  # computed below
+            "account_id":       account_id,
+            "group":            "founder_brand",
+            "label":            meta.get("label", account_id),
+            "username":         meta.get("username", ""),
+            "post_id":          p.get("post_id"),
+            "post_url":         p.get("post_url"),
+            "date":             (p.get("timestamp") or "")[:10],
+            "type":             p.get("type") or "Unknown",
+            "product_type":     p.get("product_type") or "unknown",
+            "caption":          (p.get("caption") or "").strip(),
+            "hashtags":         p.get("hashtags", []),
+            "likes":            likes,
+            "comments":         p.get("comments_count"),
+            "video_views":      p.get("video_view_count"),
+            "video_plays":      p.get("video_play_count"),
+            "duration_sec":     p.get("video_duration_sec"),
+            "location":         p.get("location_name"),
+            "relative_score":   None,  # computed below
+            # Optional fields — populated from analytics CSV or richer Apify data when available
+            "saves":            p.get("savesCount") or p.get("saves"),
+            "shares":           p.get("sharesCount") or p.get("shares"),
+            "reach":            p.get("reach"),
+            "impressions":      p.get("impressions"),
+            "engagement_rate":  p.get("engagement_rate"),
+            "carousel_slides":  len(p.get("childPosts") or []) or p.get("carousel_slide_count") or None,
         })
     # compute relative_score for this account
     signals = [_engagement(p) for p in normalized if _engagement(p) > 0]
@@ -558,24 +565,31 @@ def load_reference_posts():
         if likes == -1:
             likes = None
         posts.append({
-            "account_id":    p.get("username", ""),
-            "group":         "viral_reference_group",
-            "label":         f"@{p.get('username','')}",
-            "username":      f"@{p.get('username','')}",
-            "post_id":       p.get("post_id"),
-            "post_url":      p.get("post_url"),
-            "date":          p.get("date",""),
-            "type":          p.get("type") or "Unknown",
-            "product_type":  p.get("product_type") or "unknown",
-            "caption":       (p.get("caption") or "").strip(),
-            "hashtags":      p.get("hashtags", []),
-            "likes":         likes,
-            "comments":      p.get("comments"),
-            "video_views":   p.get("video_views"),
-            "video_plays":   p.get("video_plays"),
-            "duration_sec":  p.get("video_duration_sec"),
-            "location":      p.get("location"),
-            "relative_score": p.get("relative_score"),
+            "account_id":      p.get("username", ""),
+            "group":           "viral_reference_group",
+            "label":           f"@{p.get('username','')}",
+            "username":        f"@{p.get('username','')}",
+            "post_id":         p.get("post_id"),
+            "post_url":        p.get("post_url"),
+            "date":            p.get("date",""),
+            "type":            p.get("type") or "Unknown",
+            "product_type":    p.get("product_type") or "unknown",
+            "caption":         (p.get("caption") or "").strip(),
+            "hashtags":        p.get("hashtags", []),
+            "likes":           likes,
+            "comments":        p.get("comments"),
+            "video_views":     p.get("video_views"),
+            "video_plays":     p.get("video_plays"),
+            "duration_sec":    p.get("video_duration_sec"),
+            "location":        p.get("location"),
+            "relative_score":  p.get("relative_score"),
+            # Optional fields — None unless available in processed data or analytics CSV
+            "saves":           p.get("saves"),
+            "shares":          p.get("shares"),
+            "reach":           p.get("reach"),
+            "impressions":     p.get("impressions"),
+            "engagement_rate": p.get("engagement_rate"),
+            "carousel_slides": p.get("carousel_slide_count") or len(p.get("child_posts") or []) or None,
         })
     return posts
 
@@ -680,29 +694,108 @@ def duration_bucket(sec):
         return "45–60s"
     return "60s+"
 
+def format_adjusted_performance_score(post: dict):
+    """
+    Format-aware performance score. Uses relative_score as base, then applies
+    format-specific weights and quality signals from available data.
+
+    PUBLIC DATA LIMITATION: shares, saves, reach, and impressions are NOT available
+    from Instagram public scraping. When None, falls back to relative_score + text-based
+    signals. Add analytics CSVs to data/analytics/ to unlock the full score.
+
+    Reel   — plays-heavy base; comment depth + saves/shares bonuses
+    Carousel — guide/list text signals; very high bonus when saves/shares available
+    Photo  — caption emotional depth; saves/shares bonus when available
+    """
+    relative = post.get("relative_score")
+    if relative is None:
+        return None
+
+    fmt      = (post.get("product_type") or post.get("type") or "").lower()
+    caption  = (post.get("caption") or "").lower()
+    saves    = post.get("saves") or 0
+    shares   = post.get("shares") or 0
+    likes    = post.get("likes") or 0
+    comments = post.get("comments") or 0
+
+    is_reel     = any(x in fmt for x in ["video", "clips", "reel"])
+    is_carousel = any(x in fmt for x in ["sidecar", "carousel", "album"])
+
+    bonus = 0.0
+
+    if is_reel:
+        if saves > 0 and likes > 0:
+            bonus += min(0.4, (saves / likes) * 1.5)
+        if shares > 0 and likes > 0:
+            bonus += min(0.4, (shares / likes) * 1.5)
+        if likes > 0 and comments > 0 and (comments / likes) > 0.03:
+            bonus += 0.15  # deep comment engagement
+
+    elif is_carousel:
+        guide_kws = ["guide", "tips", "save this", "save for", "things to", "how to",
+                     "itinerary", "best", "top", "places", "spots", "hotels",
+                     "what to", "must", "list", "number"]
+        bonus += min(0.25, sum(1 for kw in guide_kws if kw in caption) * 0.07)
+        first_line = caption.split("\n")[0] if caption else ""
+        if 0 < len(first_line) <= 70:
+            bonus += 0.08  # short punchy first slide
+        if saves > 0 and likes > 0:
+            bonus += min(0.7, (saves / likes) * 3.0)
+        if shares > 0 and likes > 0:
+            bonus += min(0.5, (shares / likes) * 2.5)
+
+    else:  # Photo / Image
+        if len(caption) > 300:
+            bonus += 0.08
+        emo_kws = ["feel", "alive", "connection", "meaning", "soul", "heart",
+                   "changed", "beauty", "wonder", "grateful", "moment",
+                   "memory", "human", "love", "peace"]
+        bonus += min(0.15, sum(1 for kw in emo_kws if kw in caption) * 0.04)
+        if saves > 0 and likes > 0:
+            bonus += min(0.4, (saves / likes) * 2.0)
+        if shares > 0 and likes > 0:
+            bonus += min(0.4, (shares / likes) * 2.0)
+
+    return round(relative * (1.0 + bonus), 2)
+
+
 def posts_to_df(posts):
     if not posts:
         return pd.DataFrame()
     rows = []
     for p in posts:
-        rows.append({
-            "Account":       p.get("label",""),
-            "Group":         p.get("group",""),
-            "Date":          p.get("date",""),
-            "Type":          p.get("product_type","").capitalize(),
-            "Caption":       truncate(p.get("caption",""), 90),
-            "Likes":         p.get("likes"),
-            "Comments":      p.get("comments"),
-            "Plays":         p.get("video_plays"),
-            "Views":         p.get("video_views"),
-            "Relative Score":p.get("relative_score"),
-            "Duration (s)":  p.get("duration_sec"),
-            "Pillar":        infer_pillar(p.get("caption","")),
-            "Destination":   infer_destination(p.get("caption","")),
-            "Hook Type":     infer_hook_type(p.get("caption","")),
-            "Tier (est.)":   infer_tier(p),
-            "URL":           p.get("post_url",""),
-        })
+        row = {
+            "Account":        p.get("label",""),
+            "Group":          p.get("group",""),
+            "Date":           p.get("date",""),
+            "Type":           p.get("product_type","").capitalize(),
+            "Caption":        truncate(p.get("caption",""), 90),
+            "Likes":          p.get("likes"),
+            "Comments":       p.get("comments"),
+            "Plays":          p.get("video_plays"),
+            "Views":          p.get("video_views"),
+            "Relative Score": p.get("relative_score"),
+            "Adj. Score":     format_adjusted_performance_score(p),
+            "Duration (s)":   p.get("duration_sec"),
+            "Pillar":         infer_pillar(p.get("caption","")),
+            "Destination":    infer_destination(p.get("caption","")),
+            "Hook Type":      infer_hook_type(p.get("caption","")),
+            "Tier (est.)":    infer_tier(p),
+            "URL":            p.get("post_url",""),
+        }
+        # Optional fields — only include column when at least something is present
+        for opt_field, col_name in [
+            ("saves",           "Saves"),
+            ("shares",          "Shares"),
+            ("reach",           "Reach"),
+            ("impressions",     "Impressions"),
+            ("engagement_rate", "Eng. Rate"),
+            ("carousel_slides", "Slides"),
+        ]:
+            v = p.get(opt_field)
+            if v is not None:
+                row[col_name] = v
+        rows.append(row)
     return pd.DataFrame(rows)
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -828,17 +921,38 @@ def score_adaptation(tier: str) -> tuple[int, str]:
         return 4, "Tier 3 — content must be genuinely original, not adapted from reference ✗"
     return 5, "Classify the adaptation tier for accurate scoring"
 
-def score_format(fmt: str, caption: str) -> tuple[int, str]:
-    """Max 5 pts. Checks format/content alignment."""
+def score_format(fmt: str, caption: str, idea: str = "") -> tuple[int, str]:
+    """Max 5 pts. Format-aware: Reel / Carousel / Photo each scored on different criteria."""
     fmt_l = (fmt or "").lower()
-    cap   = (caption or "").lower()
-    if "reel" in fmt_l and len(cap) > 50:
-        return 5, "Reel + developed caption ✓"
-    if "carousel" in fmt_l and any(n in cap for n in ["5 ","10 ","here are","tips","guide"]):
-        return 5, "Carousel + list content ✓"
-    if "photo" in fmt_l and len(cap) < 150:
-        return 5, "Photo + concise caption ✓"
-    return 3, "Format match — consider whether the format matches the content type"
+    cap   = (caption or idea or "").lower()
+
+    is_reel     = any(x in fmt_l for x in ["reel", "video"])
+    is_carousel = any(x in fmt_l for x in ["carousel"])
+    is_photo    = any(x in fmt_l for x in ["photo", "image", "static"])
+
+    if is_reel:
+        if len(cap) > 50:
+            return 5, "Reel + developed caption/script ✓ — prioritise plays, comment depth, saves"
+        return 4, "Reel — add hook/caption detail; plays + comment depth are the key signals"
+
+    if is_carousel:
+        guide_kws = ["guide","tips","save","list","things to","how to","itinerary",
+                     "best","top","spots","places","number","must","step"]
+        if any(kw in cap for kw in guide_kws):
+            return 5, "Carousel + guide/list content = strong save/share potential ✓"
+        first = cap.split("\n")[0] if cap else ""
+        if len(first) < 80:
+            return 4, "Carousel + short first-slide hook ✓ — add guide/list value to maximise saves"
+        return 3, "Carousel — add numbered list, itinerary, or tips format to trigger saves (carousel's most valuable metric)"
+
+    if is_photo:
+        if len(cap) < 150:
+            return 5, "Photo + concise caption ✓"
+        if len(cap) > 300:
+            return 4, "Photo + long caption — works when the visual is strong; check emotional resonance"
+        return 5, "Photo + caption ✓"
+
+    return 3, "Specify format (Reel / Carousel / Photo) for format-specific scoring"
 
 def run_scoring(idea, destination, fmt, emotion, hook, caption, cta, tier):
     """Run all 8 scoring criteria. Returns dict of scores and notes."""
@@ -849,7 +963,7 @@ def run_scoring(idea, destination, fmt, emotion, hook, caption, cta, tier):
     s5, n5 = score_shareability(caption, idea)
     s6, n6 = score_cta(cta)
     s7, n7 = score_adaptation(tier)
-    s8, n8 = score_format(fmt, caption)
+    s8, n8 = score_format(fmt, caption, idea)
     total  = s1 + s2 + s3 + s4 + s5 + s6 + s7 + s8
     if total >= 80:
         rec, rec_color = "✅ Post it", "#4ade80"
@@ -1072,6 +1186,9 @@ def generate_improvement(idea, hook, caption, destination, fmt, emotion, cta, ti
     proj_caption = caption or idea or ""
     proj_result  = run_scoring(idea, destination, fmt, emotion, proj_hook, proj_caption, ctas[0], tier)
 
+    # ── Format-specific advice ─────────────────────────────────────────────────
+    format_advice = generate_format_advice(fmt, idea, destination, emotion, hooks)
+
     return {
         "matched_patterns":   matched,
         "relevant_creators":  relevant_creators,
@@ -1082,7 +1199,106 @@ def generate_improvement(idea, hook, caption, destination, fmt, emotion, cta, ti
         "hashtags":           hashtags,
         "warnings":           warnings,
         "projected_score":    proj_result["total"],
+        "format_advice":      format_advice,
     }
+
+# ─────────────────────────────────────────────────────────────────────────────
+# FORMAT-SPECIFIC IMPROVEMENT HELPERS
+# ─────────────────────────────────────────────────────────────────────────────
+def generate_carousel_plan(idea: str, destination: str, emotion: str) -> dict:
+    """Slide-by-slide carousel plan. Detects guide vs narrative type from the idea text."""
+    dest     = (destination or "this destination").strip().split(",")[0].strip()
+    idea_low = (idea or "").lower()
+    is_guide = any(kw in idea_low for kw in [
+        "guide", "tips", "things to", "how to", "itinerary", "best", "top", "list", "spots", "places"
+    ])
+
+    if is_guide:
+        slides = [
+            f"Slide 1 (Hook) — Short bold curiosity-gap headline: '[Number] things about {dest} most people never discover' — saves start here",
+            "Slide 2 — Lead with your strongest, most surprising detail (don't save the best for last)",
+            "Slide 3 — Second insight — visual-heavy, one idea per slide, minimal text",
+            "Slide 4 — Third insight — make this feel essential, not optional",
+            "Slide 5 — Fourth insight — this is where save rates peak; deliver something truly specific",
+            f"Slide 6 — A short personal note from Rafa or Sofia about {dest}",
+            f"Slide 7 (Close) — 'Avalon designs custom {dest} escapes. Comment '{dest.upper()[:6]}' to start yours.'",
+        ]
+        save_trigger  = f"Numbered guide + specific destination = high save rate. People bookmark it as a pre-trip reference for {dest}."
+        share_trigger = f"Slide 1 should make people think 'I need to send this to [person going to {dest}]'. The curiosity-gap headline is the share trigger."
+        caption_angle = f"Short 1–2 line intro + 'Save this for your {dest} trip →' CTA. Do not write the whole guide in the caption — the slides carry it."
+        why_works     = f"Guide carousels score high on saves, which signals Instagram to push them harder. The numbered hook also doubles as a Reel hook if repurposed."
+        slide_count   = 7
+        carousel_type = "Guide Carousel"
+    else:
+        slides = [
+            f"Slide 1 (Hook) — One short powerful statement about {dest}. No explanation. Creates curiosity.",
+            f"Slide 2 — The setup: what most people expect or know about {dest}",
+            f"Slide 3 — The unexpected reality: what Avalon actually knows (visual + short caption)",
+            "Slide 4 — The emotional moment or shift — slower, more personal",
+            "Slide 5 — The universal insight: what this reveals about travel in general",
+            f"Slide 6 (Close) — Avalon's connection to {dest} + keyword CTA",
+        ]
+        save_trigger  = "A strong universal insight on slide 5–6 drives saves. People save it to revisit the feeling or share the last slide standalone."
+        share_trigger = "Slide 1 must make the viewer think 'I need to send this to someone'. The hook is the share trigger — not the destination name."
+        caption_angle = f"2–3 lines that tease the arc. End with 'Swipe to see what we found →' or 'Save this before your {dest} trip.'"
+        why_works     = f"Narrative carousels work when each slide has exactly one idea and the last slide lands hard. Swipe-through rate drops after slide 3 — make slides 3–5 count."
+        slide_count   = 6
+        carousel_type = "Narrative Carousel"
+
+    dest_slug = re.sub(r'[^A-Z]', '', dest.upper())[:8] or "ESCAPE"
+    return {
+        "type":              carousel_type,
+        "slide_count":       slide_count,
+        "slides":            slides,
+        "first_slide_hook":  slides[0],
+        "save_trigger":      save_trigger,
+        "share_trigger":     share_trigger,
+        "caption_angle":     caption_angle,
+        "cta":               f"Comment '{dest_slug}' for our full {dest} guide →" if is_guide else f"DM us 'AVALON' and we'll design your {dest} escape →",
+        "why_it_works":      why_works,
+        "travelcroats_note": "Study @travelcroats — the primary carousel reference in the group — for slide sequencing, first-slide hooks, guide CTAs, and save/share triggers.",
+    }
+
+
+def generate_format_advice(fmt: str, idea: str, destination: str, emotion: str, hooks: list) -> dict:
+    """Generate format-specific improvement advice for the simulator."""
+    fmt_l   = (fmt or "").lower()
+    dest    = (destination or "this destination").strip().split(",")[0].strip()
+    is_reel = any(x in fmt_l for x in ["reel", "video", "story"])
+    is_car  = "carousel" in fmt_l
+    is_photo= any(x in fmt_l for x in ["photo", "image", "static"])
+
+    if is_reel:
+        h3s = hooks[0]["text"] if hooks else f"No one tells you the real side of {dest}."
+        return {
+            "format": "Reel",
+            "first_3s_hook":   h3s,
+            "visual_sequence": (
+                f"[0–3s]  Hook shot — the one frame that stops the scroll\n"
+                f"[3–10s] Setup: show the conventional expectation of {dest}\n"
+                f"[10–25s] The reveal: Avalon's real version\n"
+                f"[25–45s] Emotional turn — slow the pacing here\n"
+                f"[45–60s] CTA overlay on a clean final shot"
+            ),
+            "text_overlay":  "On-screen text for the hook only (first 3s). Max 4 words per overlay. Then let visuals + audio carry it.",
+            "pacing":         "Cuts every 2–3s in the hook. Slow to 5–7s cuts in the emotional middle. End on a still or very slow shot.",
+            "audio_angle":    "Trending audio for Tier 1 formats. Original audio or calm instrumental for Tier 2 narrative Reels to keep the premium feel.",
+            "share_trigger":  "The hook makes people tag someone. The last 10 seconds closes the emotional loop that drives saves.",
+            "key_metric":     "Plays / views are the primary signal. Comment depth (comments/likes ratio) indicates resonance.",
+        }
+    elif is_car:
+        return {"format": "Carousel", "carousel_plan": generate_carousel_plan(idea, destination, emotion)}
+    elif is_photo:
+        return {
+            "format": "Photo",
+            "caption_angle":          f"Long caption if the image is simple. Short caption if the image is extraordinary. They should answer different questions about {dest}.",
+            "emotional_framing":      "What feeling does this image create in the first second? Start the caption from that feeling — not from the destination's name.",
+            "visual_caption_pairing": "The image shows the where. The caption explains the why. If both tell the same story, one of them is redundant.",
+            "comment_prompt":         "End with a question that requires a personal answer: 'What does this remind you of?' or 'Would you stay here?' or 'Tag the person you'd bring.'",
+            "key_metric":             "Likes + comments are primary. Caption emotional depth drives saves and shares when available.",
+        }
+    return {"format": fmt or "Unknown", "note": "Select Reel, Carousel, or Photo for format-specific advice."}
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 # SIDEBAR  NAVIGATION
@@ -1996,6 +2212,139 @@ def page_simulator():
             st.text_area("Copy this hashtag set:", value=hashtag_str, height=75, label_visibility="visible")
             st.caption("Edit as needed. 1–3 highly targeted hashtags often outperform generic hashtag spam.")
 
+        # ── 6. Format-Specific Advice ─────────────────────────────────────────
+        st.markdown("---")
+        fa = improvement.get("format_advice", {})
+        fa_fmt = fa.get("format", "")
+
+        if fa_fmt == "Carousel":
+            st.markdown("#### 6. Carousel Improvement Ideas")
+            st.caption(
+                "⚠️ **Public data note:** Save counts, share counts, reach, and impressions are "
+                "not available from public Instagram scraping. Carousel scoring uses text-based "
+                "proxies (guide/list keywords, first-slide length). Upload an Instagram analytics "
+                "CSV to `data/analytics/` to unlock full carousel performance data."
+            )
+            cp = fa.get("carousel_plan", {})
+            if cp:
+                c6a, c6b = st.columns([2, 1])
+                with c6a:
+                    st.markdown(f"**Type:** {cp.get('type','—')}  &nbsp;·&nbsp;  **Slides:** {cp.get('slide_count','—')}", unsafe_allow_html=True)
+
+                with c6b:
+                    st.markdown(
+                        f"<div style='background:#0f172a;border:1px solid #1e3a5f;border-radius:8px;"
+                        f"padding:.6rem .9rem;font-size:.82rem;color:#64748b'>"
+                        f"Reference: @travelcroats — PRIMARY CAROUSEL REFERENCE in the group."
+                        f"</div>",
+                        unsafe_allow_html=True,
+                    )
+
+                st.markdown("**① First-slide hook**")
+                st.markdown(
+                    f"<div style='background:#0f2027;border-left:3px solid #00b4d8;border-radius:6px;"
+                    f"padding:.65rem 1rem;font-size:.92rem;color:#e2e8f0;font-style:italic'>"
+                    f"{cp.get('first_slide_hook','—')}"
+                    f"</div>",
+                    unsafe_allow_html=True,
+                )
+
+                st.markdown("**② Suggested slide sequence**")
+                for slide in cp.get("slides", []):
+                    st.markdown(
+                        f"<div style='background:#0f172a;border-radius:6px;padding:.45rem .9rem;"
+                        f"margin-bottom:.3rem;font-size:.85rem;color:#94a3b8'>{slide}</div>",
+                        unsafe_allow_html=True,
+                    )
+
+                col_s, col_sh = st.columns(2)
+                with col_s:
+                    st.markdown("**③ Save trigger**")
+                    st.markdown(
+                        f"<div style='background:#0f2027;border-left:3px solid #4ade80;border-radius:6px;"
+                        f"padding:.6rem .9rem;font-size:.88rem;color:#86efac'>"
+                        f"{cp.get('save_trigger','—')}</div>",
+                        unsafe_allow_html=True,
+                    )
+                with col_sh:
+                    st.markdown("**④ Share trigger**")
+                    st.markdown(
+                        f"<div style='background:#0f2027;border-left:3px solid #a78bfa;border-radius:6px;"
+                        f"padding:.6rem .9rem;font-size:.88rem;color:#c4b5fd'>"
+                        f"{cp.get('share_trigger','—')}</div>",
+                        unsafe_allow_html=True,
+                    )
+
+                st.markdown("**⑤ Caption angle**")
+                st.markdown(
+                    f"<div style='background:#0f172a;border-radius:6px;padding:.6rem .9rem;"
+                    f"font-size:.88rem;color:#94a3b8'>{cp.get('caption_angle','—')}</div>",
+                    unsafe_allow_html=True,
+                )
+
+                st.markdown("**⑥ CTA**")
+                st.markdown(f"> {cp.get('cta','—')}")
+
+                st.markdown("**⑦ Why this could work for Avalon**")
+                st.markdown(
+                    f"<div style='background:#0f2027;border-left:3px solid #c9a84c;border-radius:6px;"
+                    f"padding:.65rem 1rem;font-size:.88rem;color:#fde68a'>"
+                    f"{cp.get('why_it_works','—')}</div>",
+                    unsafe_allow_html=True,
+                )
+
+        elif fa_fmt == "Reel":
+            st.markdown("#### 6. Reel Format Advice")
+            st.caption(
+                "⚠️ **Public data note:** Share counts, saves, reach, and impressions are not "
+                "available from public scraping. Reel scoring primarily uses plays/views and "
+                "comment depth as proxies."
+            )
+            reel_fields = [
+                ("First 3-second hook",   fa.get("first_3s_hook", "—")),
+                ("Visual sequence",        fa.get("visual_sequence", "—")),
+                ("On-screen text",         fa.get("text_overlay", "—")),
+                ("Pacing",                 fa.get("pacing", "—")),
+                ("Audio angle",            fa.get("audio_angle", "—")),
+                ("Share trigger",          fa.get("share_trigger", "—")),
+                ("Key metric to watch",    fa.get("key_metric", "—")),
+            ]
+            for label, value in reel_fields:
+                st.markdown(f"**{label}**")
+                if "\n" in value:
+                    st.code(value, language=None)
+                else:
+                    st.markdown(
+                        f"<div style='background:#0f172a;border-radius:6px;padding:.5rem .9rem;"
+                        f"font-size:.88rem;color:#94a3b8;margin-bottom:.4rem'>{value}</div>",
+                        unsafe_allow_html=True,
+                    )
+
+        elif fa_fmt == "Photo":
+            st.markdown("#### 6. Photo Format Advice")
+            st.caption(
+                "⚠️ **Public data note:** Save counts, shares, reach, and impressions are not "
+                "available from public scraping. Photo scoring uses likes + comments + caption length."
+            )
+            photo_fields = [
+                ("Caption angle",            fa.get("caption_angle", "—")),
+                ("Emotional framing",         fa.get("emotional_framing", "—")),
+                ("Visual + caption pairing",  fa.get("visual_caption_pairing", "—")),
+                ("Comment prompt",            fa.get("comment_prompt", "—")),
+                ("Key metric to watch",       fa.get("key_metric", "—")),
+            ]
+            for label, value in photo_fields:
+                st.markdown(f"**{label}**")
+                st.markdown(
+                    f"<div style='background:#0f172a;border-radius:6px;padding:.5rem .9rem;"
+                    f"font-size:.88rem;color:#94a3b8;margin-bottom:.4rem'>{value}</div>",
+                    unsafe_allow_html=True,
+                )
+
+        else:
+            if fa.get("note"):
+                st.info(f"Format advice: {fa['note']}")
+
     elif submitted:
         st.warning("Please fill in at least the Content Idea field.")
 
@@ -2149,6 +2498,33 @@ def page_playbook():
 # ─────────────────────────────────────────────────────────────────────────────
 def page_data_quality():
     st.markdown("## 🔍 Data Quality & Coverage")
+
+    # Public data limitation banner
+    st.markdown(
+        "<div style='background:#1a1400;border:1.5px solid #78350f;border-radius:10px;"
+        "padding:1rem 1.4rem;margin-bottom:1.2rem'>"
+        "<p style='color:#fbbf24;font-weight:700;font-size:.95rem;margin:0 0 .5rem 0'>"
+        "⚠️ Public Data Limitation — What This Dashboard Can and Cannot See</p>"
+        "<p style='color:#fde68a;font-size:.87rem;margin:0 0 .4rem 0'>"
+        "This system only collects <strong>publicly visible</strong> Instagram data via Apify. "
+        "The following metrics are <strong>never available</strong> from public scraping and "
+        "the dashboard will never invent or estimate them:</p>"
+        "<ul style='color:#d97706;font-size:.85rem;line-height:1.9;margin:.3rem 0 .5rem 1.2rem;padding:0'>"
+        "<li><strong>Saves / Bookmarks</strong> — only visible to the account owner</li>"
+        "<li><strong>Shares / Reshares</strong> — only visible to the account owner</li>"
+        "<li><strong>Reach</strong> — not publicly exposed by Instagram</li>"
+        "<li><strong>Impressions</strong> — not publicly exposed by Instagram</li>"
+        "<li><strong>Profile visits from a post</strong> — private analytics only</li>"
+        "<li><strong>Follows gained from a post</strong> — private analytics only</li>"
+        "</ul>"
+        "<p style='color:#fde68a;font-size:.87rem;margin:0'>"
+        "Format-adjusted scoring for <strong>Carousels</strong> (save-heavy) and <strong>Reels</strong> "
+        "(plays-heavy) uses text-based proxies (caption keywords, caption length) as a stand-in. "
+        "To unlock full metric-based scoring, drop an Instagram analytics CSV into "
+        "<code>data/analytics/</code>.</p>"
+        "</div>",
+        unsafe_allow_html=True,
+    )
 
     # File status check
     checks = {

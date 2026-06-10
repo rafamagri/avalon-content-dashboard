@@ -153,6 +153,32 @@
         "best_avalon_opportunity": "Founder Personality Dynamic + Trip Invitation (Rafa vs Sofia format)",
         "avalon_fit_score": 96,
         "notes": "Top posts: NOS VAMOS A UN PARAISO (20× avg), personality debates (3.87×–5.1× avg). Spanish-language — do not copy phrasing. The two-founder format and agency trip invitation structure are Tier 1 for Avalon."
+      },
+      {
+        "id": "moore_rachel",
+        "instagram_username": "moore_rachel",
+        "instagram_url": "https://www.instagram.com/moore_rachel/",
+        "follower_count": null,
+        "niche": "Travel, lifestyle & aspirational storytelling",
+        "style_tags": ["travel", "lifestyle", "aspirational", "storytelling", "creator-led", "personal", "polished"],
+        "why_relevant_to_avalon": "Useful for studying emotional travel storytelling, lifestyle-led destination framing, and aspirational but personal content formats that can be adapted into Avalon's premium travel voice.",
+        "content_strengths": ["emotional travel storytelling", "lifestyle-led destination framing", "aspirational personal content", "hook variety", "visual pacing"],
+        "best_avalon_opportunity": "Emotional Travel Storytelling + Lifestyle Destination Framing",
+        "avalon_fit_score": 80,
+        "notes": "Study hooks, caption style, visual pacing, emotional angles, and travel formats that feel personal but still polished. No raw data collected yet — add via scripts/05_collect_references.py."
+      },
+      {
+        "id": "travelcroats",
+        "instagram_username": "travelcroats",
+        "instagram_url": "https://www.instagram.com/travelcroats/",
+        "follower_count": null,
+        "niche": "Travel guides, destination inspiration & carousel content",
+        "style_tags": ["carousel", "travel-guide", "destination", "itinerary", "saveable", "list-style", "practical"],
+        "why_relevant_to_avalon": "PRIMARY CAROUSEL REFERENCE in the group. Especially useful for studying carousel formats, destination guides, saveable posts, list-style travel content, itinerary carousels, and practical travel inspiration that can be adapted for Avalon packages.",
+        "content_strengths": ["carousel structure", "destination guide format", "first-slide hooks", "save/share triggers", "itinerary-style content", "slide sequencing", "carousel CTAs"],
+        "best_avalon_opportunity": "Destination Guide Carousel + Itinerary Carousel (Maldives, Colombia, Sri Lanka packages)",
+        "avalon_fit_score": 85,
+        "notes": "PRIMARY CAROUSEL REFERENCE. Give special attention to: carousel structure, slide sequencing, first-slide hooks, save/share triggers, destination guide formats, and carousel CTAs. No raw data collected yet — add via scripts/05_collect_references.py."
       }
     ]
   },

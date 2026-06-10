@@ -63,7 +63,7 @@ globally minded, ocean-inspired, boutique, curated. Not generic, not mass-market
 **Conceptual name:** `viral_influencer_trend_reference_group`
 **Physical folder/config key:** `viral_reference_group` (kept for stability — do not rename)
 
-10 public creator accounts studied as ONE collective benchmark pool — NOT competitors.
+12 public creator accounts studied as ONE collective benchmark pool — NOT competitors.
 Purpose: study viral influencer content, trend formats, and content structures that Avalon can
 adapt or recreate. A lot of social media is trend-based — the goal is NOT to avoid replication
 entirely. The goal is to understand what can be replicated safely and strategically.
@@ -81,6 +81,18 @@ Analysis sections: A. Viral Pattern Library  B. Hook Bank  C. Reel Script Formul
 **Relative performance scoring:** Each post gets a `relative_score` field — its engagement
 signal (plays/views/comments) divided by that creator's own median. Score ≥ 2.0 = high
 performing; ≥ 3.0 = viral within their content. This normalizes across different audience sizes.
+
+**Format-adjusted scoring:** `format_adjusted_performance_score()` applies format-specific bonuses.
+Reel: bonus for plays + deep comment engagement. Carousel: bonus for guide/list keywords + saveable
+first-slide signals + slide count. Photo: bonus for emotional language + long caption.
+**Public data limitation:** saves, shares, reach, and impressions are NEVER available from public
+scraping. The dashboard never invents these values. Text-based proxies are used as a fallback.
+Adding an Instagram analytics CSV to `data/analytics/` unlocks full metric-based scoring.
+
+**New creators (added June 2026):**
+- `moore_rachel` — travel, lifestyle & aspirational storytelling (avalon_fit_score: 80)
+- `travelcroats` — PRIMARY CAROUSEL REFERENCE. Carousel formats, destination guides, saveable
+  posts, itinerary carousels, first-slide hooks, save/share triggers. (avalon_fit_score: 85)
 
 **Data isolation rule:** `_data_type: "viral_reference_group"` on every raw post record.
 Never mixed with founder or brand account data.

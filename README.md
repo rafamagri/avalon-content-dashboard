@@ -50,6 +50,10 @@ After scoring your idea, the simulator generates a full improvement plan sourced
 3. **Avalon adaptation guide** — caption structure + visual direction
 4. **What NOT to copy** — explicit safety warnings per pattern
 5. **Improved version** — 5 stronger hooks, 1 Reel structure, 3 CTAs, 1 hashtag set, projected score
+6. **Format-specific advice** — tailored guidance based on selected format:
+   - **Carousel:** full slide-by-slide plan, first-slide hook, save trigger, share trigger, caption angle, CTA, and why it works for Avalon. @travelcroats tagged as the primary carousel reference.
+   - **Reel:** first 3-second hook, visual sequence, pacing, audio angle, text overlay guidance, share trigger
+   - **Photo:** caption angle, emotional framing, visual/caption pairing, comment prompt
 
 All suggestions are rule-based (no API required). They improve when you add more detail to the idea, hook, or caption fields.
 
@@ -133,7 +137,8 @@ python3 scripts/06_analyze_references.py
 Purpose: identify trend formats, viral structures, and content patterns that Avalon can adapt.
 
 Accounts: @noareserrunt · @gavinheeks · @jackrosen6 · @colemangeiger · @colinduthie ·
-@jords.media · @lilifabienne_ · @monicaroams · @seanhammonds · @viluagency
+@jords.media · @lilifabienne_ · @monicaroams · @seanhammonds · @viluagency ·
+@moore_rachel · @travelcroats
 
 **Three-tier classification:**
 - **Tier 1 — Direct Trend Adaptation:** Recreate directly with Avalon footage and voice
@@ -184,6 +189,23 @@ Reference Strength Score (0–100) balances four signals:
 - **Replicability (15%)** — share of posts estimated as Tier 1 or Tier 2 (safe to adapt)
 
 Example: small creator + very viral post = strong pattern. Large creator + average post = useful but not automatically top-ranked.
+
+### Format-aware scoring
+
+The `format_adjusted_performance_score()` function assigns a bonus on top of each post's `relative_score` based on format-specific signals:
+
+| Format | Primary signal | Bonus triggers |
+|---|---|---|
+| **Reel** | plays / views | deep comment engagement, saves/shares when available |
+| **Carousel** | saves + guide value | guide/list caption keywords, saveable first-slide proxy, slide count |
+| **Photo** | likes + comments | emotional language, long caption, saves/shares when available |
+
+**Public data limitation:** saves, shares, reach, and impressions are **never available** from public Instagram scraping. The dashboard does not invent these values. When unavailable, format scoring falls back to text-based proxies. Drop an Instagram analytics CSV into `data/analytics/` to unlock full metric-based scoring.
+
+The `score_format()` function (used in the 100-point Content Simulator scorer) is also format-aware:
+- **Reel:** rewards well-developed caption
+- **Carousel:** rewards guide/list framing with strong first-slide hook
+- **Photo:** rewards concise, high-impact caption
 
 ---
 
