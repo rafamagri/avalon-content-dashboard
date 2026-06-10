@@ -32,14 +32,26 @@ The dashboard opens automatically in your browser at `http://localhost:8501`.
 | Section | What it shows |
 |---|---|
 | 📊 Overview | KPI cards, account breakdown, total engagement |
-| 🌊 Viral Reference Group | Top 60 viral posts by score, full pattern library, tier framework |
+| 🌊 Viral Reference Group | Top viral posts, full pattern library, tier framework, **Creator Authority table** |
 | 👥 Founder & Brand | Per-account analysis for Rafa, Sofia, and Avalon |
 | 🏆 Top Performers | Sortable, filterable table across all accounts |
-| 📈 Pattern Charts | Format, topic, hook, caption length, and duration vs. performance |
-| 🎯 Content Simulator | Score a new post idea out of 100 before creating it |
+| 📈 Pattern Charts | Format, pillar, destination, hook, caption length, and duration vs. performance |
+| 🎯 Content Simulator | Score a new post idea out of 100 + **Reference-Based Improvement** section |
 | 📅 Weekly Content Plan | Reads Markdown plans from `content_plans/` |
 | 📖 Playbook | Always/Never rules, optimal specs, top hook formulas by tier |
 | 🔍 Data Quality | File status, what's available, what needs manual export |
+
+### Content Simulator — Reference-Based Improvement
+
+After scoring your idea, the simulator generates a full improvement plan sourced from the **Viral Influencer Trend Reference Group**:
+
+1. **Matching viral patterns** — which of the 12 library patterns align with your idea
+2. **Relevant creators** — which reference accounts are most useful for this type of content
+3. **Avalon adaptation guide** — caption structure + visual direction
+4. **What NOT to copy** — explicit safety warnings per pattern
+5. **Improved version** — 5 stronger hooks, 1 Reel structure, 3 CTAs, 1 hashtag set, projected score
+
+All suggestions are rule-based (no API required). They improve when you add more detail to the idea, hook, or caption fields.
 
 ---
 
@@ -115,7 +127,7 @@ python3 scripts/06_analyze_references.py
 ## Viral Influencer Trend Reference Group
 
 **Conceptual name:** `viral_influencer_trend_reference_group`
-**Physical folder:** `viral_reference_group/` (kept stable)
+**Physical folder:** `viral_reference_group/` (kept stable — do not rename)
 
 10 public creator accounts studied as **one combined benchmark pool** — not competitors.
 Purpose: identify trend formats, viral structures, and content patterns that Avalon can adapt.
@@ -128,7 +140,50 @@ Accounts: @noareserrunt · @gavinheeks · @jackrosen6 · @colemangeiger · @coli
 - **Tier 2 — Structural Replication:** Use the structure, not the exact words or personal story
 - **Tier 3 — Inspiration Only:** Too creator-specific to copy — use only for directional ideas
 
+**Ethics rule:** Avalon can replicate trend formats and content structures, but must never copy exact captions, scripts, footage, personal stories, signature phrases, or creator identity. All ideas must be transformed into Avalon's own voice, footage, destinations, and brand angle.
+
 Pattern library: `analysis/viral_reference_group/viral_pattern_library.md`
+
+### Adding follower counts
+
+Open `config/reference_creators.json` and update each creator's `"follower_count"` field:
+```json
+{ "instagram_username": "gavinheeks", "follower_count": 450000, ... }
+```
+The Creator Authority table in the dashboard will update on next reload.
+
+### Adding new reference creators
+
+Add new creators to `config/new_reference_creators_to_add.json`:
+```json
+[
+  {
+    "id": "newcreator",
+    "instagram_username": "newcreator",
+    "instagram_url": "https://www.instagram.com/newcreator/",
+    "follower_count": null,
+    "niche": "Ocean travel",
+    "why_relevant_to_avalon": "...",
+    "avalon_fit_score": 80,
+    "notes": ""
+  }
+]
+```
+When ready, move the entry into `config/reference_creators.json` under `viral_reference_group.accounts` and run:
+```bash
+python3 scripts/05_collect_references.py   # collect their posts
+python3 scripts/06_analyze_references.py   # rebuild group dataset + pattern library
+```
+
+### Influence weighting
+
+Reference Strength Score (0–100) balances four signals:
+- **Viral performance (35%)** — posts that outperform that creator's own median matter most
+- **Follower authority (25%)** — log-normalized follower count (larger = more weight, but not dominant)
+- **Avalon fit (25%)** — static rating in config of how well this creator's style maps to Avalon
+- **Replicability (15%)** — share of posts estimated as Tier 1 or Tier 2 (safe to adapt)
+
+Example: small creator + very viral post = strong pattern. Large creator + average post = useful but not automatically top-ranked.
 
 ---
 

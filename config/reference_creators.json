@@ -3,13 +3,16 @@
   "_conceptual_name": "viral_influencer_trend_reference_group",
   "_folder_key": "viral_reference_group (physical name kept stable — do not rename folders or config keys)",
   "_purpose": "Study viral influencer content, trend formats, and content structures that Avalon Escapes can adapt or recreate. Social media is trend-based — the goal is not to avoid replication entirely. Understand what can be replicated safely and strategically.",
+  "_ethics_rule": "Avalon can replicate trend formats and content structures, but must never copy exact captions, scripts, footage, personal stories, signature phrases, or creator identity. All ideas must be transformed into Avalon's own voice, footage, destinations, and brand angle.",
   "_rules": [
     "Treat all 10 accounts as ONE collective reference pool, not as individual creators",
     "Raw data is stored per-account for clean re-collection, but analysis always uses the combined group dataset",
     "Data saved to data/raw/viral_reference_group/{username}/ — NEVER mixed with founder or brand data",
     "Analysis output: analysis/viral_reference_group/viral_pattern_library.md",
     "Always ask for credit confirmation before scraping",
-    "Goal: extract the STRUCTURE and TREND FORMATS behind what works, not the content itself"
+    "Goal: extract the STRUCTURE and TREND FORMATS behind what works, not the content itself",
+    "Follower count is used as a confidence/authority layer, not as the only ranking factor",
+    "Small creator + very viral post = strong pattern. Large creator + average post = useful but not automatically top pattern."
   ],
   "_classification_tiers": {
     "1_direct_trend_adaptation": "Format is already trend-based — recreate directly with Avalon footage, voice, destinations, captions, and brand angle. (POV formats, send-this-to formats, transition trends, audio trends, list Reels, travel reminders, keyword CTAs, invitation formats)",
@@ -24,52 +27,132 @@
       {
         "id": "noareserrunt",
         "instagram_username": "noareserrunt",
-        "instagram_url": "https://www.instagram.com/noareserrunt/"
+        "instagram_url": "https://www.instagram.com/noareserrunt/",
+        "follower_count": null,
+        "niche": "Philosophical travel storytelling & cinematic Reels",
+        "style_tags": ["cinematic", "philosophical", "ultra-short-caption", "trend-audio", "reel"],
+        "why_relevant_to_avalon": "Highest viral coefficient in the group (160× average on top post). Ultra-short cinematic hooks + philosophical essay format directly applicable to Avalon's premium storytelling voice.",
+        "content_strengths": ["curiosity-gap hooks", "ultra-short cinematic captions", "philosophical essay reels", "trend audio + cinematic edit"],
+        "best_avalon_opportunity": "Ultra-Short Cinematic Hook + Philosophical Essay Reel",
+        "avalon_fit_score": 80,
+        "notes": "Most viral creator in the group (53M plays, 1.6M likes on top post). Signature phrase 'That’s what they call it at least…' is TIER 3 — do not copy. The structural approach is fully Tier 2."
       },
       {
         "id": "gavinheeks",
         "instagram_username": "gavinheeks",
-        "instagram_url": "https://www.instagram.com/gavinheeks/"
+        "instagram_url": "https://www.instagram.com/gavinheeks/",
+        "follower_count": null,
+        "niche": "Ocean, marine life & adventure travel",
+        "style_tags": ["ocean", "diving", "marine-life", "guide-cta", "adventure", "reel"],
+        "why_relevant_to_avalon": "Ocean and diving content directly mirrors Avalon’s Maldives/ocean positioning. Top post uses keyword CTA format (194× average) — the strongest keyword CTA example in the group. Direct overlap with Avalon’s ocean adventures.",
+        "content_strengths": ["keyword/DM CTAs", "ocean & diving footage", "destination guides", "invitation formats"],
+        "best_avalon_opportunity": "Keyword CTA Guide (DM/Comment for Fuvahmulah or Maldives guide)",
+        "avalon_fit_score": 88,
+        "notes": "Top post: 'dm me the word GUIDE for my full guide on everything Okinawa' — 194× his average. Ocean niche is the most direct Avalon overlap in the group."
       },
       {
         "id": "jackrosen6",
         "instagram_username": "jackrosen6",
-        "instagram_url": "https://www.instagram.com/jackrosen6/"
+        "instagram_url": "https://www.instagram.com/jackrosen6/",
+        "follower_count": null,
+        "niche": "Cultural travel, Latin America & human connection stories",
+        "style_tags": ["cultural", "latin-america", "human-moment", "love-declaration", "adventure"],
+        "why_relevant_to_avalon": "Brazil/Latin America content + human connection storytelling closely mirrors Rafa’s background and Avalon’s Latin American positioning. Country love declaration format (10M plays, 1M likes on Brazil post).",
+        "content_strengths": ["country love declarations", "human connection moments", "cultural immersion storytelling", "Latin America content"],
+        "best_avalon_opportunity": "Country / Destination Love Declaration (Colombia, Brazil, Maldives)",
+        "avalon_fit_score": 85,
+        "notes": "BRASIL post: 10M plays, 1M likes — the country love declaration format is Tier 1 and directly applicable to Avalon's destinations. Human moment stories are Tier 3 (deeply personal)."
       },
       {
         "id": "colemangeiger",
         "instagram_username": "colemangeiger",
-        "instagram_url": "https://www.instagram.com/colemangeiger/"
+        "instagram_url": "https://www.instagram.com/colemangeiger/",
+        "follower_count": null,
+        "niche": "Cinematic portrait photography & art-travel crossover",
+        "style_tags": ["cinematic", "portrait", "art", "ultra-short-caption", "aesthetic"],
+        "why_relevant_to_avalon": "Premium visual aesthetic and ultra-short cinematic caption style applicable to Avalon’s luxury positioning. Highest single-post likes in the dataset (247K). Shows what premium brevity looks like.",
+        "content_strengths": ["cinematic visual storytelling", "ultra-short confident captions", "premium aesthetic editing"],
+        "best_avalon_opportunity": "Ultra-Short Hook + Cinematic Visual (requires extraordinary footage)",
+        "avalon_fit_score": 72,
+        "notes": "Highest single-post likes in group (247K on 'Nor(cole)man Rockwell'). Very art-forward — less directly applicable than ocean/adventure creators. Caption style is Tier 1, personal identity is Tier 3."
       },
       {
         "id": "colinduthie",
         "instagram_username": "colinduthie",
-        "instagram_url": "https://www.instagram.com/colinduthie/"
+        "instagram_url": "https://www.instagram.com/colinduthie/",
+        "follower_count": null,
+        "niche": "Off-the-beaten-path adventure travel (conflict zones, extreme destinations)",
+        "style_tags": ["adventure", "off-beaten-path", "cinematic", "ultra-short-caption", "curiosity-gap", "reel"],
+        "why_relevant_to_avalon": "Ultra-short cinematic hooks, curiosity-gap format, and underrated destination reveals. Structure is highly replicable for Avalon’s lesser-known destinations (Fuvahmulah, Providencia, Türkiye beyond Istanbul).",
+        "content_strengths": ["curiosity-gap hooks", "ultra-short cinematic captions", "underrated destination reveals", "pop culture comparisons"],
+        "best_avalon_opportunity": "Underrated / Overlooked Destination Reveal + Curiosity-Gap Hook",
+        "avalon_fit_score": 75,
+        "notes": "Top posts: 'The Disneyland of Iran' (41× average), 'The city that time forgot' (Chernobyl). Pop-culture comparison formula is his signature — abstract it, do not copy directly."
       },
       {
         "id": "jords.media",
         "instagram_username": "jords.media",
-        "instagram_url": "https://www.instagram.com/jords.media/"
+        "instagram_url": "https://www.instagram.com/jords.media/",
+        "follower_count": null,
+        "niche": "Lifestyle travel & philosophical reflection",
+        "style_tags": ["lifestyle", "philosophical", "reflective", "essay-caption", "travel-philosophy"],
+        "why_relevant_to_avalon": "Philosophical essay format and 'travel is more than checking places off a list' messaging is closely aligned with Avalon’s brand voice. Structural replication of caption arc is very applicable.",
+        "content_strengths": ["philosophical essay captions", "reflective travel voice", "emotional arc storytelling"],
+        "best_avalon_opportunity": "Philosophical Essay Reel (caption structure, not exact text)",
+        "avalon_fit_score": 82,
+        "notes": "Caption arc ('It’s not about crossing places off a list 🗺️ It’s so much more than that…') is a fully replicable Tier 2 structure for Avalon’s voice."
       },
       {
         "id": "lilifabienne_",
         "instagram_username": "lilifabienne_",
-        "instagram_url": "https://www.instagram.com/lilifabienne_/"
+        "instagram_url": "https://www.instagram.com/lilifabienne_/",
+        "follower_count": null,
+        "niche": "Couples lifestyle, slow travel & European city life",
+        "style_tags": ["couples", "lifestyle", "slow-travel", "europe", "city", "romantic"],
+        "why_relevant_to_avalon": "Couples/romantic travel format relevant for Avalon’s honeymoon and romantic escape packages. Milestone narrative structure ('a year ago today, barcelona went dark' — 2.4M plays).",
+        "content_strengths": ["couples travel storytelling", "milestone/anniversary narrative", "slow travel voice", "romantic escape framing"],
+        "best_avalon_opportunity": "Milestone / Journey Narrative (founding story, anniversary trip)",
+        "avalon_fit_score": 78,
+        "notes": "Top post: 'a year ago today, barcelona went dark… and somehow… we felt more connected than ever' (2.4M plays). Romantic milestone narrative is Tier 2 — highly applicable for Avalon honeymoon/couples content."
       },
       {
         "id": "monicaroams",
         "instagram_username": "monicaroams",
-        "instagram_url": "https://www.instagram.com/monicaroams/"
+        "instagram_url": "https://www.instagram.com/monicaroams/",
+        "follower_count": null,
+        "niche": "Solo female adventure travel & group trip hosting",
+        "style_tags": ["adventure", "solo-travel", "trip-hosting", "keyword-cta", "invitation", "reel"],
+        "why_relevant_to_avalon": "Strongest keyword CTA and trip invitation performance in the group (39× and 40× averages). Trip invitation + keyword CTA format is directly applicable to Avalon’s group departures and guided escape offers.",
+        "content_strengths": ["trip invitations", "keyword/comment CTAs", "journey narrative", "underrated destination content"],
+        "best_avalon_opportunity": "Trip Invitation Format + Keyword CTA (for Avalon group departures)",
+        "avalon_fit_score": 83,
+        "notes": "Top posts use trip invitation (39× avg) and keyword CTA ('comment HIKETRIP' — 40× avg). Journey narrative ('a year and a half ago i left to solo travel') is Tier 2. Very actionable for Avalon agency model."
       },
       {
         "id": "seanhammonds",
         "instagram_username": "seanhammonds",
-        "instagram_url": "https://www.instagram.com/seanhammonds/"
+        "instagram_url": "https://www.instagram.com/seanhammonds/",
+        "follower_count": null,
+        "niche": "Cultural adventure travel & transformation storytelling",
+        "style_tags": ["adventure", "cultural", "transformation", "expectation-subversion", "philosophical", "reel"],
+        "why_relevant_to_avalon": "Highest raw viral numbers (102M plays). Expectation subversion, destination love declarations, and philosophical transformation narratives all consistently viral. Broadest viral range in the group.",
+        "content_strengths": ["expectation subversion", "destination love declarations", "transformation narratives", "philosophical reflections"],
+        "best_avalon_opportunity": "Expectation Subversion + Destination Love Declaration (for Avalon’s misunderstood destinations)",
+        "avalon_fit_score": 79,
+        "notes": "Top posts: spider cobweb video (102M plays), Bangladesh train story (72× avg). Expectation subversion formula is Tier 2 — directly applicable. Personal transformation stories are Tier 3."
       },
       {
         "id": "viluagency",
         "instagram_username": "viluagency",
-        "instagram_url": "https://www.instagram.com/viluagency/"
+        "instagram_url": "https://www.instagram.com/viluagency/",
+        "follower_count": null,
+        "niche": "Boutique travel agency — founder-led, Spanish-language",
+        "style_tags": ["travel-agency", "founders", "trip-invitation", "personality-dynamic", "boutique"],
+        "why_relevant_to_avalon": "MOST DIRECTLY COMPARABLE to Avalon. Only other boutique agency in the group. Two-founder format, trip invitations, agency storytelling. Study everything from them as a direct structural reference.",
+        "content_strengths": ["founder personality dynamic", "trip invitations", "agency storytelling", "personality-based branding"],
+        "best_avalon_opportunity": "Founder Personality Dynamic + Trip Invitation (Rafa vs Sofia format)",
+        "avalon_fit_score": 96,
+        "notes": "Top posts: NOS VAMOS A UN PARAISO (20× avg), personality debates (3.87×–5.1× avg). Spanish-language — do not copy phrasing. The two-founder format and agency trip invitation structure are Tier 1 for Avalon."
       }
     ]
   },
@@ -78,5 +161,7 @@
     "apify_actor": "apify/instagram-post-scraper",
     "data_detail_level": "detailedData",
     "note": "25 posts per account for initial pattern analysis. Increase to 50 for deeper historical view."
-  }
+  },
+  "_how_to_add_new_creators": "Add new creator handles to config/new_reference_creators_to_add.json. When ready to collect data, move the entry into this file under viral_reference_group.accounts and run scripts/05_collect_references.py followed by scripts/06_analyze_references.py.",
+  "_follower_count_note": "follower_count defaults to null. Update manually from each creator's public Instagram profile. Used as a confidence/authority layer in the reference strength score — not as the sole ranking factor."
 }

@@ -243,6 +243,253 @@ AVALON_TERMS = ["ocean","dive","shark","maldives","fuvahmulah","colombia","brazi
                 "rafa","sofia","avalon","curated","escapes","authentic","premium","elegant","warm"]
 
 # ─────────────────────────────────────────────────────────────────────────────
+# VIRAL PATTERNS  (sourced from viral_pattern_library.md — used by simulator)
+# Each pattern: keywords for matching + adaptation guidance for Avalon.
+# Three tiers: 1 = Direct Trend Adaptation, 2 = Structural Replication, 3 = Inspiration Only
+# ─────────────────────────────────────────────────────────────────────────────
+VIRAL_PATTERNS = [
+    {
+        "id": "curiosity_gap",
+        "name": "Curiosity-Gap Hook",
+        "tier": 2, "tier_label": "Tier 2 — Structural Replication",
+        "accounts": ["colinduthie","seanhammonds","noareserrunt","monicaroams","gavinheeks"],
+        "keywords": ["no one tells","couldn't believe","can't believe","nothing like","who knew",
+                     "still can't","unexpected","didn't expect","surprised","you won't believe",
+                     "unbelievable","shocking","secret","nobody knows","hidden"],
+        "hook_templates": [
+            "No one tells you there are two [DESTINATION]s. Most people only ever see one.",
+            "Still can't believe [DESTINATION] exists and nobody talks about it.",
+        ],
+        "caption_structure": "Opening gap (the thing nobody says) → specific sensory detail → the shift → universal insight any traveler can relate to",
+        "visual_direction": "Open on the unexpected angle, not the postcard shot. Let the visual answer the tension created by the hook.",
+        "what_not_to_copy": "Do not use @noareserrunt's signature phrase 'That’s what they call it at least…' — it belongs to that creator's identity.",
+        "avalon_fit": 88, "replicability": 90,
+    },
+    {
+        "id": "philosophical_essay",
+        "name": "Philosophical Essay Reel",
+        "tier": 2, "tier_label": "Tier 2 — Structural Replication",
+        "accounts": ["noareserrunt","seanhammonds","jords.media","lilifabienne_","colinduthie"],
+        "keywords": ["society","perspective","meaning","what travel","it's not about","more than that",
+                     "home is","the truth about","what no one","they don't tell","life is short",
+                     "philosophy","reflection","realize","realized","insight","what we forget"],
+        "hook_templates": [
+            "It's not about the hotel. It's about who you become when you stop being reachable.",
+            "What they don't tell you about [DESTINATION]: it doesn't ask you to perform.",
+        ],
+        "caption_structure": "Universal observation → short parallel tension lines → the turn (specific moment) → insight that transcends the location → open-ended closing line",
+        "visual_direction": "Slow-motion cinematic cuts timed to narration. The edit reinforces the emotional arc — not the sights.",
+        "what_not_to_copy": "Do not use @noareserrunt's 'Society doesn't kill dreams' manifesto or any passage from it. Do not copy any specific philosophical essay from a reference creator.",
+        "avalon_fit": 82, "replicability": 75,
+    },
+    {
+        "id": "love_declaration",
+        "name": "Country / Destination Love Declaration",
+        "tier": 1, "tier_label": "Tier 1 — Direct Trend Adaptation",
+        "accounts": ["jackrosen6","seanhammonds","gavinheeks","colinduthie","monicaroams"],
+        "keywords": ["love","heart","favourite","favorite","heaven","adore","obsessed","colombia",
+                     "maldives","brazil","brasil","türkiye","turkiye","sri lanka","this place",
+                     "will always","changed my life","forever","country","destination love"],
+        "hook_templates": [
+            "[DESTINATION] 🌊 / Most people only know one side of it. We know all of them.",
+            "COLOMBIA 🇨🇴 / Cartagena is just the introduction. / Sofia has been going to Providencia since before there was an Avalon.",
+        ],
+        "caption_structure": "[DESTINATION + flag emoji] / [Specific personal detail most tourists miss] / [What this means for someone who travels with Avalon]",
+        "visual_direction": "Hero destination shot. The footage must be specific and personal, not generic stock-style.",
+        "what_not_to_copy": "Generic 'love this place' copy without personal specificity. Do not copy exact captions from reference creators.",
+        "avalon_fit": 90, "replicability": 95,
+    },
+    {
+        "id": "expectation_subversion",
+        "name": "Expectation Subversion",
+        "tier": 2, "tier_label": "Tier 2 — Structural Replication",
+        "accounts": ["seanhammonds","colinduthie","monicaroams","jackrosen6"],
+        "keywords": ["exceeded","expectation","surprised","wasn't expecting","completely changed",
+                     "nothing like i","thought it was","wrong about","misconception","preconception",
+                     "actually amazing","not what","different from","changed my mind","rewrote"],
+        "hook_templates": [
+            "[DESTINATION] completely rewrote every expectation I had about luxury travel.",
+            "Everyone told me [DESTINATION] was overwhelming. They were talking about the wrong [DESTINATION].",
+        ],
+        "caption_structure": "[Admission of the misconception most people have] / [What first-hand experience revealed] / [What it changed in the narrator]",
+        "visual_direction": "Open with the cliché frame — then hard cut to the real version Avalon knows.",
+        "what_not_to_copy": "Do not copy specific country narratives or personal testimony — those stories belong to those creators.",
+        "avalon_fit": 87, "replicability": 88,
+    },
+    {
+        "id": "ultra_short_cinematic",
+        "name": "Ultra-Short Hook + Cinematic Visual",
+        "tier": 1, "tier_label": "Tier 1 — Direct Trend Adaptation",
+        "accounts": ["colinduthie","seanhammonds","noareserrunt","colemangeiger","gavinheeks"],
+        "keywords": ["cinematic","footage","visuals","film","just","minimal","pure","dawn","sunrise",
+                     "underwater","quiet","wild","raw","real","only","nothing more","brevity"],
+        "hook_templates": [
+            "Nothing like the [DESTINATION] they show you.",
+            "The ocean at Fuvahmulah. That's it. That's the post.",
+        ],
+        "caption_structure": "One confident sentence. Maximum 6 words. The visual earns the brevity.",
+        "visual_direction": "Footage must be extraordinary — Fuvahmulah underwater, Cartagena golden hour, Sri Lanka tea country at dawn. Do not use this format with average footage.",
+        "what_not_to_copy": "Do not imitate @colinduthie's specific pop culture comparisons ('Minecraft IRL', 'The Disneyland of Iran') — those are his signature formula.",
+        "avalon_fit": 78, "replicability": 92,
+    },
+    {
+        "id": "trip_invitation",
+        "name": "Trip Invitation / Join Us",
+        "tier": 1, "tier_label": "Tier 1 — Direct Trend Adaptation",
+        "accounts": ["gavinheeks","monicaroams","viluagency"],
+        "keywords": ["join us","join me","spots","trip","coming with","invite","invitation","hosting",
+                     "limited","we're going","group","book","available","register","departure",
+                     "space","open","who's coming","who wants to"],
+        "hook_templates": [
+            "We're taking 6 people to [DESTINATION] this season. Tiger sharks, freedom, and a route no one else is running. 5 spots left.",
+            "YOUR CHANCE TO TRAVEL WITH AVALON 🌊 / We're opening [DESTINATION] for a curated group. Who's coming?",
+        ],
+        "caption_structure": "[Trip reveal — destination + dates] / [What makes this route different] / [Who it's for] / [Limited spots CTA]",
+        "visual_direction": "Founders on camera inviting viewers personally. Mix destination footage with behind-the-scenes planning shots.",
+        "what_not_to_copy": "Do not copy @viluagency's specific Spanish-language phrasing — those belong to their brand identity.",
+        "avalon_fit": 95, "replicability": 96,
+    },
+    {
+        "id": "keyword_cta",
+        "name": "Keyword / Comment CTA",
+        "tier": 1, "tier_label": "Tier 1 — Direct Trend Adaptation",
+        "accounts": ["gavinheeks","monicaroams","colinduthie"],
+        "keywords": ["comment","dm","guide","send","keyword","type","message","reply","want info",
+                     "interested","itinerary","for the link","drop your","comment below"],
+        "hook_templates": [
+            "Comment '[DESTINATION]' and we'll send you our full guide — hotels, routes, and the things only we know.",
+            "DM us the word 'ESCAPE' and we'll design your [DESTINATION] trip this week.",
+        ],
+        "caption_structure": "Engaging opening (destination or experience) + value proposition + clear keyword CTA at the end. Short. Every word earns its place.",
+        "visual_direction": "Any strong Avalon visual works — the CTA is the engine, not the footage.",
+        "what_not_to_copy": "Do not copy specific keyword phrases used by reference creators. Use Avalon's own branded keywords.",
+        "avalon_fit": 90, "replicability": 98,
+    },
+    {
+        "id": "society_challenge",
+        "name": "Society / System Challenge",
+        "tier": 2, "tier_label": "Tier 2 — Structural Replication",
+        "accounts": ["noareserrunt","seanhammonds","monicaroams"],
+        "keywords": ["society","supposed to","they told","conventional","expected","system","career",
+                     "mortgage","office","monday","9 to 5","rat race","escape","different choice",
+                     "opted out","quit","left","freedom","not supposed to"],
+        "hook_templates": [
+            "What they don't teach you: time is the real luxury. Not hotels.",
+            "You weren't meant to spend your whole life saving up for a trip you'll keep postponing.",
+        ],
+        "caption_structure": "[Conventional expectation most people accept] → [The crack in that logic] → [Travel as the alternative] → [Avalon as the practical step]",
+        "visual_direction": "Contrast edit — grey/urban/routine shots cut against vivid Avalon destination footage.",
+        "what_not_to_copy": "Do not use @noareserrunt's 'Society doesn't kill dreams' manifesto. Do not copy any specific philosophical text from reference creators.",
+        "avalon_fit": 72, "replicability": 70,
+    },
+    {
+        "id": "founder_journey",
+        "name": "Founder / Agency Journey",
+        "tier": 2, "tier_label": "Tier 2 — Structural Replication",
+        "accounts": ["monicaroams","colinduthie","jords.media"],
+        "keywords": ["founded","started","built","journey","a year ago","origin","story","began",
+                     "rafa","sofia","avalon","why we","how we","behind the","milestone",
+                     "when we first","the beginning","chapter","how it started"],
+        "hook_templates": [
+            "A year ago, Avalon was two people and a shared obsession with the Indian Ocean.",
+            "Here's how Rafa and Sofia went from diving in Fuvahmulah to designing trips for other people who needed to feel that way.",
+        ],
+        "caption_structure": "[Founding story beat] → [The key moment of decision or clarity] → [What Avalon became because of it] → [What this means for the viewer]",
+        "visual_direction": "Founder footage from early trips + current high-quality production footage. Real and polished together.",
+        "what_not_to_copy": "Do not copy personal backstory or milestone narratives from reference creators — Rafa and Sofia have their own genuine story to tell.",
+        "avalon_fit": 85, "replicability": 80,
+    },
+    {
+        "id": "underrated_destination",
+        "name": "Underrated / Overlooked Destination",
+        "tier": 2, "tier_label": "Tier 2 — Structural Replication",
+        "accounts": ["seanhammonds","monicaroams","colinduthie","jackrosen6"],
+        "keywords": ["underrated","overlooked","no one talks","off the radar","not on the list",
+                     "misunderstood","beyond","real side","lesser known","nobody tells",
+                     "unpopular opinion","they never show","tourist trail","hidden side"],
+        "hook_templates": [
+            "Nobody talks about [DESTINATION] beyond the obvious. That's Avalon's favourite thing about it.",
+            "The version of [DESTINATION] that never makes it onto Instagram. We've been going there for years.",
+        ],
+        "caption_structure": "[The common misconception or tourist version] / [What first-hand Avalon experience revealed] / [The specific detail only insiders know] / [Invitation to see it this way]",
+        "visual_direction": "Open with the cliché tourist shot — then immediately cut to the real, lesser-known version Avalon knows.",
+        "what_not_to_copy": "Do not copy specific country narratives or personal testimonies from reference creators — those observations belong to them.",
+        "avalon_fit": 89, "replicability": 85,
+    },
+    {
+        "id": "founder_personality",
+        "name": "Founder Personality Dynamic",
+        "tier": 1, "tier_label": "Tier 1 — Direct Trend Adaptation",
+        "accounts": ["viluagency"],
+        "keywords": ["rafa","sofia","founders","team rafa","team sofia","we disagree","non-negotiable",
+                     "which one are you","our debate","our rules","behind avalon","two of us",
+                     "we couldn't agree","our travel style","personality","both founders"],
+        "hook_templates": [
+            "Rafa wants 5-star. Sofia wants adventure. Here's what happens when we plan a trip together.",
+            "Our 5 non-negotiables when we design an Avalon escape. Rafa and Sofia do not agree on all of them.",
+        ],
+        "caption_structure": "[The personality reveal or debate topic] / [Rafa's position] / [Sofia's position] / [What Avalon clients get: the best of both] / [Pick sides CTA]",
+        "visual_direction": "Both founders on camera. Split-screen or alternating cuts. Real and personal — not rehearsed.",
+        "what_not_to_copy": "Do not copy @viluagency's specific Spanish-language personality format — those belong to their brand.",
+        "avalon_fit": 93, "replicability": 92,
+    },
+    {
+        "id": "human_moment",
+        "name": "Human Moment Over Destination",
+        "tier": 3, "tier_label": "Tier 3 — Inspiration Only",
+        "accounts": ["jackrosen6","seanhammonds","colinduthie"],
+        "keywords": ["local people","locals","met someone","human connection","shared a meal",
+                     "person i met","family","community","stranger","kindness","offered","gave me",
+                     "reminded me","humanity","connection","the people","a woman","a man","an old"],
+        "hook_templates": [
+            "You go to [DESTINATION] for the ocean. You come back because of the people who live inside it.",
+            "The moment that changed how I see [DESTINATION] had nothing to do with the destination.",
+        ],
+        "caption_structure": "[The unexpected human encounter, specific and concrete] / [What it revealed about the place] / [What it revealed about travel itself]",
+        "visual_direction": "Authentic, unposed footage of human connection moments. The rawness is the point — do not over-produce.",
+        "what_not_to_copy": "These stories are deeply personal to each creator. Rafa and Sofia must tell their own genuine version — not an adaptation of a reference creator's narrative.",
+        "avalon_fit": 75, "replicability": 40,
+    },
+]
+
+# ── Hashtag sets per Avalon destination (used by simulator improvement engine) ─
+DESTINATION_HASHTAGS = {
+    "Maldives": [
+        "#maldives", "#fuvahmulah", "#divingmaldives", "#tigersh ark",
+        "#freediving", "#indianocean", "#maldivesislands", "#oceanlife",
+        "#luxurymaldives", "#islandescape", "#luxurytravel", "#avalon_escapes",
+        "#curatedtravel", "#boutiquetravel",
+    ],
+    "Colombia": [
+        "#colombia", "#cartagena", "#providencia", "#colombiatravel",
+        "#caribbeancolombia", "#latinamerica", "#colombialuxury",
+        "#tropicalescapes", "#curatedtravel", "#avalon_escapes",
+        "#luxurylatin", "#bespoketravel",
+    ],
+    "Brazil": [
+        "#brazil", "#brasil", "#fernandodenoronha", "#riolife",
+        "#braziltravel", "#lencoismaranhenses", "#latinamerica",
+        "#southamerica", "#brazilianparadise", "#luxurybrazil",
+        "#curatedtravel", "#avalon_escapes",
+    ],
+    "Türkiye": [
+        "#turkey", "#turkiye", "#istanbul", "#cappadocia", "#bodrum",
+        "#aegeansea", "#turkishcoast", "#turkeytravel", "#luxuryturkey",
+        "#boutiqueuescapes", "#curatedtravel", "#avalon_escapes",
+    ],
+    "Sri Lanka": [
+        "#srilanka", "#srilankatravel", "#ella", "#mirissa", "#galle",
+        "#srilankaluxury", "#ceylon", "#tropicalluxury", "#srilankan",
+        "#boutiqueholiday", "#curatedtravel", "#avalon_escapes",
+    ],
+    "Global / Curated Escapes": [
+        "#luxurytravel", "#boutiquetravel", "#curatedtravel", "#bespoketravel",
+        "#tailormadetravel", "#privatetour", "#honeymoontravel", "#travelcouple",
+        "#luxurytravelblogger", "#avalon_escapes", "#luxescapes", "#intentionaltravel",
+    ],
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
 # DATA LOADING  (graceful — never crashes on missing files)
 # ─────────────────────────────────────────────────────────────────────────────
 @st.cache_data(show_spinner=False)
@@ -627,6 +874,217 @@ def run_scoring(idea, destination, fmt, emotion, hook, caption, cta, tier):
     }
 
 # ─────────────────────────────────────────────────────────────────────────────
+# REFERENCE GROUP HELPERS  (creator metadata + stats + strength scoring)
+# ─────────────────────────────────────────────────────────────────────────────
+@st.cache_data(show_spinner=False)
+def load_creator_config() -> dict:
+    """Load reference_creators.json and return a dict keyed by instagram_username."""
+    cfg_path = ROOT / "config" / "reference_creators.json"
+    raw = safe_load_json(cfg_path)
+    if not raw:
+        return {}
+    accounts = raw.get("viral_reference_group", {}).get("accounts", [])
+    return {a["instagram_username"]: a for a in accounts}
+
+@st.cache_data(show_spinner=False)
+def compute_creator_stats() -> dict:
+    """Compute per-creator engagement stats from group_posts.json."""
+    ref_posts = load_reference_posts()
+    if not ref_posts:
+        return {}
+    stats: dict = {}
+    for p in ref_posts:
+        uid = p.get("account_id", "")
+        if not uid:
+            continue
+        if uid not in stats:
+            stats[uid] = {"total": 0, "viral": 0, "high": 0, "scores": [], "formats": {}}
+        score = p.get("relative_score")
+        stats[uid]["total"] += 1
+        if score:
+            stats[uid]["scores"].append(score)
+            if score >= 3.0:
+                stats[uid]["viral"] += 1
+            elif score >= 2.0:
+                stats[uid]["high"] += 1
+        fmt = (p.get("product_type") or "unknown").lower()
+        stats[uid]["formats"][fmt] = stats[uid]["formats"].get(fmt, 0) + 1
+    for uid, d in stats.items():
+        d["avg_score"] = statistics.mean(d["scores"]) if d["scores"] else 1.0
+        d["top_format"] = max(d["formats"], key=d["formats"].get) if d["formats"] else "—"
+    return stats
+
+def _follower_authority(follower_count) -> float:
+    """Log-normalize follower count to 0–100. 1M = 100. None → 50 (mid default)."""
+    import math
+    if not follower_count or follower_count <= 0:
+        return 50.0
+    return min(100.0, math.log10(max(1, follower_count)) / math.log10(1_000_000) * 100)
+
+def compute_reference_strength(username: str, stats: dict, creator_cfgs: dict) -> int:
+    """
+    0–100 score:  viral performance 35% + follower authority 25%
+                  + Avalon fit 25%   + replicability 15%
+    """
+    s   = stats.get(username, {})
+    cfg = creator_cfgs.get(username, {})
+    viral_perf    = min(100.0, s.get("avg_score", 1.0) * 20)
+    follower_auth = _follower_authority(cfg.get("follower_count"))
+    avalon_fit    = float(cfg.get("avalon_fit_score", 70))
+    total_posts   = s.get("total", 0)
+    viral_posts   = s.get("viral", 0) + s.get("high", 0)
+    replicability = (viral_posts / total_posts * 100) if total_posts > 0 else 50.0
+    raw = viral_perf * 0.35 + follower_auth * 0.25 + avalon_fit * 0.25 + replicability * 0.15
+    return min(100, max(0, int(raw)))
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PATTERN MATCHING ENGINE  (rule-based, no API)
+# ─────────────────────────────────────────────────────────────────────────────
+def match_patterns_for_improvement(full_text: str) -> list:
+    """Match user input against VIRAL_PATTERNS. Returns top-4 sorted by keyword hits + Avalon fit."""
+    if not full_text:
+        return []
+    low = full_text.lower()
+    matches = []
+    for p in VIRAL_PATTERNS:
+        score = sum(1 for kw in p["keywords"] if kw in low)
+        if score > 0:
+            matches.append((p, score))
+    matches.sort(key=lambda x: (x[1], x[0]["avalon_fit"]), reverse=True)
+    return matches[:4]
+
+def _fill(template: str, destination: str) -> str:
+    """Fill [DESTINATION] placeholder in a template string."""
+    dest = (destination or "").strip().split(",")[0].strip() or "this destination"
+    return template.replace("[DESTINATION]", dest).replace("[MONTH]", "this season")
+
+# ─────────────────────────────────────────────────────────────────────────────
+# IMPROVEMENT GENERATOR  (rule-based, no API, driven by pattern matches)
+# ─────────────────────────────────────────────────────────────────────────────
+def generate_improvement(idea, hook, caption, destination, fmt, emotion, cta, tier) -> dict:
+    """
+    Generate reference-based improvement suggestions.
+    Returns: matched_patterns, relevant_creators, hooks (5), caption_guide,
+             reel_structure, ctas (3), hashtags, warnings, projected_score.
+    """
+    full_text = " ".join(filter(None, [idea, hook, caption, destination, emotion]))
+    matched   = match_patterns_for_improvement(full_text)
+    creator_cfgs  = load_creator_config()
+    creator_stats = compute_creator_stats()
+
+    # ── Relevant creators ─────────────────────────────────────────────────────
+    creator_freq: dict = {}
+    for pattern, _ in matched:
+        for uname in pattern["accounts"]:
+            creator_freq[uname] = creator_freq.get(uname, 0) + 1
+
+    relevant_creators = []
+    for uname, _ in sorted(creator_freq.items(), key=lambda x: x[1], reverse=True)[:4]:
+        cfg = creator_cfgs.get(uname, {})
+        s   = creator_stats.get(uname, {})
+        creator_patterns = [p for p, _ in matched if uname in p["accounts"]]
+        if not creator_patterns:
+            continue
+        best = creator_patterns[0]
+        relevant_creators.append({
+            "handle":         f"@{uname}",
+            "follower_count": cfg.get("follower_count"),
+            "niche":          cfg.get("niche", ""),
+            "why_relevant":   cfg.get("why_relevant_to_avalon", ""),
+            "pattern_name":   best["name"],
+            "tier_label":     best["tier_label"],
+            "tier":           best["tier"],
+            "posts_analyzed": s.get("total", 0),
+            "viral_posts":    s.get("viral", 0),
+            "ref_strength":   compute_reference_strength(uname, creator_stats, creator_cfgs),
+        })
+
+    # ── Generate 5 hooks ──────────────────────────────────────────────────────
+    dest  = (destination or "").strip()
+    hooks: list = []
+    seen: set   = set()
+    for pattern, _ in matched:
+        for tmpl in pattern["hook_templates"]:
+            h = _fill(tmpl, dest)
+            if h not in seen:
+                hooks.append({"text": h, "pattern": pattern["name"], "tier": pattern["tier_label"], "tier_num": pattern["tier"]})
+                seen.add(h)
+    fallbacks = [
+        {"text": f"No one tells you the real side of {dest or 'this destination'}.", "pattern": "Curiosity-Gap Hook", "tier": "Tier 2 — Structural Replication", "tier_num": 2},
+        {"text": f"{dest or 'This destination'} completely rewrote every expectation I had.", "pattern": "Expectation Subversion", "tier": "Tier 2 — Structural Replication", "tier_num": 2},
+        {"text": f"The {dest or 'trip'} they show you. And the one that actually changes you.", "pattern": "Expectation Subversion", "tier": "Tier 2 — Structural Replication", "tier_num": 2},
+        {"text": f"Comment '{re.sub(r'[^A-Z]','',dest.upper())[:6] or 'ESCAPE'}' and we'll design your escape.", "pattern": "Keyword CTA", "tier": "Tier 1 — Direct Trend Adaptation", "tier_num": 1},
+        {"text": "What they don't teach you: time is the real luxury. Not hotels.", "pattern": "Society Challenge", "tier": "Tier 2 — Structural Replication", "tier_num": 2},
+    ]
+    for fb in fallbacks:
+        if len(hooks) >= 5:
+            break
+        if fb["text"] not in seen:
+            hooks.append(fb)
+    hooks = hooks[:5]
+
+    # ── Caption structure guide ────────────────────────────────────────────────
+    if matched:
+        best = matched[0][0]
+        caption_guide = {"structure": best["caption_structure"], "visual": best["visual_direction"], "pattern_used": best["name"]}
+    else:
+        caption_guide = {
+            "structure": "Opening hook → specific sensory detail → emotional shift → universal insight → CTA",
+            "visual":    "Open strong — lead with your most compelling shot, not a setup shot.",
+            "pattern_used": "General Avalon formula",
+        }
+
+    # ── Reel structure ─────────────────────────────────────────────────────────
+    _reel_structures = {
+        "curiosity_gap":         "[0–3s]  Hook: state the gap — what no one tells you\n[3–15s] Setup: show the conventional / expected version\n[15–35s] Reveal: cut to the unexpected reality only Avalon knows\n[35–50s] Insight: one line that transcends the destination\n[50–60s] CTA: comment/DM keyword",
+        "philosophical_essay":   "[0–3s]  Hook: universal observation, one sentence\n[3–20s] Tension: 3–5 short parallel lines (things people accept)\n[20–40s] The turn: one specific personal moment that breaks the tension\n[40–55s] Insight: the universal truth it reveals\n[55–60s] Quiet closing shot + keyword CTA",
+        "love_declaration":      "[0–2s]  Destination name + flag — confident, no explanation needed\n[2–20s] The specific detail most tourists never see\n[20–40s] What this means for someone traveling with Avalon\n[40–60s] CTA: join us / comment for the guide",
+        "trip_invitation":       "[0–3s]  Hook: announce the trip + destination\n[3–15s] What makes this route different from anything on the market\n[15–35s] Who it's for + what they'll actually experience\n[35–50s] Founders on camera with personal direct invitation\n[50–60s] Limited spots CTA + keyword",
+        "expectation_subversion": "[0–3s]  State the misconception most people have\n[3–15s] Setup: the cliché version\n[15–35s] Hard cut to the real version Avalon knows\n[35–50s] The emotional shift — what changed\n[50–60s] Invitation + CTA",
+        "founder_personality":   "[0–3s]  Hook: reveal the personality clash\n[3–20s] Rafa's perspective (on camera)\n[20–35s] Sofia's perspective (on camera)\n[35–50s] The result: what Avalon clients get from both\n[50–60s] Pick a side CTA",
+        "underrated_destination": "[0–3s]  Hook: nobody talks about this side of [DESTINATION]\n[3–15s] The tourist cliché — what everyone already knows\n[15–40s] The real version — footage only insiders have\n[40–55s] Why this changes the trip entirely\n[55–60s] Comment CTA: DM for the insider guide",
+    }
+    top_id = matched[0][0]["id"] if matched else "curiosity_gap"
+    reel_struct = _reel_structures.get(top_id, _reel_structures["curiosity_gap"])
+
+    # ── 3 CTAs ────────────────────────────────────────────────────────────────
+    dest_slug = re.sub(r'[^A-Z]', '', dest.upper())[:8] or "ESCAPE"
+    ctas = [
+        f"Comment '{dest_slug}' and we'll send you our complete guide — hotels, routes, and the things only we know. →",
+        f"DM us 'AVALON' and we'll design your {dest or 'escape'} this month.",
+        f"Tag someone who needs this trip. 🌊",
+    ]
+
+    # ── Hashtag set ────────────────────────────────────────────────────────────
+    detected_dest = infer_destination(full_text)
+    hashtags = DESTINATION_HASHTAGS.get(detected_dest, DESTINATION_HASHTAGS["Global / Curated Escapes"])
+
+    # ── What NOT to copy ──────────────────────────────────────────────────────
+    warnings = []
+    for pattern, _ in matched:
+        if pattern.get("what_not_to_copy"):
+            warnings.append({"pattern": pattern["name"], "warning": pattern["what_not_to_copy"]})
+    if not warnings:
+        warnings.append({"pattern": "General rule", "warning": "Always transform reference content into Avalon's own voice, footage, destinations, and brand angle. Never copy exact captions, scripts, personal stories, or signature phrases."})
+
+    # ── Projected score (run scorer with improved hook) ───────────────────────
+    proj_hook    = hooks[0]["text"] if hooks else hook
+    proj_caption = caption or idea or ""
+    proj_result  = run_scoring(idea, destination, fmt, emotion, proj_hook, proj_caption, ctas[0], tier)
+
+    return {
+        "matched_patterns":   matched,
+        "relevant_creators":  relevant_creators,
+        "hooks":              hooks,
+        "caption_guide":      caption_guide,
+        "reel_structure":     reel_struct,
+        "ctas":               ctas,
+        "hashtags":           hashtags,
+        "warnings":           warnings,
+        "projected_score":    proj_result["total"],
+    }
+
+# ─────────────────────────────────────────────────────────────────────────────
 # SIDEBAR  NAVIGATION
 # ─────────────────────────────────────────────────────────────────────────────
 PAGES = {
@@ -770,7 +1228,7 @@ def page_viral_reference():
         unsafe_allow_html=True,
     )
 
-    tab1, tab2, tab3 = st.tabs(["📋 Top Viral Posts", "📚 Pattern Library", "🔢 Three-Tier Framework"])
+    tab1, tab2, tab3, tab4 = st.tabs(["📋 Top Viral Posts", "📚 Pattern Library", "🔢 Three-Tier Framework", "👥 Creator Authority"])
 
     # ── Tab 1: Top Posts ───────────────────────────────────────────────────
     with tab1:
@@ -892,6 +1350,93 @@ def page_viral_reference():
                 "<li>Private experience framing</li>"
                 "<li>Unique editing identity</li>"
                 "</ul></div>",
+                unsafe_allow_html=True,
+            )
+
+    # ── Tab 4: Creator Authority ───────────────────────────────────────────────
+    with tab4:
+        st.markdown("### Creator Authority & Reference Strength")
+        st.markdown(
+            "Each creator is scored 0–100 combining: **viral performance** (35%) · "
+            "**follower authority** (25%) · **Avalon fit** (25%) · **replicability** (15%). "
+            "Follower count defaults to a mid-range authority value when unknown — "
+            "update in `config/reference_creators.json`."
+        )
+
+        creator_cfgs  = load_creator_config()
+        c_stats       = compute_creator_stats()
+
+        if not creator_cfgs:
+            st.warning("Creator config not found at `config/reference_creators.json`.")
+        else:
+            # ── Summary table ────────────────────────────────────────────────
+            rows = []
+            for uname, cfg in creator_cfgs.items():
+                s        = c_stats.get(uname, {})
+                strength = compute_reference_strength(uname, c_stats, creator_cfgs)
+                fc       = cfg.get("follower_count")
+                rows.append({
+                    "Creator":          f"@{uname}",
+                    "Followers":        fmt_number(fc) if fc else "—",
+                    "Niche":            cfg.get("niche", "—"),
+                    "Posts Analyzed":   s.get("total", 0),
+                    "Viral Posts (≥3×)": s.get("viral", 0),
+                    "Top Format":       (s.get("top_format") or "—").capitalize(),
+                    "Best Opportunity": cfg.get("best_avalon_opportunity", "—")[:55],
+                    "Strength /100":    strength,
+                })
+            df_auth = pd.DataFrame(rows).sort_values("Strength /100", ascending=False)
+            st.dataframe(df_auth, use_container_width=True, hide_index=True)
+
+            # ── Bar chart ────────────────────────────────────────────────────
+            if not df_auth.empty:
+                fig = px.bar(
+                    df_auth, x="Strength /100", y="Creator", orientation="h",
+                    template=PLOTLY_TMPL, color="Strength /100",
+                    color_continuous_scale=["#0077b6","#00b4d8","#48cae4"],
+                    range_color=[0, 100], text="Strength /100",
+                )
+                fig.update_traces(textposition="outside")
+                fig.update_layout(margin=dict(l=0,r=0,t=10,b=0), height=340, showlegend=False)
+                st.plotly_chart(fig, use_container_width=True)
+
+            st.markdown("---")
+            st.markdown("#### Creator Profiles")
+            unames = list(creator_cfgs.keys())
+            for i in range(0, len(unames), 2):
+                row_cols = st.columns(2)
+                for j, uname in enumerate(unames[i:i+2]):
+                    cfg      = creator_cfgs[uname]
+                    s        = c_stats.get(uname, {})
+                    strength = compute_reference_strength(uname, c_stats, creator_cfgs)
+                    fc       = cfg.get("follower_count")
+                    fc_str   = f"{fmt_number(fc)} followers" if fc else "follower count unknown (add to config)"
+                    with row_cols[j]:
+                        st.markdown(
+                            f"<div class='ac'>"
+                            f"<h4>@{uname}</h4>"
+                            f"<p>"
+                            f"<b style='color:#e2e8f0'>Niche:</b> {cfg.get('niche','—')}<br>"
+                            f"<b style='color:#e2e8f0'>Followers:</b> {fc_str}<br>"
+                            f"<b style='color:#e2e8f0'>Analyzed:</b> {s.get('total',0)} posts · {s.get('viral',0)} viral (≥3×)<br>"
+                            f"<b style='color:#e2e8f0'>Reference Strength:</b> {strength}/100<br>"
+                            f"<b style='color:#e2e8f0'>Best Avalon opportunity:</b> {cfg.get('best_avalon_opportunity','—')}<br>"
+                            f"<span style='color:#64748b;font-size:.8rem'>{cfg.get('why_relevant_to_avalon','')}</span>"
+                            f"</p></div>",
+                            unsafe_allow_html=True,
+                        )
+
+            st.markdown("---")
+            st.markdown(
+                "<div class='ac'><p>"
+                "<b style='color:#e2e8f0'>How to add follower counts:</b> Open "
+                "<code>config/reference_creators.json</code>, find each creator's entry, "
+                "and set <code>\"follower_count\"</code> to an integer (e.g. <code>450000</code>). "
+                "The dashboard will update on next reload.<br><br>"
+                "<b style='color:#e2e8f0'>How to add new creators:</b> Add their details to "
+                "<code>config/new_reference_creators_to_add.json</code>, then move the entry "
+                "into <code>reference_creators.json</code> under <code>viral_reference_group.accounts</code>."
+                "</p></div>",
                 unsafe_allow_html=True,
             )
 
@@ -1331,6 +1876,126 @@ def page_simulator():
                     f"<div class='ac'><h4>⚠️ {criterion} — {pts}/{max_pts}</h4><p>{note}</p></div>",
                     unsafe_allow_html=True,
                 )
+
+        # ── Reference-Based Improvement ────────────────────────────────────────
+        st.markdown("---")
+        st.markdown("### 🔍 Reference-Based Improvement")
+        st.markdown(
+            "<div class='ac'><p>Suggestions below are rule-based, drawn from the "
+            "<b style='color:#00b4d8'>Viral Influencer Trend Reference Group</b> pattern library. "
+            "They show which viral patterns match your idea and how to adapt the structure into Avalon's voice — "
+            "without copying any creator's exact content.</p></div>",
+            unsafe_allow_html=True,
+        )
+
+        improvement = generate_improvement(idea, hook, caption, destination, fmt, emotion, cta, tier)
+        matched_pats = improvement["matched_patterns"]
+        creators     = improvement["relevant_creators"]
+
+        # ── 1. Matched patterns ────────────────────────────────────────────────
+        st.markdown("#### 1. Matching Viral Patterns")
+        if matched_pats:
+            for pattern, score in matched_pats:
+                tc = f"t{pattern['tier']}"
+                st.markdown(
+                    f"<div class='ac'>"
+                    f"<h4><span class='{tc}'>{pattern['tier_label']}</span> &nbsp; {pattern['name']}</h4>"
+                    f"<p>{pattern['caption_structure']}</p>"
+                    f"<p style='margin-top:.5rem;color:#64748b;font-size:.8rem'>"
+                    f"Reference accounts: {', '.join('@'+a for a in pattern['accounts'])}</p>"
+                    f"</div>",
+                    unsafe_allow_html=True,
+                )
+        else:
+            st.info("No strong pattern match. Add more detail to the idea, hook, or caption to get specific suggestions.")
+
+        # ── 2. Relevant creators ───────────────────────────────────────────────
+        if creators:
+            st.markdown("#### 2. Most Relevant Reference Creators")
+            crows = []
+            for c in creators:
+                crows.append({
+                    "Creator":   c["handle"],
+                    "Followers": fmt_number(c["follower_count"]) if c["follower_count"] else "—",
+                    "Niche":     c["niche"],
+                    "Pattern":   c["pattern_name"],
+                    "Adaptation": c["tier_label"],
+                    "Strength":  c["ref_strength"],
+                })
+            st.dataframe(pd.DataFrame(crows), use_container_width=True, hide_index=True)
+            for c in creators[:2]:
+                if c["why_relevant"]:
+                    st.markdown(
+                        f"<div class='ac'><h4>{c['handle']}</h4>"
+                        f"<p>{c['why_relevant']}</p></div>",
+                        unsafe_allow_html=True,
+                    )
+
+        # ── 3. How to adapt for Avalon ─────────────────────────────────────────
+        st.markdown("#### 3. How to Adapt for Avalon")
+        guide = improvement["caption_guide"]
+        st.markdown(
+            f"<div class='ac'>"
+            f"<h4>Caption structure — {guide['pattern_used']}</h4>"
+            f"<p>{guide['structure']}</p>"
+            f"<br><b style='color:#e2e8f0;font-size:.85rem'>Visual direction:</b>"
+            f"<p>{guide['visual']}</p>"
+            f"</div>",
+            unsafe_allow_html=True,
+        )
+
+        # ── 4. What NOT to copy ────────────────────────────────────────────────
+        st.markdown("#### 4. What NOT to Copy")
+        for w in improvement["warnings"]:
+            st.markdown(
+                f"<div style='background:#1a0e0e;border:1px solid #7f1d1d;border-radius:8px;"
+                f"padding:.75rem 1.1rem;margin-bottom:.45rem'>"
+                f"<span style='color:#fca5a5;font-size:.78rem;font-weight:700;letter-spacing:.05em'>"
+                f"{w['pattern'].upper()}</span><br>"
+                f"<span style='color:#f87171;font-size:.86rem'>{w['warning']}</span>"
+                f"</div>",
+                unsafe_allow_html=True,
+            )
+
+        # ── 5. Improved version ────────────────────────────────────────────────
+        st.markdown("#### 5. Improved Version")
+        proj_score = improvement["projected_score"]
+        proj_color = "#4ade80" if proj_score >= 80 else "#facc15" if proj_score >= 60 else "#fb923c"
+        st.markdown(
+            f"Projected score with improved hook: "
+            f"<b style='color:{proj_color};font-size:1.1rem'>{proj_score}/100</b>",
+            unsafe_allow_html=True,
+        )
+
+        imp_t1, imp_t2, imp_t3, imp_t4 = st.tabs(["🪝 5 Hooks", "🎬 Reel Structure", "📣 3 CTAs", "#️⃣ Hashtags"])
+
+        with imp_t1:
+            for i, h in enumerate(improvement["hooks"], 1):
+                tn  = str(h.get("tier_num", 2))
+                tc  = f"t{tn}"
+                st.markdown(
+                    f"<div class='ac'>"
+                    f"<h4>Hook {i} &nbsp;<span class='{tc}'>{h['tier']}</span></h4>"
+                    f"<p style='color:#e2e8f0;font-size:.97rem;font-style:italic'>"
+                    f"&ldquo;{h['text']}&rdquo;</p>"
+                    f"<p style='font-size:.78rem;color:#64748b;margin-top:.3rem'>Pattern: {h['pattern']}</p>"
+                    f"</div>",
+                    unsafe_allow_html=True,
+                )
+
+        with imp_t2:
+            st.markdown("**Best-fit Reel structure based on matched patterns:**")
+            st.code(improvement["reel_structure"], language=None)
+
+        with imp_t3:
+            for c in improvement["ctas"]:
+                st.markdown(f"→ {c}")
+
+        with imp_t4:
+            hashtag_str = "  ".join(improvement["hashtags"])
+            st.text_area("Copy this hashtag set:", value=hashtag_str, height=75, label_visibility="visible")
+            st.caption("Edit as needed. 1–3 highly targeted hashtags often outperform generic hashtag spam.")
+
     elif submitted:
         st.warning("Please fill in at least the Content Idea field.")
 

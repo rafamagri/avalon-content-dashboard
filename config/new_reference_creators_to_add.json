@@ -1,0 +1,16 @@
+[
+  {
+    "_note": "Add new reference creators here. Fill in as much detail as known. When ready to include in data collection, move the entry into config/reference_creators.json under viral_reference_group.accounts and run scripts/05_collect_references.py.",
+    "id": "",
+    "instagram_username": "",
+    "instagram_url": "",
+    "follower_count": null,
+    "niche": "",
+    "style_tags": [],
+    "why_relevant_to_avalon": "",
+    "content_strengths": [],
+    "best_avalon_opportunity": "",
+    "avalon_fit_score": null,
+    "notes": ""
+  }
+]
