@@ -1,0 +1,82 @@
+{
+  "_description": "Viral Influencer Trend Reference Group — 10 public creator accounts studied collectively as one benchmark pool for viral travel, lifestyle, ocean, adventure, and storytelling content.",
+  "_conceptual_name": "viral_influencer_trend_reference_group",
+  "_folder_key": "viral_reference_group (physical name kept stable — do not rename folders or config keys)",
+  "_purpose": "Study viral influencer content, trend formats, and content structures that Avalon Escapes can adapt or recreate. Social media is trend-based — the goal is not to avoid replication entirely. Understand what can be replicated safely and strategically.",
+  "_rules": [
+    "Treat all 10 accounts as ONE collective reference pool, not as individual creators",
+    "Raw data is stored per-account for clean re-collection, but analysis always uses the combined group dataset",
+    "Data saved to data/raw/viral_reference_group/{username}/ — NEVER mixed with founder or brand data",
+    "Analysis output: analysis/viral_reference_group/viral_pattern_library.md",
+    "Always ask for credit confirmation before scraping",
+    "Goal: extract the STRUCTURE and TREND FORMATS behind what works, not the content itself"
+  ],
+  "_classification_tiers": {
+    "1_direct_trend_adaptation": "Format is already trend-based — recreate directly with Avalon footage, voice, destinations, captions, and brand angle. (POV formats, send-this-to formats, transition trends, audio trends, list Reels, travel reminders, keyword CTAs, invitation formats)",
+    "2_structural_replication": "Replicate the structure (hook formula, emotional arc, pacing, caption shape, CTA style) but NOT exact words, footage, creator identity, or personal story.",
+    "3_inspiration_only": "Do not copy — too unique to the creator, too personal, or too close to their brand identity. Use only as directional inspiration. (Personal manifestos, signature phrases, private experiences, unique editing identity)"
+  },
+  "viral_reference_group": {
+    "label": "Viral Influencer Trend Reference Group",
+    "purpose": "Collective benchmark for viral travel / lifestyle / ocean / adventure / storytelling / agency content — trend identification and safe adaptation for Avalon Escapes",
+    "analysis_approach": "combined_group",
+    "accounts": [
+      {
+        "id": "noareserrunt",
+        "instagram_username": "noareserrunt",
+        "instagram_url": "https://www.instagram.com/noareserrunt/"
+      },
+      {
+        "id": "gavinheeks",
+        "instagram_username": "gavinheeks",
+        "instagram_url": "https://www.instagram.com/gavinheeks/"
+      },
+      {
+        "id": "jackrosen6",
+        "instagram_username": "jackrosen6",
+        "instagram_url": "https://www.instagram.com/jackrosen6/"
+      },
+      {
+        "id": "colemangeiger",
+        "instagram_username": "colemangeiger",
+        "instagram_url": "https://www.instagram.com/colemangeiger/"
+      },
+      {
+        "id": "colinduthie",
+        "instagram_username": "colinduthie",
+        "instagram_url": "https://www.instagram.com/colinduthie/"
+      },
+      {
+        "id": "jords.media",
+        "instagram_username": "jords.media",
+        "instagram_url": "https://www.instagram.com/jords.media/"
+      },
+      {
+        "id": "lilifabienne_",
+        "instagram_username": "lilifabienne_",
+        "instagram_url": "https://www.instagram.com/lilifabienne_/"
+      },
+      {
+        "id": "monicaroams",
+        "instagram_username": "monicaroams",
+        "instagram_url": "https://www.instagram.com/monicaroams/"
+      },
+      {
+        "id": "seanhammonds",
+        "instagram_username": "seanhammonds",
+        "instagram_url": "https://www.instagram.com/seanhammonds/"
+      },
+      {
+        "id": "viluagency",
+        "instagram_username": "viluagency",
+        "instagram_url": "https://www.instagram.com/viluagency/"
+      }
+    ]
+  },
+  "collection_settings": {
+    "results_limit": 25,
+    "apify_actor": "apify/instagram-post-scraper",
+    "data_detail_level": "detailedData",
+    "note": "25 posts per account for initial pattern analysis. Increase to 50 for deeper historical view."
+  }
+}

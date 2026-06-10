@@ -1,0 +1,39 @@
+{
+  "accounts": [
+    {
+      "id": "rafa",
+      "label": "Rafa (Founder / Personal)",
+      "role": "founder_personal",
+      "instagram_username": "_rafamagri",
+      "instagram_url": "https://www.instagram.com/_rafamagri/",
+      "notes": "Founder personal-brand and travel-lifestyle account"
+    },
+    {
+      "id": "sofia",
+      "label": "Sofia (Co-founder / Personal)",
+      "role": "founder_personal",
+      "instagram_username": "sofiacollins311",
+      "instagram_url": "https://www.instagram.com/sofiacollins311/",
+      "notes": "Co-founder personal account"
+    },
+    {
+      "id": "avalon",
+      "label": "Avalon Escapes (Brand)",
+      "role": "brand",
+      "instagram_username": "avalon.escapes",
+      "instagram_url": "https://www.instagram.com/avalon.escapes/",
+      "notes": "Luxury travel agency brand account — primary output target"
+    }
+  ],
+  "competitors": [],
+  "collection_settings": {
+    "results_limit": 50,
+    "apify_actor": "apify/instagram-post-scraper",
+    "data_detail_level": "details"
+  },
+  "brand_context": {
+    "name": "Avalon Escapes",
+    "description": "Luxury travel agency and bespoke escape design studio. Curated meaningful, high-end travel experiences worldwide — boutique stays, ocean adventures, island escapes, cultural immersion, retreats, wellness travel, romantic getaways, and tailor-made itineraries. Priority destinations: Maldives, Colombia, Brazil, Türkiye, Sri Lanka.",
+    "voice": ["premium", "elegant", "authentic", "warm", "personal", "inspiring"]
+  }
+}
