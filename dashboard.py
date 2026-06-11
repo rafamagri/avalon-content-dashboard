@@ -2092,56 +2092,244 @@ def _cs_brand_fit_score(idea: str, hook: str, caption: str, fmt: str, dest: str)
     return max(0, min(100, score)), issues, strengths
 
 
-def _cs_build_carousel(ctype: str, dest: str, goal: str, emotion: str,
-                        slides: int, tags_raw: str) -> str:
-    """Generate structured carousel copy brief."""
-    ct = _STUDIO_CAROUSEL_TYPES.get(ctype, _STUDIO_CAROUSEL_TYPES["Destination Guide"])
+_CS_LANG = {
+    "English":    {"swipe":"SWIPE →","cta_btn":"[ SEND US A MESSAGE ]",
+                   "cta_label":"YOUR {dest} ESCAPE","cta_soul":"Let's design yours.",
+                   "cta_body":"Tell us where you want to go. We'll take care of the rest.",
+                   "myth_cover_hl":"DO YOU KNOW","myth_cover_soul":"what Avalon actually means?",
+                   "myth_cover_label":"THE NAME HAS A STORY",
+                   "myth_labels":["● CELTIC MYTHOLOGY","FOR US","WE DON'T CREATE TRIPS"],
+                   "myth_hls":["ÁVALON","AVALON IS","WE DESIGN"],
+                   "myth_souls":["The Isle of Apples","something more","escapes, not trips"],
+                   "save_trigger":"Save this before you book anything.",
+                   "lang_note":""},
+    "Spanish":    {"swipe":"DESLIZA PARA DESCUBRIR","cta_btn":"[ ESCRÍBENOS ]",
+                   "cta_label":"TU PRÓXIMA ESCAPADA","cta_soul":"te está esperando.",
+                   "cta_body":"Cuéntanos dónde quieres ir. Nosotras nos encargamos del resto.",
+                   "myth_cover_hl":"¿SABES","myth_cover_soul":"qué significa Avalon?",
+                   "myth_cover_label":"EL NOMBRE TIENE UNA HISTORIA",
+                   "myth_labels":["● MITOLOGÍA CELTA","PARA NOSOTRAS","NO CREAMOS VIAJES"],
+                   "myth_hls":["ÁVALON","AVALON ES","DISEÑAMOS"],
+                   "myth_souls":["La isla de las manzanas","algo más","escapadas, no viajes"],
+                   "save_trigger":"Guarda esto antes de reservar nada.",
+                   "lang_note":"🌐 Spanish — all body copy should be written in Avalon's Spanish voice."},
+    "Portuguese": {"swipe":"DESLIZE PARA DESCOBRIR","cta_btn":"[ ESCREVA-NOS ]",
+                   "cta_label":"SUA PRÓXIMA FUGA","cta_soul":"está esperando por você.",
+                   "cta_body":"Conta-nos onde queres ir. Cuidamos do resto.",
+                   "myth_cover_hl":"VOCÊ SABE","myth_cover_soul":"o que significa Avalon?",
+                   "myth_cover_label":"O NOME TEM UMA HISTÓRIA",
+                   "myth_labels":["● MITOLOGIA CELTA","PARA NÓS","NÃO CRIAMOS VIAGENS"],
+                   "myth_hls":["ÁVALON","AVALON É","DESENHAMOS"],
+                   "myth_souls":["A ilha das maçãs","algo mais","escapadas, não viagens"],
+                   "save_trigger":"Salva isto antes de reservares.",
+                   "lang_note":"🌐 Portuguese — all body copy should be written in Avalon's Portuguese voice."},
+}
+
+_CS_CTA_BTNS = {
+    "DM CTA (ESCRÍBENOS)":        {"en":"[ SEND US A MESSAGE ]","es":"[ ESCRÍBENOS ]","pt":"[ ESCREVA-NOS ]"},
+    "Soft CTA (save + follow)":   {"en":"[ SAVE + FOLLOW ]","es":"[ GUARDA + SÍGUENOS ]","pt":"[ SALVA + SEGUE-NOS ]"},
+    "Comment CTA (emoji response)":{"en":"Comment 🌊 below","es":"Comenta 🌊 abajo","pt":"Comenta 🌊 abaixo"},
+    "Save CTA":                   {"en":"[ SAVE THIS ]","es":"[ GUARDA ESTO ]","pt":"[ SALVA ISTO ]"},
+}
+
+
+def parse_carousel_brief(brief: str) -> dict:
+    """Infer all carousel parameters from natural language. Rule-based — no API."""
+    b = brief.lower()
+
+    # Destination
+    dest = "Global"
+    if any(w in b for w in ["maldives","maldive","atoll","fuvahmulah","baa atoll","lhaviyani","south ari"]):
+        dest = "Maldives"
+    elif any(w in b for w in ["colombia","colombian","cartagena","providencia","medellín","medellin","bogotá","bogota","eje cafetero"]):
+        dest = "Colombia"
+    elif any(w in b for w in ["brazil","brasil","rio","fernando de noronha","bahia","florianópolis","florianopolis","noronha"]):
+        dest = "Brazil"
+    elif any(w in b for w in ["türkiye","turkey","turkish","istanbul","cappadocia","kaş","kas","aegean","bosphorus","bodrum"]):
+        dest = "Türkiye"
+    elif any(w in b for w in ["sri lanka","srilanka","sigiriya","mirissa","ella","kandy","arugam"]):
+        dest = "Sri Lanka"
+
+    # Carousel type
+    ctype = "Destination Guide"
+    if any(w in b for w in ["founder","rafa","sofia","rafaella","co-founder","why we started","who we are","our story","the team","meet rafa","meet sofia"]):
+        ctype = "Founders Story"
+    elif any(w in b for w in ["meaning","mythology","celtic","what avalon means","qué significa","que significa","brand identity","brand story","brand meaning","what is avalon","el nombre","the name","avalon significa","origin","origen"]):
+        ctype = "Brand Mythology"
+    elif any(w in b for w in ["itinerary","day 1","day by day","schedule","days in","day trip"]):
+        ctype = "Itinerary"
+    elif any(w in b for w in ["offer","package","service","what we do","what we offer","included","group travel","dive travel","private travel","advisory"]):
+        ctype = "Services / What We Offer"
+    elif any(w in b for w in ["hotel","resort","villa","boutique","compare","comparison"," vs ","where to stay","which resort","which hotel"]):
+        ctype = "Hotel / Stay Comparison"
+    elif dest == "Global":
+        ctype = "Brand Mythology"
+
+    # Goal
+    goal = "Destination desire + DM inquiry"
+    if any(w in b for w in ["save","saveable","bookmark","share","viral","save-worthy"]):
+        goal = "Save/share + reach"
+    elif any(w in b for w in ["brand awareness","trust","identity","awareness"]):
+        goal = "Brand awareness + trust"
+    elif any(w in b for w in ["education","teach","learn","guide","tips","know before"]):
+        goal = "Educational + save"
+
+    # Target emotion
+    emotion = "Curiosity → longing → trust → inquiry"
+    if any(w in b for w in ["mythology","transformation","transform","shift","celtic","meaning"]):
+        emotion = "Curiosity → wonder → belonging → desire to connect"
+    elif any(w in b for w in ["emotional","emotion","feel","warm","warmth","touch","moving"]):
+        emotion = "Emotion → connection → trust → desire"
+    elif any(w in b for w in ["desire","dream","aspir","wish","longing"]):
+        emotion = "Longing → desire → inspiration → inquiry"
+    elif any(w in b for w in ["elegant","luxury","premium","high-end","sophisticated"]):
+        emotion = "Aspiration → trust → desire → inquiry"
+
+    # Slide count
+    slides = 6
+    m = re.search(r'(\d+)\s*[-–]?\s*slide', b)
+    if m:
+        slides = max(4, min(12, int(m.group(1))))
+    else:
+        for word, n in [("four",4),("five",5),("six",6),("seven",7),("eight",8),("nine",9),("ten",10)]:
+            if word in b:
+                slides = n
+                break
+
+    # Language
+    language = "English"
+    if any(w in b for w in ["spanish","español","espanol","en español","in spanish","castellano"]):
+        language = "Spanish"
+    elif any(w in b for w in ["portuguese","português","portugues","in portuguese","em português"]):
+        language = "Portuguese"
+
+    # CTA style
+    cta_style = "DM CTA (ESCRÍBENOS)"
+    if any(w in b for w in ["soft cta","soft cta","gentle cta","no sell","no cta","soft"]):
+        cta_style = "Soft CTA (save + follow)"
+    elif any(w in b for w in ["comment cta","comment","emoji response"]):
+        cta_style = "Comment CTA (emoji response)"
+    elif any(w in b for w in ["save cta","save trigger"]):
+        cta_style = "Save CTA"
+
+    # Visual mood
+    mood_parts = []
+    if any(w in b for w in ["navy","dark navy","deep navy","dark blue","#0f2649"]):
+        mood_parts.append("Deep navy `#0F2649`")
+    if any(w in b for w in ["ocean","underwater","sea","water","diving","marine"]):
+        mood_parts.append("ocean blues + underwater light")
+    if any(w in b for w in ["warm","golden","sunset","amber","terracotta"]):
+        mood_parts.append("warm gold tones")
+    if any(w in b for w in ["white serif","serif typography","white typography"]):
+        mood_parts.append("white serif typography")
+    if any(w in b for w in ["subtle gold","gold detail","gold accent"]):
+        mood_parts.append("subtle gold accents")
+    if any(w in b for w in ["cultural","city","urban","architecture","historic"]):
+        mood_parts.append("cultural depth")
+    if not mood_parts:
+        mood_parts = ["Deep navy `#0F2649`", "premium editorial"]
+    mood = " · ".join(mood_parts)
+
+    # Photo tags
+    dd = _STUDIO_DEST_DATA.get(dest, _STUDIO_DEST_DATA["Global"])
+    photo_tags = list(dd["photo_tags"])
+    if any(w in b for w in ["founder","rafa","sofia","personal","real photo"]):
+        for t in ["founder_beach_golden_hour","founder_city_monument"]:
+            if t not in photo_tags: photo_tags.insert(0, t)
+    if any(w in b for w in ["ocean","diving","underwater","shark","coral","fish"]):
+        for t in ["ocean_underwater_coral","founder_diving_gear"]:
+            if t not in photo_tags: photo_tags.insert(0, t)
+    if any(w in b for w in ["maldives","sunset","palm","island","overwater"]):
+        if "maldives_sunset_palms" not in photo_tags: photo_tags.insert(0, "maldives_sunset_palms")
+
+    needs_ai_brief = any(w in b for w in ["ai brief","image brief","ai image","midjourney","dall-e","no photos","generate image"])
+
+    return {
+        "carousel_type": ctype, "destination": dest, "goal": goal,
+        "emotion": emotion, "slides": slides, "language": language,
+        "cta_style": cta_style, "mood": mood,
+        "photo_tags": photo_tags, "needs_ai_brief": needs_ai_brief,
+    }
+
+
+def _cs_ai_image_briefs(slides: int, dest: str, arc: str, mood: str) -> str:
+    """Generate per-slide AI image prompt briefs (no API — descriptive only)."""
     dd = _STUDIO_DEST_DATA.get(dest, _STUDIO_DEST_DATA["Global"])
     places = dd["places"]
-    angle = dd["angle"]
+    L = ["### AI Image Briefs (when no authorial photo is available)\n"]
+    L.append(f"Style reference: Deep navy overlay on real travel photography. Never stock-looking.")
+    L.append(f"Palette: `#0F2649` navy dominant · white text · warm gold accents")
+    L.append(f"Mood: {mood}\n")
+    for i in range(1, slides + 1):
+        place = places[(i - 2) % len(places)] if i > 1 else dest
+        if i == 1:
+            b = f"Wide, atmospheric establishing shot of {dest}. Moody, no people, ultra-premium travel editorial. Dark ocean or dramatic landscape."
+        elif i == slides:
+            b = f"{dest} golden hour — warm light, palm silhouettes or ocean reflection. End-card energy. Dark navy overlay."
+        else:
+            b = f"{place}, {dest} — authentic, non-tourist angle, atmospheric. {mood}. No logos, no crowds, no stock energy."
+        L.append(f"**Slide {i}:** {b}")
+    return "\n".join(L)
+
+
+def _cs_build_carousel(ctype: str, dest: str, goal: str, emotion: str,
+                        slides: int, tags_raw: str,
+                        language: str = "English",
+                        cta_style: str = "DM CTA (ESCRÍBENOS)") -> str:
+    """Generate structured carousel copy brief with language + CTA style awareness."""
+    ct  = _STUDIO_CAROUSEL_TYPES.get(ctype, _STUDIO_CAROUSEL_TYPES["Destination Guide"])
+    dd  = _STUDIO_DEST_DATA.get(dest, _STUDIO_DEST_DATA["Global"])
+    lng = _CS_LANG.get(language, _CS_LANG["English"])
+    lang_code = {"English":"en","Spanish":"es","Portuguese":"pt"}.get(language, "en")
+    cta_btn = _CS_CTA_BTNS.get(cta_style, _CS_CTA_BTNS["DM CTA (ESCRÍBENOS)"])[lang_code]
+
+    places = dd["places"]
+    angle  = dd["angle"]
     footer = ct["footer"]
     user_tags = [t.strip() for t in tags_raw.split(",") if t.strip()]
-    all_tags = user_tags + dd["photo_tags"]
-
+    all_tags  = user_tags + dd["photo_tags"]
     def _tag(i): return f"`{all_tags[i % len(all_tags)]}`" if all_tags else "`authorial photo`"
 
+    arc = ct["arc"]
     L = []
-    L.append(f"**Type:** {ctype}  |  **Destination:** {dest}  |  **Slides:** {slides}")
+    if lng["lang_note"]:
+        L.append(f"> {lng['lang_note']}\n")
+    L.append(f"**Type:** {ctype}  |  **Destination:** {dest}  |  **Slides:** {slides}  |  **Language:** {language}")
     L.append(f"**Goal:** {goal}  |  **Emotion:** {emotion}")
+    L.append(f"**CTA style:** {cta_style}")
     L.append("")
 
-    # Hook lines by arc
-    arc = ct["arc"]
+    # Cover slide — language-aware
     if arc == "mythology":
-        cover_hl = "DO YOU KNOW"
-        cover_soul = "what Avalon actually means?"
-        cover_label = "THE NAME HAS A STORY"
+        cover_hl    = lng["myth_cover_hl"]
+        cover_soul  = lng["myth_cover_soul"]
+        cover_label = lng["myth_cover_label"]
     elif arc == "founders":
-        cover_hl = "TWO WOMEN."
-        cover_soul = "Two cultures. One mission."
-        cover_label = "WHY AVALON EXISTS"
+        cover_hl    = "TWO WOMEN." if language == "English" else "DOS MUJERES." if language == "Spanish" else "DUAS MULHERES."
+        cover_soul  = "Two cultures. One mission." if language == "English" else "Dos culturas. Una misión." if language == "Spanish" else "Duas culturas. Uma missão."
+        cover_label = "WHY AVALON EXISTS" if language == "English" else "POR QUÉ EXISTE AVALON" if language == "Spanish" else "POR QUE EXISTE AVALON"
     elif arc == "services":
-        cover_hl = "AVALON ESCAPES"
-        cover_soul = "The best places are not found. They are lived."
+        cover_hl    = "AVALON ESCAPES"
+        cover_soul  = "The best places are not found. They are lived." if language == "English" else "Los mejores lugares no se encuentran. Se viven." if language == "Spanish" else "Os melhores lugares não se encontram. Vivem-se."
         cover_label = "CURATED EXPERIENCES · CULTURE & DIVING"
     elif arc == "itinerary":
-        cover_hl = f"THE PERFECT"
-        cover_soul = f"{dest} itinerary"
-        cover_label = f"SAVE THIS · {slides - 1} DAYS"
+        cover_hl    = "THE PERFECT" if language == "English" else "EL ITINERARIO PERFECTO" if language == "Spanish" else "O ITINERÁRIO PERFEITO"
+        cover_soul  = f"{dest} itinerary" if language == "English" else f"de {dest}" if language == "Spanish" else f"de {dest}"
+        cover_label = f"SAVE THIS · {slides - 1} DAYS" if language == "English" else f"GUARDA ESTO · {slides - 1} DÍAS" if language == "Spanish" else f"SALVA ISTO · {slides - 1} DIAS"
     elif arc == "comparison":
-        cover_hl = dest.upper()
-        cover_soul = "where to actually stay"
-        cover_label = "THE STAY MATTERS"
+        cover_hl    = dest.upper()
+        cover_soul  = "where to actually stay" if language == "English" else "dónde hospedarse de verdad" if language == "Spanish" else "onde realmente ficar"
+        cover_label = "THE STAY MATTERS" if language == "English" else "EL ALOJAMIENTO IMPORTA" if language == "Spanish" else "A HOSPEDAGEM IMPORTA"
     else:  # guide
-        cover_hl = dest.upper()
-        cover_soul = angle
-        cover_label = f"WHAT MOST TRAVELERS MISS"
+        cover_hl    = dest.upper()
+        cover_soul  = angle
+        cover_label = "WHAT MOST TRAVELERS MISS" if language == "English" else "LO QUE LA MAYORÍA NO VE" if language == "Spanish" else "O QUE A MAIORIA PERDE"
 
-    L.append(f"### Slide 1 — Hook (Cover)")
+    L.append("### Slide 1 — Hook (Cover)")
     L.append(f"**Headline (Montserrat Black):** {cover_hl}")
     L.append(f"**Soul line (Amore Christmas italic):** {cover_soul}")
     L.append(f"**Micro label (gold):** {cover_label}")
-    L.append(f"**Swipe instruction (gold):** SWIPE →")
+    L.append(f"**Swipe instruction (gold):** {lng['swipe']}")
     L.append(f"**Footer:** {footer}")
     L.append(f"**Photo:** {_tag(0)}  ·  **Logo:** Butterfly isotype top-right · @avalon.escapes top-left")
     L.append("")
@@ -2149,29 +2337,34 @@ def _cs_build_carousel(ctype: str, dest: str, goal: str, emotion: str,
     # Middle slides
     for i in range(2, slides):
         place = places[(i - 2) % len(places)]
-        L.append(f"### Slide {i} — {place if arc == 'guide' else _mid_role(arc, i, slides)}")
-        L.append(f"**Category label (gold):** {_mid_label(arc, dest, place, i)}")
-        L.append(f"**Headline (Montserrat Black):** {_mid_hl(arc, dest, place, i)}")
-        L.append(f"**Soul line (italic):** {_mid_soul(arc, dest, place)}")
+        role  = place if arc == "guide" else _mid_role(arc, i, slides)
+        lbl   = lng["myth_labels"][min(i-2,2)] if arc == "mythology" else _mid_label(arc, dest, place, i)
+        hl    = lng["myth_hls"][min(i-2,2)] if arc == "mythology" else _mid_hl(arc, dest, place, i)
+        soul  = lng["myth_souls"][min(i-2,2)] if arc == "mythology" else _mid_soul(arc, dest, place)
+        L.append(f"### Slide {i} — {role}")
+        L.append(f"**Category label (gold):** {lbl}")
+        L.append(f"**Headline (Montserrat Black):** {hl}")
+        L.append(f"**Soul line (italic):** {soul}")
         L.append(f"**Body:** [Specific insider knowledge — not guidebook, not stock copy]")
         L.append(f"**Photo:** {_tag(i)}  ·  **Logo:** Butterfly isotype top-right")
         L.append("")
 
-    # Last slide — CTA
+    # CTA slide
+    cta_label = lng["cta_label"].format(dest=dest.upper())
     L.append(f"### Slide {slides} — CTA")
-    L.append(f"**Micro label (gold):** YOUR {dest.upper()} ESCAPE")
-    L.append(f"**Soul headline:** Let's design yours.")
-    L.append(f"**Sub-text:** Tell us where you want to go. We'll take care of the rest.")
-    L.append(f"**CTA button:** [ SEND US A MESSAGE ] (outlined white)")
+    L.append(f"**Micro label (gold):** {cta_label}")
+    L.append(f"**Soul headline:** {lng['cta_soul']}")
+    L.append(f"**Sub-text:** {lng['cta_body']}")
+    L.append(f"**CTA button:** {cta_btn} (outlined white)")
     L.append(f"**Footer:** {footer}")
     L.append(f"**Photo:** {_tag(slides - 1)} golden hour  ·  **Logo:** Full imagotype centered")
     L.append("")
 
     L.append("---")
-    L.append("**Caption hook:** " + _caption_hook_cs(arc, dest))
+    L.append("**Caption hook:** " + _caption_hook_cs(arc, dest, language))
     L.append("")
     L.append("**Caption body:** 3–4 short stanzas. Specific knowledge. Rafa or Sofia's voice.")
-    L.append("**Save trigger:** \"Save this before you book anything in [destination].\"")
+    L.append(f"**Save trigger:** \"{lng['save_trigger']}\"")
     L.append("**CTA:** DM invite or comment prompt — never \"link in bio\"")
     L.append("")
     L.append("**Colors:** Navy `#0F2649` backgrounds · White Montserrat Black headlines · Gold labels")
@@ -2183,48 +2376,66 @@ def _cs_build_carousel(ctype: str, dest: str, goal: str, emotion: str,
 def _mid_role(arc, i, total):
     roles = {
         "mythology": ["Etymology / Origin", "Brand Meaning", "Philosophy", "Promise"],
-        "founders": ["Our Mission", "Meet Rafa", "Meet Sofia", "Our Promise", "Destination Proof"],
-        "services": ["What We Offer", "Dive & Ocean Travel", "Custom Escapes", "Our Philosophy"],
-        "itinerary": [f"Days {i*2-1}–{i*2}" for i in range(1, 6)],
-        "comparison": ["Why the Stay Matters", "Option A", "Option B", "Our Recommendation"],
-        "guide": ["Context", "Insight 1", "Insight 2", "Insider Angle"],
+        "founders":  ["Our Mission", "Meet Rafa", "Meet Sofia", "Our Promise", "Destination Proof"],
+        "services":  ["What We Offer", "Dive & Ocean Travel", "Custom Escapes", "Our Philosophy"],
+        "itinerary": [f"Days {j*2-1}–{j*2}" for j in range(1, 6)],
+        "comparison":["Why the Stay Matters", "Option A", "Option B", "Our Recommendation"],
+        "guide":     ["Context", "Insight 1", "Insight 2", "Insider Angle"],
     }
-    r = roles.get(arc, ["Body Slide"])
-    return r[(i - 2) % len(r)]
+    return roles.get(arc, ["Body Slide"])[(i - 2) % len(roles.get(arc, ["Body Slide"]))]
 
 
 def _mid_label(arc, dest, place, i):
     if arc == "mythology": return ["● CELTIC MYTHOLOGY","FOR US","WE DON'T CREATE TRIPS"][min(i-2,2)]
-    if arc == "founders": return ["OUR MISSION","CO-FOUNDER","CO-FOUNDER","OUR PROMISE"][min(i-2,3)]
-    if arc == "services": return "WHAT WE OFFER"
+    if arc == "founders":  return ["OUR MISSION","CO-FOUNDER","CO-FOUNDER","OUR PROMISE"][min(i-2,3)]
+    if arc == "services":  return "WHAT WE OFFER"
     return dest.upper()
 
 
 def _mid_hl(arc, dest, place, i):
-    if arc == "mythology": return ["ÁVALON",f"AVALON IS","WE DESIGN"][min(i-2,2)]
-    if arc == "founders": return ["OUR MISSION","MEET\nRAFA","MEET\nSOFIA","OUR PROMISE"][min(i-2,3)]
-    if arc == "services": return ["WHAT WE OFFER","DIVE TRAVEL","PRIVATE ADVISORY","THE WORLD AWAITS"][min(i-2,3)]
+    if arc == "mythology": return ["ÁVALON","AVALON IS","WE DESIGN"][min(i-2,2)]
+    if arc == "founders":  return ["OUR MISSION","MEET\nRAFA","MEET\nSOFIA","OUR PROMISE"][min(i-2,3)]
+    if arc == "services":  return ["WHAT WE OFFER","DIVE TRAVEL","PRIVATE ADVISORY","THE WORLD AWAITS"][min(i-2,3)]
     if arc == "itinerary": return f"DAYS {(i-1)*2-1}–{(i-1)*2}"
     return place.upper() + "."
 
 
 def _mid_soul(arc, dest, place):
-    if arc == "mythology": return ["La isla de las manzanas","something more","escapes, not trips"][0]
-    if arc == "founders": return "Avalon is for those who want to feel a place, not just visit it."
-    if arc == "services": return "Trips designed to turn dreams into real experiences."
-    return f"worth the detour."
+    if arc == "mythology": return "La isla de las manzanas"
+    if arc == "founders":  return "Avalon is for those who want to feel a place, not just visit it."
+    if arc == "services":  return "Trips designed to turn dreams into real experiences."
+    return "worth the detour."
 
 
-def _caption_hook_cs(arc, dest):
-    hooks = {
+def _caption_hook_cs(arc, dest, language="English"):
+    hooks_en = {
         "mythology": "There's a reason we named it Avalon.",
-        "founders": "We didn't start a travel agency.",
-        "guide": f"Most people think they know {dest}.",
+        "founders":  "We didn't start a travel agency.",
+        "guide":     f"Most people think they know {dest}.",
         "itinerary": f"The {dest} itinerary most people never find.",
-        "services": "We don't book trips. We design escapes.",
-        "comparison": f"The right stay in {dest} changes the whole trip.",
+        "services":  "We don't book trips. We design escapes.",
+        "comparison":f"The right stay in {dest} changes the whole trip.",
     }
-    return hooks.get(arc, f"The {dest} you haven't discovered yet.")
+    hooks_es = {
+        "mythology": "Hay una razón por la que lo llamamos Avalon.",
+        "founders":  "No empezamos una agencia de viajes.",
+        "guide":     f"La mayoría cree que conoce {dest}.",
+        "itinerary": f"El itinerario de {dest} que la mayoría nunca encuentra.",
+        "services":  "No reservamos viajes. Diseñamos escapadas.",
+        "comparison":f"El alojamiento correcto en {dest} cambia el viaje entero.",
+    }
+    hooks_pt = {
+        "mythology": "Há uma razão pela qual o chamamos Avalon.",
+        "founders":  "Não começámos uma agência de viagens.",
+        "guide":     f"A maioria acha que conhece {dest}.",
+        "itinerary": f"O itinerário de {dest} que a maioria nunca encontra.",
+        "services":  "Não reservamos viagens. Desenhamos escapadas.",
+        "comparison":f"A hospedagem certa em {dest} muda toda a viagem.",
+    }
+    bank = {"English": hooks_en, "Spanish": hooks_es, "Portuguese": hooks_pt}.get(language, hooks_en)
+    return bank.get(arc, f"The {dest} you haven't discovered yet." if language == "English"
+                   else f"El {dest} que aún no has descubierto." if language == "Spanish"
+                   else f"O {dest} que ainda não descobriste.")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -3717,58 +3928,139 @@ def page_content_studio():
 
     # ─── A: CAROUSEL BUILDER ─────────────────────────────────────────────────
     with tab_a:
-        st.markdown("### 🃏 Carousel Builder")
+        st.markdown("### 🃏 Carousel Builder — Quick Brief Mode")
         st.markdown(
             "<p style='color:#64748b;font-size:.85rem'>"
-            "Fill in the brief → get a slide-by-slide carousel plan in Avalon's brand voice.</p>",
+            "Describe what you want in plain language — the dashboard infers all parameters automatically.</p>",
             unsafe_allow_html=True,
         )
-        col1, col2 = st.columns(2)
-        with col1:
-            cs_type = st.selectbox(
-                "Carousel type",
-                list(_STUDIO_CAROUSEL_TYPES.keys()),
-                key="cs_type",
-            )
-            cs_dest = st.selectbox(
-                "Destination / category",
-                list(_STUDIO_DEST_DATA.keys()),
-                key="cs_dest",
-            )
-            cs_slides = st.slider("Number of slides", 4, 10, 7, key="cs_slides")
-        with col2:
-            cs_goal = st.text_input(
-                "Goal",
-                value="Destination desire + DM inquiry",
-                key="cs_goal",
-            )
-            cs_emotion = st.text_input(
-                "Target emotion",
-                value="Curiosity → longing → trust → inquiry",
-                key="cs_emotion",
-            )
-            cs_tags = st.text_input(
-                "Available authorial photo tags (comma-separated)",
-                placeholder="founder_beach_golden_hour, ocean_underwater_coral",
-                key="cs_tags",
+
+        brief_text = st.text_area(
+            "What carousel do you want to create?",
+            placeholder=(
+                "e.g. Create a 6-slide Spanish carousel about what Avalon means, "
+                "with deep navy ocean overlays, white serif typography, subtle gold details, "
+                "mythology, transformation, and a soft CTA to DM us."
+            ),
+            height=110,
+            key="cs_brief_input",
+        )
+
+        # ── Auto-parse: update adv-settings session state when brief changes ──
+        if brief_text.strip() and brief_text != st.session_state.get("_cs_brief_prev", ""):
+            st.session_state["_cs_brief_prev"] = brief_text
+            _inf = parse_carousel_brief(brief_text)
+            st.session_state["cs_adv_type"]     = _inf["carousel_type"]
+            st.session_state["cs_adv_dest"]     = _inf["destination"]
+            st.session_state["cs_adv_slides"]   = _inf["slides"]
+            st.session_state["cs_adv_goal"]     = _inf["goal"]
+            st.session_state["cs_adv_emotion"]  = _inf["emotion"]
+            st.session_state["cs_adv_language"] = _inf["language"]
+            st.session_state["cs_adv_cta"]      = _inf["cta_style"]
+            st.session_state["cs_adv_tags"]     = ", ".join(_inf["photo_tags"][:4])
+            st.session_state["cs_adv_needs_ai"] = _inf["needs_ai_brief"]
+
+        # ── Inferred summary card ──────────────────────────────────────────────
+        if brief_text.strip():
+            _idc = parse_carousel_brief(brief_text)
+            st.markdown(
+                f"<div style='background:#0a1f0a;border:1px solid #1a4a1a;border-radius:8px;"
+                f"padding:.75rem 1.1rem;margin:.3rem 0 .7rem 0'>"
+                f"<p style='color:#4ade80;font-weight:700;font-size:.78rem;margin:0 0 .4rem 0'>"
+                f"✅ Inferred from your brief — override below if needed</p>"
+                f"<div style='display:grid;grid-template-columns:repeat(3,1fr);gap:.25rem .8rem'>"
+                f"<span style='color:#94a3b8;font-size:.78rem'><b style='color:#e2e8f0'>Type:</b> {_idc['carousel_type']}</span>"
+                f"<span style='color:#94a3b8;font-size:.78rem'><b style='color:#e2e8f0'>Dest:</b> {_idc['destination']}</span>"
+                f"<span style='color:#94a3b8;font-size:.78rem'><b style='color:#e2e8f0'>Slides:</b> {_idc['slides']}</span>"
+                f"<span style='color:#94a3b8;font-size:.78rem'><b style='color:#e2e8f0'>Language:</b> {_idc['language']}</span>"
+                f"<span style='color:#94a3b8;font-size:.78rem'><b style='color:#e2e8f0'>CTA:</b> {_idc['cta_style']}</span>"
+                f"<span style='color:#94a3b8;font-size:.78rem'><b style='color:#e2e8f0'>Goal:</b> {_idc['goal']}</span>"
+                f"</div>"
+                f"<p style='color:#64748b;font-size:.75rem;margin:.3rem 0 0 0'>"
+                f"<b style='color:#94a3b8'>Mood:</b> {_idc['mood']}</p>"
+                f"</div>",
+                unsafe_allow_html=True,
             )
 
-        if st.button("🃏 Generate Carousel Brief", key="cs_gen_btn", type="primary"):
-            with st.spinner("Building carousel plan..."):
-                result = _cs_build_carousel(
-                    cs_type, cs_dest, cs_goal, cs_emotion, cs_slides, cs_tags or ""
+        # ── Seed defaults for advanced settings on first load ─────────────────
+        _type_opts = list(_STUDIO_CAROUSEL_TYPES.keys())
+        _dest_opts = list(_STUDIO_DEST_DATA.keys())
+        _lang_opts = ["English", "Spanish", "Portuguese"]
+        _cta_opts  = list(_CS_CTA_BTNS.keys())
+        _adv_defaults = {
+            "cs_adv_type":     _type_opts[0],
+            "cs_adv_dest":     "Maldives",
+            "cs_adv_slides":   6,
+            "cs_adv_goal":     "Destination desire + DM inquiry",
+            "cs_adv_emotion":  "Curiosity → longing → trust → inquiry",
+            "cs_adv_language": "English",
+            "cs_adv_cta":      "DM CTA (ESCRÍBENOS)",
+            "cs_adv_tags":     "",
+            "cs_adv_needs_ai": False,
+        }
+        for _k, _v in _adv_defaults.items():
+            if _k not in st.session_state:
+                st.session_state[_k] = _v
+
+        # ── Advanced Settings expander (auto-filled, user-editable) ───────────
+        with st.expander("⚙️ Advanced Settings — auto-filled from brief, override if needed"):
+            col1, col2 = st.columns(2)
+            with col1:
+                st.selectbox("Carousel type", _type_opts, key="cs_adv_type")
+                st.selectbox("Destination / category", _dest_opts, key="cs_adv_dest")
+                st.slider("Number of slides", min_value=4, max_value=12, key="cs_adv_slides")
+            with col2:
+                st.selectbox("Language", _lang_opts, key="cs_adv_language")
+                st.selectbox("CTA style", _cta_opts, key="cs_adv_cta")
+                st.text_input("Goal", key="cs_adv_goal")
+                st.text_input("Target emotion", key="cs_adv_emotion")
+                st.text_input(
+                    "Authorial photo tags (comma-separated)",
+                    placeholder="founder_beach_golden_hour, ocean_underwater_coral",
+                    key="cs_adv_tags",
                 )
+                st.checkbox("Include AI image briefs per slide", key="cs_adv_needs_ai")
+
+        # ── Generate button ────────────────────────────────────────────────────
+        if st.button("🃏 Generate Carousel Plan", key="cs_gen_btn", type="primary"):
+            _type   = st.session_state["cs_adv_type"]
+            _dest   = st.session_state["cs_adv_dest"]
+            _slides = st.session_state["cs_adv_slides"]
+            _goal   = st.session_state["cs_adv_goal"]
+            _emot   = st.session_state["cs_adv_emotion"]
+            _tags   = st.session_state["cs_adv_tags"]
+            _lang   = st.session_state["cs_adv_language"]
+            _cta    = st.session_state["cs_adv_cta"]
+            _ai     = st.session_state["cs_adv_needs_ai"]
+
+            result = _cs_build_carousel(
+                _type, _dest, _goal, _emot, _slides, _tags,
+                language=_lang, cta_style=_cta,
+            )
+
+            if _ai:
+                _arc  = _STUDIO_CAROUSEL_TYPES.get(_type, {}).get("arc", "guide")
+                _b    = st.session_state.get("cs_brief_input", "")
+                _mood = parse_carousel_brief(_b).get("mood", "Deep navy · premium editorial") if _b.strip() else "Deep navy · premium editorial"
+                result += "\n\n---\n\n" + _cs_ai_image_briefs(_slides, _dest, _arc, _mood)
+
+            st.session_state["_cs_result"]    = result
+            st.session_state["_cs_dest_slug"] = _dest.lower().replace(" ", "_").replace("/", "_")
+
+        # ── Output area ────────────────────────────────────────────────────────
+        if "_cs_result" in st.session_state:
             st.markdown("---")
             st.markdown("#### Generated Carousel Plan")
-            st.markdown(result)
+            st.markdown(st.session_state["_cs_result"])
             st.download_button(
                 "📋 Download as Markdown",
-                data=result,
-                file_name=f"avalon_carousel_{cs_dest.lower().replace(' ','_')}.md",
+                data=st.session_state["_cs_result"],
+                file_name=f"avalon_carousel_{st.session_state.get('_cs_dest_slug','custom')}.md",
                 mime="text/markdown",
                 key="cs_dl",
             )
 
+        st.markdown("---")
         with st.expander("📂 Pre-built carousel drafts (from content_plans/carousel_drafts/)"):
             drafts_dir = CONTENT_PLANS / "carousel_drafts"
             if drafts_dir.exists():
