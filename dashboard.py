@@ -612,6 +612,221 @@ SAMPLE_AVALON_WEEK = [
 ]
 
 # ─────────────────────────────────────────────────────────────────────────────
+# PROFESSIONAL FRAMEWORKS CONSTANTS
+# ─────────────────────────────────────────────────────────────────────────────
+MARKETING_SKILLS_MAP = {
+    "copywriting": {
+        "name": "Copywriting",
+        "icon": "✍️",
+        "source_skill": "skills/copywriting/",
+        "one_liner": "Clear, compelling, action-driving copy — clarity over cleverness.",
+        "key_frameworks": ["AIDA (Attention → Interest → Desire → Action)", "PAS (Problem → Agitate → Solution)", "BAB (Before → After → Bridge)"],
+        "core_principles": [
+            "Benefits over features — 'feel the silence at Fuvahmulah' not '5-night Maldives package'",
+            "Specificity creates credibility — exact sensory detail beats vague superlatives",
+            "Customer language — use the words your client uses to describe the feeling they want",
+            "One idea per section — each stanza advances one emotional argument",
+        ],
+        "avalon_application": "Every hook, caption, CTA, and carousel slide. If the copy doesn't earn its sentence, cut it.",
+        "content_types": {"Reel", "Photo", "Carousel", "Story", "Founder Story"},
+        "keywords": ["hook", "headline", "caption", "copy", "first line", "cta", "rewrite", "open"],
+    },
+    "content_strategy": {
+        "name": "Content Strategy",
+        "icon": "📐",
+        "source_skill": "skills/content-strategy/",
+        "one_liner": "Decide what to create, why, and how to make it searchable or shareable.",
+        "key_frameworks": ["Searchable vs Shareable", "Content Pillars (3–5 topics)", "80/20 Content Mix", "Repurposing Matrix"],
+        "core_principles": [
+            "Every post must be searchable, shareable, or both",
+            "Searchable content captures existing demand (Maldives guides, Sri Lanka itinerary)",
+            "Shareable content creates demand (emotional Reels, philosophical travel essays)",
+            "Consistency compounds — 3–4× per week beats sporadic high-effort output",
+        ],
+        "avalon_application": "Weekly calendar planning, pillar balance, guide carousels (searchable), philosophical Reels (shareable).",
+        "content_types": {"Destination Guide", "Carousel", "Trend Adaptation"},
+        "keywords": ["guide", "tips", "itinerary", "plan", "calendar", "pillar", "strategy", "content"],
+    },
+    "marketing_psychology": {
+        "name": "Marketing Psychology",
+        "icon": "🧠",
+        "source_skill": "skills/marketing-psychology/",
+        "one_liner": "Understand why people buy and how to influence decisions ethically.",
+        "key_frameworks": ["Jobs to Be Done", "Loss Aversion", "Social Proof", "Scarcity & Exclusivity", "Anchoring"],
+        "core_principles": [
+            "JTBD — clients hire Avalon for transformation and connection, not logistics",
+            "Loss aversion — 'most people never find this side of Sri Lanka' works harder than 'discover Sri Lanka'",
+            "Social proof — real founder experience > generic travel claims",
+            "Scarcity — 'we design 8 custom escapes per month' creates urgency without pressure",
+        ],
+        "avalon_application": "Caption angle framing, CTA psychology, how Rafa and Sofia talk about their real experiences.",
+        "content_types": {"Reel", "Photo", "Founder Story"},
+        "keywords": ["feel", "emotion", "transform", "philosophy", "reminder", "why", "soul", "meaning"],
+    },
+    "cro": {
+        "name": "Conversion Optimisation",
+        "icon": "🎯",
+        "source_skill": "skills/cro/",
+        "one_liner": "Turn attention into action — DMs, saves, link clicks, and inquiries.",
+        "key_frameworks": ["CTA Specificity", "Friction Reduction", "Value Proposition Clarity", "Headline-to-Offer Congruency"],
+        "core_principles": [
+            "Value prop clarity in 5 seconds — what is this and why should I care?",
+            "Keyword CTAs reduce friction ('Comment FUVA' > 'visit our website')",
+            "Specific CTAs convert better than generic ones ('DM us your dream destination' → vague)",
+            "The hook must match what the post delivers — no bait-and-switch",
+        ],
+        "avalon_application": "CTA writing, keyword comment/DM funnels, carousel save triggers, inquiry generation.",
+        "content_types": {"Reel", "Carousel", "Destination Guide"},
+        "keywords": ["dm", "comment", "guide", "keyword", "cta", "convert", "inquiry", "book", "save"],
+    },
+    "social_media": {
+        "name": "Social Media Strategy",
+        "icon": "📱",
+        "source_skill": "skills/social/",
+        "one_liner": "Platform-specific content creation, Reels, carousels, and engagement strategy.",
+        "key_frameworks": ["Platform Content Pillars (30/25/25/15/5 mix)", "Reel Hook Framework", "Carousel Save Framework", "Story Engagement Loop"],
+        "core_principles": [
+            "Reels are the primary Instagram discovery channel — prioritise them",
+            "Carousels drive saves — the most bookmarkable post format",
+            "Stories build direct connection — raw, behind-the-scenes, polls",
+            "Engagement depth (comments > likes) is the algorithm signal that content resonated",
+        ],
+        "avalon_application": "Weekly format mix, Reel vs carousel ratio, Stories cadence, hashtag strategy.",
+        "content_types": {"Reel", "Story", "Carousel"},
+        "keywords": ["reel", "carousel", "story", "algorithm", "format", "schedule", "cadence", "reach"],
+    },
+}
+
+ADVANCED_PROMPT_MODES = {
+    "Standard": {
+        "description": "Clean GOAL prompt — no modification.",
+        "prefix": "",
+    },
+    "Devil's Advocate": {
+        "description": "Challenge the idea first, identify failure modes, then improve.",
+        "prefix": "[DEVIL'S ADVOCATE MODE]\n\nBefore answering, challenge this request. Point out every way this approach could fail, backfire, or underperform. Be specific and honest. Then — having identified the weaknesses — provide the stronger version that addresses them.\n\n",
+    },
+    "Client Lens": {
+        "description": "Respond as Avalon's ideal client — how does this content land for them?",
+        "prefix": "[CLIENT LENS MODE]\n\nYou are Avalon Escapes' ideal client: a 35-year-old professional who values meaningful premium travel, has discretionary income, follows 20+ travel creators on Instagram, and is deciding whether to trust a boutique agency. Read this content with their exact eyes — what do they feel, doubt, or want more of?\n\n",
+    },
+    "Consult the Greats": {
+        "description": "Evaluate through expert lenses — Ogilvy, behavioural economics, viral travel creators.",
+        "prefix": "[CONSULT THE GREATS MODE]\n\nEvaluate this through four lenses: (1) David Ogilvy — is the headline clear, specific, and honest? (2) Rory Sutherland — what psychological mechanism is at play? (3) A viral travel creator — is the hook compressed enough to hold attention? (4) A boutique luxury founder — does this build long-term trust? Synthesise all four into ONE clear recommendation.\n\n",
+    },
+    "Back 2 The Future": {
+        "description": "Imagine the content was already posted — analyse results, then rewrite.",
+        "prefix": "[BACK 2 THE FUTURE MODE]\n\nImagine this content has already been posted on @avalon.escapes. Three weeks have passed. Tell me: Did it perform? What did the audience respond to? What fell flat? What would have made the biggest difference? Then provide the rewritten version based on those lessons.\n\n",
+    },
+    "Style Clone": {
+        "description": "Write in Avalon's exact voice — personal, premium, not corporate.",
+        "prefix": "[STYLE CLONE MODE]\n\nWrite entirely in the Avalon Escapes brand voice: premium but personal, short punchy stanzas, emotionally precise, specific sensory detail, ocean-influenced, founder-speaking-not-agency-selling. Do NOT copy exact words from reference creators. Write as if Rafa or Sofia is speaking from personal experience.\n\n",
+    },
+}
+
+AVALON_CONTEXT_BLOCK = """Brand: Avalon Escapes — luxury travel agency and bespoke escape design studio.
+Founders: Rafa (@_rafamagri, Brazilian, personal travel-lifestyle brand, ocean-obsessed) and Sofia (@sofiacollins311, freediver, ocean adventure specialist).
+Brand account: @avalon.escapes (launched April 2026, early-stage).
+Priority destinations: Maldives (Fuvahmulah diving), Colombia (Cartagena, Providencia), Brazil (Trancoso, Fernando de Noronha), Türkiye (Kaş, Cappadocia), Sri Lanka (tea hills, east coast, cultural triangle).
+Voice: premium, elegant, warm, personal, authentic, emotionally intelligent, ocean-inspired, boutique, curated. NOT generic, NOT corporate, NOT mass-market.
+Content style: narrative Reels, destination guide carousels, founder story posts, philosophical travel essays, trip invitation formats.
+Viral reference group: 12 accounts — adapt trend structures, never copy captions, scripts, footage, or creator identity.
+Marketing principles: copywriting (AIDA/PAS, benefits over features), CRO (keyword CTAs), content strategy (searchable + shareable), marketing psychology (JTBD, loss aversion)."""
+
+PROMPT_TEMPLATES = [
+    {
+        "id": "improve_idea",
+        "name": "Improve this content idea",
+        "icon": "✨",
+        "goal": "Improve this Instagram content idea for @avalon.escapes so it is more specific, more emotionally resonant, and more likely to drive DM inquiries.",
+        "objective": "A stronger hook (under 8 words), a refined caption structure (100–130 words, short stanzas), and a specific keyword CTA. Preserve the emotional core.",
+        "assets": AVALON_CONTEXT_BLOCK + "\n\nContent idea: [INSERT IDEA]\nFormat: [FORMAT]\nDestination: [DESTINATION]\nCurrent hook: [HOOK]",
+        "layout": "Output: (1) Improved hook (2) Caption draft — short punchy stanzas (3) CTA (4) One sentence on what was strengthened.",
+    },
+    {
+        "id": "weekly_plan",
+        "name": "Generate a 7-day content plan",
+        "icon": "📅",
+        "goal": "Create a complete 7-day Avalon Escapes content plan that mixes formats and destinations, balancing brand awareness and DM inquiry generation.",
+        "objective": "7 posts — minimum 3 Reels, 2 carousels, 1 photo, 1 Story. Each post covers a different destination or pillar. At least 2 designed for high save rate. At least 1 founder story.",
+        "assets": AVALON_CONTEXT_BLOCK + "\n\nContent pillars available: Ocean & Island Adventures, Destination Guide, Founder Story, Luxury Escapes, Travel Philosophy, Viral Travel Inspiration, Tailor-Made Journeys.\nViral patterns available: curiosity-gap hook, keyword CTA, trip invitation, carousel guide, philosophical essay, expectation subversion.",
+        "layout": "For each day: Day / Weekday / Format / Pillar / Destination / Idea (2 sentences) / Hook (1 line) / CTA / Status: Idea. Output as clean list.",
+    },
+    {
+        "id": "analyze_trend",
+        "name": "Analyse an influencer trend",
+        "icon": "🔍",
+        "goal": "Analyse a viral trend observed in the reference group and determine how Avalon can adapt it safely.",
+        "objective": "Tier classification (1/2/3), pattern name, what NOT to copy, and a full Avalon adaptation with hook, visual direction, and CTA.",
+        "assets": AVALON_CONTEXT_BLOCK + "\n\nTier definitions: Tier 1 = Direct Trend Adaptation (recreate with Avalon footage), Tier 2 = Structural Replication (use structure only), Tier 3 = Inspiration Only (too personal to copy).\n\nCreator post to analyse: [DESCRIBE THE POST STRUCTURE, HOOK, FORMAT — do not copy exact text]",
+        "layout": "Output: (1) Pattern name (2) Tier + reasoning (3) What NOT to copy (4) Avalon adaptation: hook, visual direction, caption structure, CTA.",
+    },
+    {
+        "id": "carousel_plan",
+        "name": "Create a carousel",
+        "icon": "📱",
+        "goal": "Design a complete Instagram carousel for @avalon.escapes that maximises saves and drives DM inquiries.",
+        "objective": "6–7 slides. First slide must stop the scroll and trigger a 'save this' instinct. Each slide has exactly one idea. Strong guide CTA on the last slide.",
+        "assets": AVALON_CONTEXT_BLOCK + "\n\nCarousel type: [Guide / Narrative / Itinerary]\nDestination: [DESTINATION]\nMain topic: [TOPIC]\nReference: @travelcroats (PRIMARY CAROUSEL REFERENCE — slide sequencing, first-slide hooks, save/share triggers).",
+        "layout": "Output: (1) First-slide hook (2) Slides 2–6/7 with headline + 1-sentence body (3) Final slide: Avalon brand + keyword CTA (4) Caption (2–3 lines + 'Save this →') (5) Save trigger explanation.",
+    },
+    {
+        "id": "reel_script",
+        "name": "Create a Reel script",
+        "icon": "🎬",
+        "goal": "Write a complete Reel brief for @avalon.escapes that drives strong watch-through rate and keyword CTA engagement.",
+        "objective": "Hook under 8 words. Visual sequence with timestamps (60s). Caption 100–130 words. Keyword CTA. Tier label stated.",
+        "assets": AVALON_CONTEXT_BLOCK + "\n\nReel concept: [INSERT CONCEPT]\nDestination: [DESTINATION]\nEmotion target: [e.g. awe + curiosity + FOMO]\nViral pattern: [e.g. curiosity-gap, expectation subversion, love declaration]",
+        "layout": "Output: (1) Hook [max 8 words] (2) Visual sequence with timestamps [0–3s], [3–15s], [15–35s], [35–50s], [50–60s] (3) Caption [short punchy stanzas] (4) CTA [keyword-based] (5) Tier label + what NOT to copy.",
+    },
+    {
+        "id": "rewrite_caption",
+        "name": "Rewrite caption in Avalon voice",
+        "icon": "🎤",
+        "goal": "Rewrite a draft caption in the Avalon Escapes brand voice without losing the core message.",
+        "objective": "Remove generic/corporate language. Add specificity and sensory detail. Preserve the emotional core. End with a clean CTA. Max 130 words.",
+        "assets": AVALON_CONTEXT_BLOCK + "\n\nCaption to rewrite:\n[INSERT DRAFT CAPTION HERE]",
+        "layout": "Output: (1) Rewritten caption (short punchy stanzas) (2) One sentence on the main change made (3) Optional alternative hook.",
+    },
+    {
+        "id": "score_before_posting",
+        "name": "Score content before posting",
+        "icon": "📊",
+        "goal": "Evaluate this content idea against Avalon's scoring rubric and professional marketing standards before it goes live.",
+        "objective": "Score /100 with breakdown, identify 2–3 weakest areas, provide specific fixes for each, give a projected score after improvements.",
+        "assets": AVALON_CONTEXT_BLOCK + "\n\nIdea: [INSERT IDEA]\nHook: [HOOK]\nCaption: [CAPTION]\nCTA: [CTA]\nFormat: [FORMAT]\nDestination: [DESTINATION]",
+        "layout": "Output: (1) Overall score /100 (2) Breakdown by criterion (3) Top 2–3 weaknesses with specific fixes (4) Projected score after fixes.",
+    },
+    {
+        "id": "why_fail",
+        "name": "Identify why content may fail",
+        "icon": "⚠️",
+        "goal": "Identify every reason this content idea might underperform before it is created or posted.",
+        "objective": "3–5 specific failure risks, each with a concrete fix. Output should make the final version meaningfully stronger.",
+        "assets": AVALON_CONTEXT_BLOCK + "\n\nContent idea: [INSERT IDEA AND HOOK]",
+        "layout": "Output: For each risk — (1) Failure mode (2) Why it happens (3) Specific fix. Then one paragraph on the stronger version.",
+    },
+    {
+        "id": "client_facing_content",
+        "name": "Create client-facing travel content",
+        "icon": "✈️",
+        "goal": "Create a client-facing piece of travel content for Avalon Escapes — could be a DM response, proposal section, itinerary description, or email copy.",
+        "objective": "Warm, personal, specific, premium. Sounds like Rafa or Sofia speaking — not a template. Builds trust and desire simultaneously.",
+        "assets": AVALON_CONTEXT_BLOCK + "\n\nContent type: [DM response / proposal / itinerary / email]\nDestination: [DESTINATION]\nClient context: [e.g. honeymoon, first luxury trip, ocean adventure, cultural immersion]\nTone: conversational and premium",
+        "layout": "Output: (1) Draft copy (2) Tone notes: what makes this feel personal vs generic.",
+    },
+    {
+        "id": "turn_trend_into_avalon",
+        "name": "Turn influencer pattern into Avalon content",
+        "icon": "🔄",
+        "goal": "Take a viral influencer content pattern and transform it fully into Avalon's voice, destinations, and brand angle.",
+        "objective": "A complete Avalon post: hook, visual brief, caption draft, CTA — that uses the pattern's structure but contains NONE of the original creator's words, footage, identity, or personal story.",
+        "assets": AVALON_CONTEXT_BLOCK + "\n\nPattern to adapt: [PATTERN NAME AND DESCRIPTION]\nOriginal creator: [CREATOR HANDLE]\nTier: [1 / 2 / 3]\nAvalon destination to apply it to: [DESTINATION]",
+        "layout": "Output: (1) Hook [adapted] (2) Visual direction [original] (3) Caption draft [short stanzas] (4) CTA (5) What NOT to copy note.",
+    },
+]
+
+# ─────────────────────────────────────────────────────────────────────────────
 # DATA LOADING  (graceful — never crashes on missing files)
 # ─────────────────────────────────────────────────────────────────────────────
 @st.cache_data(show_spinner=False)
@@ -1632,6 +1847,141 @@ def _render_wc_day(i: int):
     if idea_now.strip():
         st.caption("📊 _Copy idea + hook into the **Content Simulator** to score and improve it._")
 
+    # GOAL prompt expander
+    with st.expander("🎯 Generate GOAL prompt for this day", expanded=False):
+        adv_key = f"wc_{i}_adv_mode"
+        if adv_key not in st.session_state:
+            st.session_state[adv_key] = "Standard"
+        adv_mode = st.selectbox(
+            "Advanced prompt mode",
+            list(ADVANCED_PROMPT_MODES.keys()),
+            key=adv_key,
+            help=ADVANCED_PROMPT_MODES.get(st.session_state.get(adv_key, "Standard"), {}).get("description", ""),
+        )
+        if st.button("Generate GOAL prompt", key=f"wc_{i}_gen_goal"):
+            g = st.session_state.get(_wc_key(i, "idea"), "(no idea yet)") or "(no idea yet)"
+            o = f"Format: {st.session_state.get(_wc_key(i, 'format') or 'not specified', 'not specified')}. Status target: Ready to post."
+            hook_v   = st.session_state.get(_wc_key(i, "hook"), "") or ""
+            vis_v    = st.session_state.get(_wc_key(i, "visual_plan"), "") or ""
+            cap_v    = st.session_state.get(_wc_key(i, "caption"), "") or ""
+            cta_v    = st.session_state.get(_wc_key(i, "cta"), "") or ""
+            dest_v   = st.session_state.get(_wc_key(i, "destination_package"), "") or ""
+            pillar_v = st.session_state.get(_wc_key(i, "content_pillar"), "") or ""
+            notes_v  = st.session_state.get(_wc_key(i, "notes"), "") or ""
+            a_parts = [AVALON_CONTEXT_BLOCK]
+            if dest_v:   a_parts.append(f"Destination: {dest_v}")
+            if pillar_v: a_parts.append(f"Content pillar: {pillar_v}")
+            if hook_v:   a_parts.append(f"Current hook: {hook_v}")
+            if vis_v:    a_parts.append(f"Visual plan: {vis_v}")
+            if cap_v:    a_parts.append(f"Caption draft: {cap_v}")
+            if cta_v:    a_parts.append(f"CTA: {cta_v}")
+            if notes_v:  a_parts.append(f"Notes: {notes_v}")
+            l_text = f"Output a fully developed {st.session_state.get(_wc_key(i, 'format'), 'post')} for @avalon.escapes including: improved hook, caption (short punchy stanzas, 100–130 words), CTA, and visual direction."
+            prompt = generate_goal_prompt(
+                goal=f"Create a strong, ready-to-post {WEEKDAYS[i]} {st.session_state.get(_wc_key(i,'format'),'post')} for @avalon.escapes: {g}",
+                objective=o,
+                assets="\n".join(a_parts),
+                layout=l_text,
+                mode=st.session_state.get(adv_key, "Standard"),
+            )
+            st.session_state[f"wc_{i}_goal_prompt"] = prompt
+
+        if st.session_state.get(f"wc_{i}_goal_prompt"):
+            st.text_area(
+                "Copy this prompt →",
+                value=st.session_state[f"wc_{i}_goal_prompt"],
+                height=280,
+                key=f"wc_{i}_goal_display",
+                label_visibility="visible",
+            )
+            st.caption("Paste into Claude Code (! or a new conversation) for full AI assistance.")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PROFESSIONAL FRAMEWORKS HELPERS
+# ─────────────────────────────────────────────────────────────────────────────
+def generate_goal_prompt(goal: str, objective: str, assets: str, layout: str, mode: str = "Standard") -> str:
+    prefix = ADVANCED_PROMPT_MODES.get(mode, {}).get("prefix", "")
+    body = (
+        f"GOAL Prompt — Avalon Escapes\n\n"
+        f"🎯 GOAL — What outcome am I working toward?\n{goal or '(not specified)'}\n\n"
+        f"📏 OBJECTIVE — What does success look like?\n{objective or '(not specified)'}\n\n"
+        f"🧰 ASSETS — Context, brand voice, audience, destinations, references\n{assets or '(not specified)'}\n\n"
+        f"🖼️ LAYOUT — Format, structure, tone, output style\n{layout or '(not specified)'}"
+    )
+    return prefix + body
+
+
+def generate_goal_diagnosis(idea: str, hook: str, caption: str, destination: str, fmt: str, cta: str) -> dict:
+    """Evaluate how well the current content inputs satisfy each GOAL dimension."""
+    full = " ".join(filter(None, [idea, hook, caption, destination, fmt, cta])).lower()
+
+    # G — Goal clarity
+    goal_signals = ["dm", "comment", "guide", "book", "plan", "escape", "design", "invite", "join",
+                    "awareness", "share", "save", "viral", "show", "inspire", "inquiry", "trust"]
+    g_hits = sum(1 for s in goal_signals if s in full)
+    g_score = 3 if (len((idea or "").split()) >= 10 and g_hits >= 2) else (2 if g_hits >= 1 else 1)
+
+    # O — Objective clarity (measurable CTA present)
+    has_cta     = bool(cta and cta.strip())
+    has_kw_cta  = any(k in (cta or "").lower() for k in ["dm", "comment", "save", "share", "book", "click", "tap"])
+    o_score = 3 if (has_cta and has_kw_cta) else (2 if has_cta else 1)
+
+    # A — Asset richness (context provided)
+    char_count = len(" ".join(filter(None, [idea, hook, caption, destination])))
+    a_score = 3 if char_count > 280 else (2 if char_count > 80 else 1)
+
+    # L — Layout clarity (format + structure defined)
+    has_fmt  = bool(fmt and fmt.strip())
+    has_body = len((caption or "").split()) >= 25
+    l_score = 3 if (has_fmt and has_body) else (2 if has_fmt else 1)
+
+    _labels = {1: "Needs work", 2: "Developing", 3: "Strong"}
+    _colors = {1: "#ef4444",    2: "#f59e0b",    3: "#22c55e"}
+    _tips = {
+        "goal": {
+            1: "No clear outcome. What should happen after someone sees this? (DM, save, brand trust, inquiry?)",
+            2: "Outcome is implied but not explicit. State the desired result clearly.",
+            3: "Clear goal signal present.",
+        },
+        "objective": {
+            1: "No measurable CTA. Add a specific keyword-driven action ('Comment MALDIVES', 'DM AVALON').",
+            2: "CTA present but generic. Make it specific and keyword-driven for better conversion.",
+            3: "Measurable, specific CTA present.",
+        },
+        "assets": {
+            1: "Very thin context. Add destination details, emotion target, visual angle, or reference pattern.",
+            2: "Some context present. Add more specificity — sensory detail, destination, founder angle.",
+            3: "Good context richness — the AI has enough to work with.",
+        },
+        "layout": {
+            1: "Format not specified and no caption structure. Define format + draft at least a caption outline.",
+            2: "Format specified but caption is short. Develop the caption structure further.",
+            3: "Format and caption structure are clear.",
+        },
+    }
+    return {
+        "goal":      {"score": g_score, "label": _labels[g_score], "color": _colors[g_score], "tip": _tips["goal"][g_score]},
+        "objective": {"score": o_score, "label": _labels[o_score], "color": _colors[o_score], "tip": _tips["objective"][o_score]},
+        "assets":    {"score": a_score, "label": _labels[a_score], "color": _colors[a_score], "tip": _tips["assets"][a_score]},
+        "layout":    {"score": l_score, "label": _labels[l_score], "color": _colors[l_score], "tip": _tips["layout"][l_score]},
+    }
+
+
+def match_marketing_skill(fmt: str, pillar: str, idea: str) -> dict:
+    """Return the most relevant marketing skill dict for this content type."""
+    full = " ".join(filter(None, [fmt, pillar, idea])).lower()
+    for skill_id, skill in MARKETING_SKILLS_MAP.items():
+        if any(k in full for k in skill["keywords"]):
+            return skill
+    # Default by format
+    fmt_l = (fmt or "").lower()
+    if "carousel" in fmt_l or "guide" in fmt_l:
+        return MARKETING_SKILLS_MAP["content_strategy"]
+    if "story" in fmt_l:
+        return MARKETING_SKILLS_MAP["social_media"]
+    return MARKETING_SKILLS_MAP["copywriting"]
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 # SIDEBAR  NAVIGATION
@@ -1644,6 +1994,7 @@ PAGES = {
     "📈  Pattern Charts":             "charts",
     "🎯  Content Simulator":          "simulator",
     "📅  Weekly Content Plan":        "plan",
+    "🧠  Frameworks & Prompt Builder":"frameworks",
     "📖  Playbook":                   "playbook",
     "🔍  Data Quality":               "data_quality",
 }
@@ -2678,6 +3029,69 @@ def page_simulator():
             if fa.get("note"):
                 st.info(f"Format advice: {fa['note']}")
 
+        # ── 7. Professional Marketing Lens ────────────────────────────────────
+        st.markdown("---")
+        st.markdown("#### 7. Professional Marketing Lens")
+        st.caption("Which marketing skill applies, how it improves this content, and a GOAL framework diagnosis.")
+
+        _full = " ".join(filter(None, [idea, hook, caption, destination, emotion]))
+        skill = match_marketing_skill(fmt, infer_pillar(_full), idea)
+        diag  = generate_goal_diagnosis(idea, hook, caption, destination, fmt, cta)
+
+        pm_a, pm_b = st.columns([1, 1])
+        with pm_a:
+            st.markdown(
+                f"<div style='background:#0f172a;border:1px solid #1e293b;border-radius:8px;"
+                f"padding:.75rem 1rem;height:100%'>"
+                f"<div style='font-size:.72rem;color:#475569;letter-spacing:.07em;text-transform:uppercase'>Most Relevant Skill</div>"
+                f"<div style='font-size:1rem;font-weight:700;color:#e2e8f0;margin:.3rem 0'>{skill['icon']} {skill['name']}</div>"
+                f"<div style='font-size:.83rem;color:#94a3b8'>{skill['one_liner']}</div>"
+                f"<div style='font-size:.8rem;color:#475569;margin-top:.5rem'><b style='color:#64748b'>Frameworks:</b> "
+                f"{' · '.join(skill['key_frameworks'][:2])}</div>"
+                f"</div>",
+                unsafe_allow_html=True,
+            )
+        with pm_b:
+            st.markdown(
+                f"<div style='background:#0f172a;border:1px solid #1e293b;border-radius:8px;"
+                f"padding:.75rem 1rem;height:100%'>"
+                f"<div style='font-size:.72rem;color:#475569;letter-spacing:.07em;text-transform:uppercase'>Avalon Application</div>"
+                f"<div style='font-size:.85rem;color:#94a3b8;margin-top:.3rem'>{skill['avalon_application']}</div>"
+                f"</div>",
+                unsafe_allow_html=True,
+            )
+
+        st.markdown("**GOAL Diagnosis** — how well does this content satisfy each dimension?")
+        diag_cols = st.columns(4)
+        for col, (dim_key, label) in zip(diag_cols, [("goal","G — Goal"),("objective","O — Obj."),("assets","A — Assets"),("layout","L — Layout")]):
+            d = diag[dim_key]
+            with col:
+                st.markdown(
+                    f"<div style='background:#0d1117;border:1px solid {d['color']}44;"
+                    f"border-radius:8px;padding:.5rem .65rem;text-align:center'>"
+                    f"<div style='font-size:.66rem;color:#475569;text-transform:uppercase'>{label}</div>"
+                    f"<div style='font-size:.95rem;font-weight:700;color:{d['color']};margin:.1rem 0'>{d['label']}</div>"
+                    f"<div style='font-size:.7rem;color:#64748b'>{d['tip']}</div>"
+                    f"</div>",
+                    unsafe_allow_html=True,
+                )
+
+        # Generate GOAL prompt from simulator inputs
+        with st.expander("🎯 Generate GOAL prompt from these inputs", expanded=False):
+            sim_mode = st.selectbox("Advanced Mode", list(ADVANCED_PROMPT_MODES.keys()), key="sim_goal_mode")
+            if st.button("Generate GOAL prompt", key="sim_gen_goal"):
+                assets_text = AVALON_CONTEXT_BLOCK + f"\n\nDestination: {destination or 'not specified'}\nFormat: {fmt or 'not specified'}\nEmotion: {emotion or 'not specified'}\nCurrent hook: {hook or 'not specified'}\nCaption draft: {caption or '(none)'}\nCTA: {cta or 'not specified'}"
+                prompt = generate_goal_prompt(
+                    goal=f"Create a strong, ready-to-post piece of Avalon Escapes Instagram content: {idea or 'content idea'}",
+                    objective=f"Format: {fmt or 'not specified'}. Score 80+/100. Keyword CTA. Preserve emotional core.",
+                    assets=assets_text,
+                    layout="Output: improved hook, caption (short punchy stanzas, 100–130 words), CTA, visual direction, tier label.",
+                    mode=sim_mode,
+                )
+                st.session_state["sim_goal_prompt"] = prompt
+            if st.session_state.get("sim_goal_prompt"):
+                st.text_area("Copy →", value=st.session_state["sim_goal_prompt"], height=300, key="sim_goal_display", label_visibility="collapsed")
+
     elif submitted:
         st.warning("Please fill in at least the Content Idea field.")
 
@@ -2804,6 +3218,237 @@ def page_content_plan():
                 st.markdown(content)
             else:
                 st.error("Could not read plan file.")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PAGE: PROFESSIONAL FRAMEWORKS & PROMPT BUILDER
+# ─────────────────────────────────────────────────────────────────────────────
+def page_frameworks():
+    st.markdown("## 🧠 Professional Frameworks & Prompt Builder")
+    st.caption(
+        "Combines the **Viral Influencer Trend Reference Group** with the "
+        "**Professional Marketing Skills Layer** and the **GOAL Prompt Framework** "
+        "to generate structured, brand-aligned prompts you can paste directly into Claude."
+    )
+
+    tab_goal, tab_templates, tab_skill, tab_context = st.tabs([
+        "🎯 GOAL Prompt Builder",
+        "📋 Prompt Templates",
+        "🔬 Professional Skill Lens",
+        "📘 Avalon Context Builder",
+    ])
+
+    # ── Tab 1: GOAL Prompt Builder ────────────────────────────────────────────
+    with tab_goal:
+        st.markdown("### GOAL Prompt Builder")
+        st.markdown(
+            "Fill in the four sections of the **GOAL framework** to generate a "
+            "structured, Avalon-specific prompt for any content task."
+        )
+        st.markdown(
+            "<div style='background:#0f172a;border:1px solid #1e293b;border-radius:8px;"
+            "padding:.6rem 1rem;margin-bottom:1rem;font-size:.82rem;color:#64748b'>"
+            "<b style='color:#e2e8f0'>G</b> = Goal &nbsp;·&nbsp; "
+            "<b style='color:#e2e8f0'>O</b> = Objective &nbsp;·&nbsp; "
+            "<b style='color:#e2e8f0'>A</b> = Assets &nbsp;·&nbsp; "
+            "<b style='color:#e2e8f0'>L</b> = Layout &nbsp;&nbsp; "
+            "Vague prompts get generic output. GOAL prompts get Avalon-specific output."
+            "</div>",
+            unsafe_allow_html=True,
+        )
+
+        adv_mode = st.selectbox(
+            "Advanced Prompt Mode",
+            list(ADVANCED_PROMPT_MODES.keys()),
+            key="fw_adv_mode",
+        )
+        st.caption(f"_{ADVANCED_PROMPT_MODES[adv_mode]['description']}_")
+
+        g_val = st.text_area(
+            "🎯 Goal — What outcome are you working toward?",
+            key="fw_goal",
+            height=80,
+            placeholder="e.g. Drive DM inquiries for our Maldives diving trips through a 60-second Reel on @avalon.escapes.",
+        )
+        o_val = st.text_area(
+            "📏 Objective — What does success look like? What must the output satisfy?",
+            key="fw_objective",
+            height=80,
+            placeholder="e.g. Hook under 8 words. Caption 100–130 words. Keyword CTA. Tier 2 pattern. No corporate language.",
+        )
+
+        use_default_assets = st.checkbox("Include Avalon default assets block", value=True, key="fw_use_defaults")
+        extra_assets = st.text_area(
+            "🧰 Assets — Additional context (destination, creator reference, emotion target, notes)",
+            key="fw_assets_extra",
+            height=120,
+            placeholder="e.g. Destination: Fuvahmulah, Maldives. Emotion: awe + FOMO. Reference pattern: curiosity-gap (Tier 2, @noareserrunt + @colinduthie).",
+        )
+        assets_combined = (AVALON_CONTEXT_BLOCK + "\n\n" + extra_assets if use_default_assets else extra_assets)
+
+        l_val = st.text_area(
+            "🖼️ Layout — Format, structure, sections, length, and output style",
+            key="fw_layout",
+            height=80,
+            placeholder="e.g. Output: (1) hook (2) visual sequence with timestamps (3) caption — short stanzas (4) keyword CTA (5) tier label.",
+        )
+
+        if st.button("✨ Generate GOAL Prompt", type="primary", key="fw_gen_btn"):
+            if not (g_val or o_val or l_val):
+                st.warning("Fill in at least Goal and Layout to generate a meaningful prompt.")
+            else:
+                prompt = generate_goal_prompt(g_val, o_val, assets_combined, l_val, adv_mode)
+                st.session_state["fw_generated_prompt"] = prompt
+
+        if st.session_state.get("fw_generated_prompt"):
+            st.markdown("---")
+            st.markdown("**Generated Prompt — copy and paste into Claude:**")
+            st.text_area(
+                "Copy this prompt →",
+                value=st.session_state["fw_generated_prompt"],
+                height=380,
+                key="fw_prompt_output",
+                label_visibility="collapsed",
+            )
+            st.caption(
+                "Tip: In the terminal, type `! ` followed by this prompt, or paste it into a new Claude conversation. "
+                "The more detail you put in Assets, the better the output."
+            )
+
+    # ── Tab 2: Prompt Templates ───────────────────────────────────────────────
+    with tab_templates:
+        st.markdown("### Prompt Templates")
+        st.markdown(
+            "Pre-built GOAL prompts for the most common Avalon content tasks. "
+            "Select one, review and edit the fields, then generate."
+        )
+
+        template_names = {t["id"]: f"{t['icon']} {t['name']}" for t in PROMPT_TEMPLATES}
+        selected_id = st.selectbox(
+            "Select a template",
+            list(template_names.keys()),
+            format_func=lambda x: template_names[x],
+            key="fw_template_select",
+        )
+        tpl = next(t for t in PROMPT_TEMPLATES if t["id"] == selected_id)
+
+        st.markdown(f"**{tpl['icon']} {tpl['name']}**")
+
+        tpl_goal = st.text_area("🎯 Goal", value=tpl["goal"], height=75, key="fw_tpl_goal")
+        tpl_obj  = st.text_area("📏 Objective", value=tpl["objective"], height=75, key="fw_tpl_obj")
+        tpl_assets = st.text_area("🧰 Assets (edit to add your specific details)", value=tpl["assets"], height=180, key="fw_tpl_assets")
+        tpl_layout = st.text_area("🖼️ Layout", value=tpl["layout"], height=75, key="fw_tpl_layout")
+
+        tpl_mode = st.selectbox("Advanced Mode", list(ADVANCED_PROMPT_MODES.keys()), key="fw_tpl_mode")
+
+        if st.button("✨ Generate from Template", type="primary", key="fw_tpl_gen"):
+            prompt = generate_goal_prompt(tpl_goal, tpl_obj, tpl_assets, tpl_layout, tpl_mode)
+            st.session_state["fw_tpl_prompt"] = prompt
+
+        if st.session_state.get("fw_tpl_prompt"):
+            st.markdown("---")
+            st.text_area(
+                "Copy this prompt →",
+                value=st.session_state["fw_tpl_prompt"],
+                height=380,
+                key="fw_tpl_output",
+                label_visibility="collapsed",
+            )
+
+    # ── Tab 3: Professional Skill Lens ────────────────────────────────────────
+    with tab_skill:
+        st.markdown("### Professional Skill Lens")
+        st.markdown(
+            "Enter a content idea and select a format — the system identifies which "
+            "professional marketing skill applies most and explains how to use it."
+        )
+
+        sl_fmt  = st.selectbox("Format", CONTENT_FORMATS[1:], key="sl_fmt")
+        sl_dest = st.selectbox("Destination", DESTINATIONS_LIST[1:], key="sl_dest")
+        sl_idea = st.text_input("Content idea", key="sl_idea", placeholder="e.g. Show the real Maldives vs the overwater bungalow version")
+        sl_hook = st.text_input("Current hook (optional)", key="sl_hook", placeholder="e.g. No one prepares you for Fuvahmulah.")
+        sl_cta  = st.text_input("CTA (optional)", key="sl_cta", placeholder="e.g. Comment 'FUVA' for our guide →")
+        sl_cap  = st.text_area("Caption draft (optional)", key="sl_cap", height=80, placeholder="Paste your draft caption here...")
+
+        if st.button("🔬 Analyse with Marketing Skill Lens", key="sl_analyse"):
+            skill = match_marketing_skill(sl_fmt, "", sl_idea)
+            diagnosis = generate_goal_diagnosis(sl_idea, sl_hook, sl_cap, sl_dest, sl_fmt, sl_cta)
+            st.session_state["sl_result"] = {"skill": skill, "diagnosis": diagnosis}
+
+        if st.session_state.get("sl_result"):
+            skill = st.session_state["sl_result"]["skill"]
+            diag  = st.session_state["sl_result"]["diagnosis"]
+
+            st.markdown("---")
+            st.markdown(f"#### {skill['icon']} Most Relevant Skill: {skill['name']}")
+            st.markdown(
+                f"<div style='background:#0f172a;border:1px solid #1e293b;border-radius:8px;"
+                f"padding:.75rem 1.1rem;margin-bottom:.8rem'>"
+                f"<p style='color:#94a3b8;font-size:.88rem;margin:0 0 .5rem'>{skill['one_liner']}</p>"
+                f"<p style='color:#64748b;font-size:.78rem;margin:0'>"
+                f"<b style='color:#475569'>Avalon application:</b> {skill['avalon_application']}</p>"
+                f"</div>",
+                unsafe_allow_html=True,
+            )
+
+            st.markdown("**Key frameworks to apply:**")
+            for fw in skill["key_frameworks"]:
+                st.markdown(f"- {fw}")
+
+            st.markdown("**Core principles for this piece:**")
+            for p in skill["core_principles"]:
+                st.markdown(
+                    f"<div style='background:#0d1117;border-left:3px solid #334155;"
+                    f"border-radius:0 4px 4px 0;padding:.3rem .75rem;margin-bottom:.25rem;"
+                    f"font-size:.85rem;color:#94a3b8'>{p}</div>",
+                    unsafe_allow_html=True,
+                )
+
+            st.markdown("---")
+            st.markdown("#### 🎯 GOAL Framework Diagnosis")
+            st.caption("How well does your current content input satisfy each GOAL dimension?")
+
+            g_cols = st.columns(4)
+            for col, (dim_key, label) in zip(g_cols, [("goal","G — Goal"),("objective","O — Objective"),("assets","A — Assets"),("layout","L — Layout")]):
+                d = diag[dim_key]
+                with col:
+                    st.markdown(
+                        f"<div style='background:#0f172a;border:1.5px solid {d['color']}44;"
+                        f"border-radius:8px;padding:.6rem .7rem;text-align:center'>"
+                        f"<div style='font-size:.7rem;color:#475569;text-transform:uppercase;letter-spacing:.06em'>{label}</div>"
+                        f"<div style='font-size:1.15rem;font-weight:700;color:{d['color']};margin:.15rem 0'>{d['label']}</div>"
+                        f"<div style='font-size:.72rem;color:#64748b;margin-top:.2rem'>{d['tip']}</div>"
+                        f"</div>",
+                        unsafe_allow_html=True,
+                    )
+
+    # ── Tab 4: Avalon Context Builder ─────────────────────────────────────────
+    with tab_context:
+        st.markdown("### Avalon Context Builder")
+        st.markdown(
+            "This is the **Assets (A)** block for every GOAL prompt. "
+            "The more accurate it is, the better every AI output becomes."
+        )
+        ctx_path = ROOT / "reference_frameworks" / "prompting" / "avalon_context_builder.md"
+        ctx_content = safe_load_markdown(ctx_path)
+        if ctx_content:
+            st.markdown(ctx_content)
+        else:
+            st.warning("Context builder file not found at `reference_frameworks/prompting/avalon_context_builder.md`")
+
+        st.markdown("---")
+        st.markdown("**Default Assets Block** (used in every generated GOAL prompt):")
+        st.text_area(
+            "Copy and customise →",
+            value=AVALON_CONTEXT_BLOCK,
+            height=200,
+            key="fw_ctx_block",
+            label_visibility="collapsed",
+        )
+        st.caption(
+            "To update the full context builder, edit "
+            "`reference_frameworks/prompting/avalon_context_builder.md` directly."
+        )
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -3051,6 +3696,8 @@ elif page == "simulator":
     page_simulator()
 elif page == "plan":
     page_content_plan()
+elif page == "frameworks":
+    page_frameworks()
 elif page == "playbook":
     page_playbook()
 elif page == "data_quality":

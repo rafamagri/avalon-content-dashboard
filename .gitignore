@@ -6,3 +6,6 @@ __pycache__/
 *.pyc
 .streamlit/secrets.toml
 data/raw/
+
+# External repos cloned for local reference only — do not push to public GitHub
+reference_frameworks/marketing_skills/

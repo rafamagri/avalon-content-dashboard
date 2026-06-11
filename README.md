@@ -38,6 +38,7 @@ The dashboard opens automatically in your browser at `http://localhost:8501`.
 | 📈 Pattern Charts | Format, pillar, destination, hook, caption length, and duration vs. performance |
 | 🎯 Content Simulator | Score a new post idea out of 100 + **Reference-Based Improvement** section |
 | 📅 Weekly Content Calendar | Editable 7-day planning board — save, export, and clear locally |
+| 🧠 Frameworks & Prompt Builder | GOAL Prompt Builder, Prompt Templates, Professional Skill Lens, Avalon Context Builder |
 | 📖 Playbook | Always/Never rules, optimal specs, top hook formulas by tier |
 | 🔍 Data Quality | File status, what's available, what needs manual export |
 
@@ -206,6 +207,81 @@ The `score_format()` function (used in the 100-point Content Simulator scorer) i
 - **Reel:** rewards well-developed caption
 - **Carousel:** rewards guide/list framing with strong first-slide hook
 - **Photo:** rewards concise, high-impact caption
+
+---
+
+## Professional Frameworks & Prompt Builder
+
+The **🧠 Frameworks & Prompt Builder** section adds a professional marketing intelligence layer to the dashboard.
+
+### What it includes
+
+| Tab | What it does |
+|---|---|
+| 🎯 **GOAL Prompt Builder** | Fill in Goal / Objective / Assets / Layout → generate a structured, Avalon-specific AI prompt |
+| 📋 **Prompt Templates** | 10 pre-built GOAL prompts for common tasks (improve idea, weekly plan, carousel, Reel script, rewrite in Avalon voice, etc.) |
+| 🔬 **Professional Skill Lens** | Enter a content idea → the system identifies the most relevant marketing skill + runs a GOAL framework diagnosis |
+| 📘 **Avalon Context Builder** | The master context document used as the Assets (A) block in every prompt |
+
+### The GOAL Framework
+
+| Letter | Meaning |
+|---|---|
+| **G** | **Goal** — What outcome are you working toward? |
+| **O** | **Objective** — What does success look like? What criteria must the output satisfy? |
+| **A** | **Assets** — Context, brand voice, destinations, reference creators, emotion target |
+| **L** | **Layout** — Format, structure, tone, sections, output style |
+
+### Advanced Prompt Modes
+
+Apply to any GOAL prompt for deeper or more critical output:
+
+| Mode | What it does |
+|---|---|
+| **Devil's Advocate** | Challenges the idea, identifies failure modes, then improves |
+| **Client Lens** | Responds as Avalon's ideal client — how does this content land for them? |
+| **Consult the Greats** | Evaluates through expert lenses (Ogilvy, behavioural economics, viral creators) |
+| **Back 2 The Future** | Imagines the post was already published — analyses results, then rewrites |
+| **Style Clone** | Writes in Avalon's exact voice — personal, premium, not corporate |
+
+### Professional Marketing Skills Layer
+
+Source: `reference_frameworks/marketing_skills/` (cloned locally, **not committed to GitHub**)
+Summary: `reference_frameworks/marketing_skills_summary.md`
+
+Key skills applied across the dashboard:
+- **Copywriting** — AIDA, PAS, benefits over features, clarity over cleverness
+- **Content Strategy** — searchable vs shareable, pillar balance, 80/20 content mix
+- **Marketing Psychology** — Jobs to Be Done, loss aversion, social proof, scarcity
+- **CRO** — keyword CTAs, friction reduction, value proposition clarity
+- **Social Media** — Reel/carousel/story cadence, format mix, engagement signals
+
+### Professional Skill Lens in the Content Simulator
+
+After scoring any content idea, the simulator now shows:
+- **Most relevant marketing skill** + key frameworks to apply
+- **GOAL diagnosis** — scores each of G / O / A / L as Strong / Developing / Needs work
+- **Generate GOAL prompt** — builds a structured prompt from your simulator inputs
+
+### GOAL prompt per weekly calendar day
+
+Every day card in the Weekly Content Calendar has a **🎯 Generate GOAL prompt** expander. Select an advanced mode, click generate, and get a structured prompt built from that day's idea, hook, visual plan, caption, and CTA.
+
+### Safety rules (always enforced)
+
+- Adapt trend structures from the viral reference group — **never copy** captions, scripts, footage, personal stories, or creator identity
+- The marketing skills layer adds professional logic — it does not override the ethics rules
+- **Do not commit the `reference_frameworks/marketing_skills/` folder** to GitHub (it is in `.gitignore`)
+
+### Reference framework files
+
+| File | Purpose |
+|---|---|
+| `reference_frameworks/marketing_skills_summary.md` | How the marketing skills repo influences Avalon's content |
+| `reference_frameworks/prompting/GOAL_prompt_framework.md` | Full GOAL framework definition + 5 example prompts |
+| `reference_frameworks/prompting/advanced_prompt_methods.md` | 5 advanced prompt techniques with Avalon examples |
+| `reference_frameworks/prompting/avalon_context_builder.md` | Avalon's master context document for AI prompts |
+| `reference_frameworks/ai_ready_business/avalon_5ps.md` | Avalon's 5 P's of AI-readiness framework |
 
 ---
 

@@ -105,6 +105,46 @@ Never mixed with founder or brand account data.
 | 2 | **Structural Replication** | Replicate the structure (hook formula, pacing, emotional arc, caption shape, CTA style) but not the exact words, footage, creator identity, or personal story. |
 | 3 | **Inspiration Only** | Do NOT copy directly — too unique to the creator, too personal, or too close to their brand identity. Use only as directional inspiration. (Personal manifestos, signature phrases, private experience framing, unique editing identity) |
 
+## Professional Frameworks Layer
+
+**GOAL Prompt Framework:** `reference_frameworks/prompting/GOAL_prompt_framework.md`
+The official prompt structure for all AI content tasks: G (Goal) + O (Objective) + A (Assets) + L (Layout).
+Always use GOAL structure for significant AI requests. Assets block should include Avalon context.
+
+**Advanced Prompt Methods:** `reference_frameworks/prompting/advanced_prompt_methods.md`
+5 techniques: Devil's Advocate · Client Lens · Consult the Greats · Back 2 The Future · Style Clone.
+Apply as a wrapper around any GOAL prompt for deeper or more critical output.
+
+**Avalon Context Builder:** `reference_frameworks/prompting/avalon_context_builder.md`
+Master context document — use as the Assets (A) block in all AI prompts.
+Keep updated when business state, destinations, or priorities change.
+
+**Marketing Skills Layer:** `reference_frameworks/marketing_skills_summary.md`
+Source repo cloned locally to `reference_frameworks/marketing_skills/` — **NOT committed to GitHub** (in .gitignore).
+Key skills: Copywriting (AIDA/PAS), Content Strategy, Marketing Psychology (JTBD), CRO (keyword CTAs), Social Media.
+
+**AI-Ready Business 5 P's:** `reference_frameworks/ai_ready_business/avalon_5ps.md`
+People → Process → Platforms → Proprietary Data → Products & Services.
+Progression: Knowledge on demand → Collaborative co-worker → Autonomous workflow execution.
+
+**Dashboard — Frameworks page:** 🧠 Frameworks & Prompt Builder
+- Tab 1: GOAL Prompt Builder (form → generates structured AI prompt)
+- Tab 2: Prompt Templates (10 pre-built prompts for common tasks)
+- Tab 3: Professional Skill Lens (content type → marketing skill + GOAL diagnosis)
+- Tab 4: Avalon Context Builder (viewer for avalon_context_builder.md)
+
+**Dashboard — Content Simulator:** Section 7 "Professional Marketing Lens"
+- Most relevant marketing skill + key frameworks
+- GOAL diagnosis (G/O/A/L scored as Strong/Developing/Needs work)
+- Generate GOAL prompt from simulator inputs
+
+**Dashboard — Weekly Calendar:** 🎯 GOAL prompt expander on every day card
+- Generates structured GOAL prompt from day's fields (idea, hook, format, destination, etc.)
+- Supports all 5 advanced prompt modes
+
+**Public repo safety rule:** Do NOT commit `reference_frameworks/marketing_skills/` or any secrets,
+tokens, raw private data, or external repos to GitHub. The repo is public for Streamlit deployment.
+
 ## Workflow scripts (full pipeline)
 
 | Script | Purpose |
