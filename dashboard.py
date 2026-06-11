@@ -1984,6 +1984,250 @@ def match_marketing_skill(fmt: str, pillar: str, idea: str) -> dict:
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# CONTENT STUDIO  CONSTANTS
+# ─────────────────────────────────────────────────────────────────────────────
+_STUDIO_CAROUSEL_TYPES = {
+    "Destination Guide":      {"arc":"guide",      "footer":"◆ CURATED · LUXURY · TRAVEL ◆"},
+    "Brand Mythology":        {"arc":"mythology",  "footer":"◆ CURATED · LUXURY · TRAVEL ◆"},
+    "Founders Story":         {"arc":"founders",   "footer":"◆ CURATED · LUXURY · TRAVEL ◆"},
+    "Itinerary":              {"arc":"itinerary",  "footer":"◆ SAVE THIS ITINERARY ◆"},
+    "Services / What We Offer":{"arc":"services",  "footer":"◆ CURATED · LUXURY · TRAVEL ◆"},
+    "Hotel / Stay Comparison":{"arc":"comparison", "footer":"◆ CURATED · LUXURY · TRAVEL ◆"},
+}
+
+_STUDIO_DEST_DATA = {
+    "Maldives":   {"places":["Fuvahmulah","Baa Atoll","South Ari","North Malé","SAII Maldives"],
+                   "angle":"most resorts won't tell you about",
+                   "photo_tags":["maldives_sunset_palms","ocean_underwater_coral","founder_diving_gear"]},
+    "Colombia":   {"places":["Providencia","Medellín","Eje Cafetero","Cartagena","Santa Marta"],
+                   "angle":"beyond Cartagena",
+                   "photo_tags":["founder_city_monument","tropical_boat_beach"]},
+    "Türkiye":    {"places":["Kaş","Cappadocia","Istanbul","Ölüdeniz","Bodrum"],
+                   "angle":"is not one country",
+                   "photo_tags":["founder_city_monument","singapore_night_cityscape"]},
+    "Sri Lanka":  {"places":["Sigiriya","Mirissa","Ella","Arugam Bay","Kandy"],
+                   "angle":"few travelers understand",
+                   "photo_tags":["batu_caves_temple","tropical_boat_beach"]},
+    "Brazil":     {"places":["Fernando de Noronha","Florianópolis","Rio de Janeiro","Bahia"],
+                   "angle":"beyond the obvious",
+                   "photo_tags":["christ_redeemer_sky","tropical_boat_beach"]},
+    "Global":     {"places":["your chosen destination"],
+                   "angle":"worth the journey",
+                   "photo_tags":["founder_city_monument","founder_beach_golden_hour"]},
+}
+
+_STUDIO_OWN_POST_REFS = [
+    {
+        "folder": "Avalon Definiton/",
+        "post": "¿Sabes qué significa Avalon?",
+        "type": "Brand mythology carousel — 4 slides",
+        "visual_tags": "Navy overlay · text-dominant · gold tags · italic serif",
+        "mood": "Mythological · philosophical · intimate · invitational",
+        "reusable_pattern": "Question hook → etymology → emotional meaning → DM CTA",
+        "best_use": "Brand introduction · audience building · philosophy content",
+    },
+    {
+        "folder": "Avalon - Founders/",
+        "post": "Two women. Two cultures. One mission.",
+        "type": "Founders introduction carousel — 6 slides",
+        "visual_tags": "Authorial portraits · circular headshots · destination proof collage · navy overlay",
+        "mood": "Trustworthy · personal · aspirational · human · global",
+        "reusable_pattern": "Declaration cover → Mission → Meet Founder 1 → Meet Founder 2 → Promise → Photo proof",
+        "best_use": "Trust building · new follower onboarding · campaign launches",
+    },
+    {
+        "folder": "Avalon Escapes - 1st Post/",
+        "post": "AVALON ESCAPES — The best places are not found. They are lived.",
+        "type": "Brand launch carousel — 13+ slides (4 observed: 1, 5, 7, 13)",
+        "visual_tags": "Full-bleed authorial photos · brand cover · services slide · end card · imagotype CTA",
+        "mood": "Discovery · aspiration · confidence · invitation",
+        "reusable_pattern": "Brand cover → Services → World philosophy → End card with imagotype",
+        "best_use": "Brand introduction · services explanation · campaign opener · end-card format",
+    },
+]
+
+
+def _cs_brand_fit_score(idea: str, hook: str, caption: str, fmt: str, dest: str) -> tuple:
+    """Score content idea against Avalon brand standards. Returns (score, issues, strengths)."""
+    text = f"{idea} {hook} {caption}".lower()
+    score = 50
+    issues, strengths = [], []
+
+    _pos = [("feel","transform","shift","discover","real","authentic","personal","specific","inside","earned"),
+            ("we've been","rafa","sofia","i've","personal","our trip","firsthand","actually"),
+            ("save","guide","itinerary","tips","things","best","know before")]
+    _pos_labels = ["Transformation/authenticity language ✓",
+                   "Founder/personal voice ✓",
+                   "Save-worthy framing ✓"]
+    for kws, label in zip(_pos, _pos_labels):
+        if any(w in text for w in kws):
+            score += 8
+            strengths.append(label)
+
+    if dest and dest.lower() in text:
+        score += 5
+        strengths.append("Destination specificity ✓")
+    if hook and len(hook.strip()) > 8:
+        score += 5
+        strengths.append("Hook present ✓")
+
+    _neg = [("amazing","magical","stunning","incredible","breathtaking","paradise","luxurious","unforgettable"),
+            ("book now","link in bio","swipe up","click the link","limited offer","discount"),
+            ("award-winning","world-class","best travel agency","premium service","industry-leading"),
+            ]
+    _neg_labels = ["Generic luxury adjectives — replace with specific, earned details",
+                   "Generic CTA — use 'DM us' or 'ESCRÍBENOS' instead",
+                   "Corporate language — Avalon sounds like a trusted friend, not a company"]
+    for kws, label in zip(_neg, _neg_labels):
+        if any(w in text for w in kws):
+            score -= 12
+            issues.append(label)
+
+    if "!" in (hook or "") or (caption or "").count("!") > 1:
+        score -= 5
+        issues.append("Multiple exclamation marks undercut the premium tone")
+    if fmt == "Carousel" and not any(w in text for w in ["guide","tips","things","itinerary","best","know"]):
+        issues.append("Carousel hook could be more guide/save-oriented")
+
+    return max(0, min(100, score)), issues, strengths
+
+
+def _cs_build_carousel(ctype: str, dest: str, goal: str, emotion: str,
+                        slides: int, tags_raw: str) -> str:
+    """Generate structured carousel copy brief."""
+    ct = _STUDIO_CAROUSEL_TYPES.get(ctype, _STUDIO_CAROUSEL_TYPES["Destination Guide"])
+    dd = _STUDIO_DEST_DATA.get(dest, _STUDIO_DEST_DATA["Global"])
+    places = dd["places"]
+    angle = dd["angle"]
+    footer = ct["footer"]
+    user_tags = [t.strip() for t in tags_raw.split(",") if t.strip()]
+    all_tags = user_tags + dd["photo_tags"]
+
+    def _tag(i): return f"`{all_tags[i % len(all_tags)]}`" if all_tags else "`authorial photo`"
+
+    L = []
+    L.append(f"**Type:** {ctype}  |  **Destination:** {dest}  |  **Slides:** {slides}")
+    L.append(f"**Goal:** {goal}  |  **Emotion:** {emotion}")
+    L.append("")
+
+    # Hook lines by arc
+    arc = ct["arc"]
+    if arc == "mythology":
+        cover_hl = "DO YOU KNOW"
+        cover_soul = "what Avalon actually means?"
+        cover_label = "THE NAME HAS A STORY"
+    elif arc == "founders":
+        cover_hl = "TWO WOMEN."
+        cover_soul = "Two cultures. One mission."
+        cover_label = "WHY AVALON EXISTS"
+    elif arc == "services":
+        cover_hl = "AVALON ESCAPES"
+        cover_soul = "The best places are not found. They are lived."
+        cover_label = "CURATED EXPERIENCES · CULTURE & DIVING"
+    elif arc == "itinerary":
+        cover_hl = f"THE PERFECT"
+        cover_soul = f"{dest} itinerary"
+        cover_label = f"SAVE THIS · {slides - 1} DAYS"
+    elif arc == "comparison":
+        cover_hl = dest.upper()
+        cover_soul = "where to actually stay"
+        cover_label = "THE STAY MATTERS"
+    else:  # guide
+        cover_hl = dest.upper()
+        cover_soul = angle
+        cover_label = f"WHAT MOST TRAVELERS MISS"
+
+    L.append(f"### Slide 1 — Hook (Cover)")
+    L.append(f"**Headline (Montserrat Black):** {cover_hl}")
+    L.append(f"**Soul line (Amore Christmas italic):** {cover_soul}")
+    L.append(f"**Micro label (gold):** {cover_label}")
+    L.append(f"**Swipe instruction (gold):** SWIPE →")
+    L.append(f"**Footer:** {footer}")
+    L.append(f"**Photo:** {_tag(0)}  ·  **Logo:** Butterfly isotype top-right · @avalon.escapes top-left")
+    L.append("")
+
+    # Middle slides
+    for i in range(2, slides):
+        place = places[(i - 2) % len(places)]
+        L.append(f"### Slide {i} — {place if arc == 'guide' else _mid_role(arc, i, slides)}")
+        L.append(f"**Category label (gold):** {_mid_label(arc, dest, place, i)}")
+        L.append(f"**Headline (Montserrat Black):** {_mid_hl(arc, dest, place, i)}")
+        L.append(f"**Soul line (italic):** {_mid_soul(arc, dest, place)}")
+        L.append(f"**Body:** [Specific insider knowledge — not guidebook, not stock copy]")
+        L.append(f"**Photo:** {_tag(i)}  ·  **Logo:** Butterfly isotype top-right")
+        L.append("")
+
+    # Last slide — CTA
+    L.append(f"### Slide {slides} — CTA")
+    L.append(f"**Micro label (gold):** YOUR {dest.upper()} ESCAPE")
+    L.append(f"**Soul headline:** Let's design yours.")
+    L.append(f"**Sub-text:** Tell us where you want to go. We'll take care of the rest.")
+    L.append(f"**CTA button:** [ SEND US A MESSAGE ] (outlined white)")
+    L.append(f"**Footer:** {footer}")
+    L.append(f"**Photo:** {_tag(slides - 1)} golden hour  ·  **Logo:** Full imagotype centered")
+    L.append("")
+
+    L.append("---")
+    L.append("**Caption hook:** " + _caption_hook_cs(arc, dest))
+    L.append("")
+    L.append("**Caption body:** 3–4 short stanzas. Specific knowledge. Rafa or Sofia's voice.")
+    L.append("**Save trigger:** \"Save this before you book anything in [destination].\"")
+    L.append("**CTA:** DM invite or comment prompt — never \"link in bio\"")
+    L.append("")
+    L.append("**Colors:** Navy `#0F2649` backgrounds · White Montserrat Black headlines · Gold labels")
+    L.append("**Logo:** Isotype (top-right) on all slides · Full imagotype on CTA slide only")
+
+    return "\n".join(L)
+
+
+def _mid_role(arc, i, total):
+    roles = {
+        "mythology": ["Etymology / Origin", "Brand Meaning", "Philosophy", "Promise"],
+        "founders": ["Our Mission", "Meet Rafa", "Meet Sofia", "Our Promise", "Destination Proof"],
+        "services": ["What We Offer", "Dive & Ocean Travel", "Custom Escapes", "Our Philosophy"],
+        "itinerary": [f"Days {i*2-1}–{i*2}" for i in range(1, 6)],
+        "comparison": ["Why the Stay Matters", "Option A", "Option B", "Our Recommendation"],
+        "guide": ["Context", "Insight 1", "Insight 2", "Insider Angle"],
+    }
+    r = roles.get(arc, ["Body Slide"])
+    return r[(i - 2) % len(r)]
+
+
+def _mid_label(arc, dest, place, i):
+    if arc == "mythology": return ["● CELTIC MYTHOLOGY","FOR US","WE DON'T CREATE TRIPS"][min(i-2,2)]
+    if arc == "founders": return ["OUR MISSION","CO-FOUNDER","CO-FOUNDER","OUR PROMISE"][min(i-2,3)]
+    if arc == "services": return "WHAT WE OFFER"
+    return dest.upper()
+
+
+def _mid_hl(arc, dest, place, i):
+    if arc == "mythology": return ["ÁVALON",f"AVALON IS","WE DESIGN"][min(i-2,2)]
+    if arc == "founders": return ["OUR MISSION","MEET\nRAFA","MEET\nSOFIA","OUR PROMISE"][min(i-2,3)]
+    if arc == "services": return ["WHAT WE OFFER","DIVE TRAVEL","PRIVATE ADVISORY","THE WORLD AWAITS"][min(i-2,3)]
+    if arc == "itinerary": return f"DAYS {(i-1)*2-1}–{(i-1)*2}"
+    return place.upper() + "."
+
+
+def _mid_soul(arc, dest, place):
+    if arc == "mythology": return ["La isla de las manzanas","something more","escapes, not trips"][0]
+    if arc == "founders": return "Avalon is for those who want to feel a place, not just visit it."
+    if arc == "services": return "Trips designed to turn dreams into real experiences."
+    return f"worth the detour."
+
+
+def _caption_hook_cs(arc, dest):
+    hooks = {
+        "mythology": "There's a reason we named it Avalon.",
+        "founders": "We didn't start a travel agency.",
+        "guide": f"Most people think they know {dest}.",
+        "itinerary": f"The {dest} itinerary most people never find.",
+        "services": "We don't book trips. We design escapes.",
+        "comparison": f"The right stay in {dest} changes the whole trip.",
+    }
+    return hooks.get(arc, f"The {dest} you haven't discovered yet.")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # SIDEBAR  NAVIGATION
 # ─────────────────────────────────────────────────────────────────────────────
 PAGES = {
@@ -1994,6 +2238,7 @@ PAGES = {
     "📈  Pattern Charts":             "charts",
     "🎯  Content Simulator":          "simulator",
     "📅  Weekly Content Plan":        "plan",
+    "🎨  Avalon Content Studio":      "studio",
     "🧠  Frameworks & Prompt Builder":"frameworks",
     "📖  Playbook":                   "playbook",
     "🔍  Data Quality":               "data_quality",
@@ -3452,6 +3697,327 @@ def page_frameworks():
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# PAGE: AVALON CONTENT STUDIO
+# ─────────────────────────────────────────────────────────────────────────────
+def page_content_studio():
+    st.markdown("## 🎨 Avalon Content Studio")
+    st.markdown(
+        "<p style='color:#64748b;font-size:.88rem;margin-bottom:1rem'>"
+        "Generate carousel copy · improve content ideas · view the weekly plan · "
+        "browse Avalon's own post references — all brand-system-first.</p>",
+        unsafe_allow_html=True,
+    )
+
+    tab_a, tab_b, tab_c, tab_d = st.tabs([
+        "🃏 Carousel Builder",
+        "✨ Content Improver",
+        "📅 Weekly Plan",
+        "📁 Own Post References",
+    ])
+
+    # ─── A: CAROUSEL BUILDER ─────────────────────────────────────────────────
+    with tab_a:
+        st.markdown("### 🃏 Carousel Builder")
+        st.markdown(
+            "<p style='color:#64748b;font-size:.85rem'>"
+            "Fill in the brief → get a slide-by-slide carousel plan in Avalon's brand voice.</p>",
+            unsafe_allow_html=True,
+        )
+        col1, col2 = st.columns(2)
+        with col1:
+            cs_type = st.selectbox(
+                "Carousel type",
+                list(_STUDIO_CAROUSEL_TYPES.keys()),
+                key="cs_type",
+            )
+            cs_dest = st.selectbox(
+                "Destination / category",
+                list(_STUDIO_DEST_DATA.keys()),
+                key="cs_dest",
+            )
+            cs_slides = st.slider("Number of slides", 4, 10, 7, key="cs_slides")
+        with col2:
+            cs_goal = st.text_input(
+                "Goal",
+                value="Destination desire + DM inquiry",
+                key="cs_goal",
+            )
+            cs_emotion = st.text_input(
+                "Target emotion",
+                value="Curiosity → longing → trust → inquiry",
+                key="cs_emotion",
+            )
+            cs_tags = st.text_input(
+                "Available authorial photo tags (comma-separated)",
+                placeholder="founder_beach_golden_hour, ocean_underwater_coral",
+                key="cs_tags",
+            )
+
+        if st.button("🃏 Generate Carousel Brief", key="cs_gen_btn", type="primary"):
+            with st.spinner("Building carousel plan..."):
+                result = _cs_build_carousel(
+                    cs_type, cs_dest, cs_goal, cs_emotion, cs_slides, cs_tags or ""
+                )
+            st.markdown("---")
+            st.markdown("#### Generated Carousel Plan")
+            st.markdown(result)
+            st.download_button(
+                "📋 Download as Markdown",
+                data=result,
+                file_name=f"avalon_carousel_{cs_dest.lower().replace(' ','_')}.md",
+                mime="text/markdown",
+                key="cs_dl",
+            )
+
+        with st.expander("📂 Pre-built carousel drafts (from content_plans/carousel_drafts/)"):
+            drafts_dir = CONTENT_PLANS / "carousel_drafts"
+            if drafts_dir.exists():
+                for f in sorted(drafts_dir.glob("*.md")):
+                    if st.button(f"📄 {f.stem.replace('_',' ').title()}", key=f"cs_draft_{f.stem}"):
+                        st.session_state["cs_draft_content"] = f.read_text(encoding="utf-8")
+                        st.session_state["cs_draft_name"] = f.name
+            if "cs_draft_content" in st.session_state:
+                st.markdown(f"**{st.session_state.get('cs_draft_name','')}**")
+                st.markdown(st.session_state["cs_draft_content"])
+
+    # ─── B: CONTENT IMPROVER ─────────────────────────────────────────────────
+    with tab_b:
+        st.markdown("### ✨ Content Improver")
+        st.markdown(
+            "<p style='color:#64748b;font-size:.85rem'>"
+            "Paste a content idea → get an Avalon brand fit score, "
+            "what's weak, and concrete improvements.</p>",
+            unsafe_allow_html=True,
+        )
+
+        ci_col1, ci_col2 = st.columns(2)
+        with ci_col1:
+            ci_idea = st.text_area("Content idea", placeholder="What's the post about?",
+                                   height=80, key="ci_idea")
+            ci_hook = st.text_input("Draft hook / first line",
+                                    placeholder="The first thing someone reads",
+                                    key="ci_hook")
+            ci_caption = st.text_area("Caption draft (optional)", height=80, key="ci_caption")
+        with ci_col2:
+            ci_fmt = st.selectbox("Format", ["Carousel","Reel","Photo","Story","Founder Story"],
+                                  key="ci_fmt")
+            ci_dest = st.selectbox("Destination / category",
+                                   ["(none)"] + list(_STUDIO_DEST_DATA.keys()),
+                                   key="ci_dest")
+
+        if st.button("✨ Improve This Content", key="ci_gen_btn", type="primary"):
+            if not ci_idea.strip():
+                st.warning("Add a content idea first.")
+            else:
+                dest_val = "" if ci_dest == "(none)" else ci_dest
+                score, issues, strengths = _cs_brand_fit_score(
+                    ci_idea, ci_hook, ci_caption, ci_fmt, dest_val
+                )
+
+                # Score display
+                score_color = "#16a34a" if score >= 70 else "#d97706" if score >= 50 else "#dc2626"
+                st.markdown(
+                    f"<div style='background:#111827;border:1px solid #1e3a5f;border-radius:8px;"
+                    f"padding:1rem 1.4rem;margin:.8rem 0'>"
+                    f"<p style='color:#7ea8c9;font-size:.75rem;font-weight:600;letter-spacing:.07em;"
+                    f"text-transform:uppercase;margin:0 0 .4rem 0'>Avalon Brand Fit Score</p>"
+                    f"<p style='font-size:2.2rem;font-weight:700;color:{score_color};margin:0'>{score}/100</p>"
+                    f"</div>",
+                    unsafe_allow_html=True,
+                )
+
+                col_s, col_i = st.columns(2)
+                with col_s:
+                    st.markdown("**✅ Strengths**")
+                    if strengths:
+                        for s in strengths:
+                            st.markdown(f"- {s}")
+                    else:
+                        st.markdown("*Add more specificity to unlock strengths.*")
+                with col_i:
+                    st.markdown("**⚠️ Issues to fix**")
+                    if issues:
+                        for issue in issues:
+                            st.markdown(f"- {issue}")
+                    else:
+                        st.markdown("*No major brand issues detected.*")
+
+                st.markdown("---")
+                st.markdown("**Improvement directions:**")
+
+                # Hook improvement
+                if ci_hook:
+                    st.markdown(f"**Your hook:** *{ci_hook}*")
+                    hook_l = ci_hook.lower()
+                    if any(w in hook_l for w in ["amazing","magical","stunning","discover","experience"]):
+                        dest_str = f" in {dest_val}" if dest_val else ""
+                        st.markdown(
+                            f"→ **Stronger hook:** Make it specific. "
+                            f"Name the place, the detail, the feeling — something only Rafa or Sofia would know{dest_str}."
+                        )
+                    elif not ci_hook.strip().endswith("?") and len(ci_hook) < 40:
+                        st.markdown("→ Hook is short and direct. Consider adding a question or a contrast statement.")
+
+                # Format-specific direction
+                st.markdown(f"**Format direction ({ci_fmt}):**")
+                fmt_advice = {
+                    "Carousel": (
+                        "First slide must be a save-worthy hook. "
+                        f"Use Montserrat Black + Amore Christmas italic two-layer system. "
+                        f"End with full imagotype CTA slide. "
+                        f"Caption: personal voice → specific knowledge → save trigger → DM CTA."
+                    ),
+                    "Reel": (
+                        "First 3 seconds are everything. Text overlay + cut to visual impact. "
+                        "Audio should support, not compete. "
+                        "End with a comment/DM trigger — not a link."
+                    ),
+                    "Photo": (
+                        "One photo, one feeling. Caption should add what the photo can't show — "
+                        "the smell, the silence, what happened next. "
+                        "End with a question that invites comments."
+                    ),
+                    "Story": (
+                        "Behind-the-scenes energy. Poll or question sticker. "
+                        "Speak directly — 'We just landed in...' or 'Sofia is underwater right now.'"
+                    ),
+                    "Founder Story": (
+                        "First person, specific memory. Not 'travel is amazing'. "
+                        "The exact thing that happened. The specific place. The exact feeling. "
+                        "Only Rafa or Sofia could write this."
+                    ),
+                }
+                st.markdown(fmt_advice.get(ci_fmt, ""))
+
+                # Visual direction
+                if dest_val and dest_val in _STUDIO_DEST_DATA:
+                    dd = _STUDIO_DEST_DATA[dest_val]
+                    st.markdown(f"**Visual direction for {dest_val}:**")
+                    st.markdown(
+                        f"Navy `#0F2649` overlay on authorial {dest_val} photography. "
+                        f"Featured places: {', '.join(dd['places'][:3])}. "
+                        f"Suggested photo tags: {', '.join(f'`{t}`' for t in dd['photo_tags'])}."
+                    )
+
+                # Brand voice reminder
+                st.markdown("**Brand voice check:** Does this sound like Rafa or Sofia wrote it? "
+                             "Does it feel like it costs money?")
+
+    # ─── C: WEEKLY PLAN ──────────────────────────────────────────────────────
+    with tab_c:
+        st.markdown("### 📅 Generated Weekly Content Plan")
+        st.markdown(
+            "<p style='color:#64748b;font-size:.85rem'>"
+            "The plan below is generated from the Avalon Brand System + Own Post References + "
+            "Viral Reference Group + Professional Frameworks. "
+            "For an editable day-by-day planning board, use the "
+            "<strong>📅 Weekly Content Plan</strong> page in the sidebar.</p>",
+            unsafe_allow_html=True,
+        )
+        weekly_plan_file = CONTENT_PLANS / "avalon_weekly_content_plan.md"
+        if weekly_plan_file.exists():
+            plan_md = weekly_plan_file.read_text(encoding="utf-8")
+            # Show overview table first (extract it)
+            st.markdown(plan_md)
+            st.download_button(
+                "📋 Download Weekly Plan",
+                data=plan_md,
+                file_name="avalon_weekly_content_plan.md",
+                mime="text/markdown",
+                key="studio_plan_dl",
+            )
+        else:
+            st.info(
+                "`content_plans/avalon_weekly_content_plan.md` not found. "
+                "The file will be created when you run the full pipeline."
+            )
+            # Show a sample structure
+            st.markdown("""
+**Sample weekly structure:**
+
+| Day | Format | Theme | Destination |
+|---|---|---|---|
+| Monday | Carousel | Brand mythology | Brand |
+| Tuesday | Reel | Destination desire | Maldives |
+| Wednesday | Photo | Founder moment | Personal |
+| Thursday | Carousel | Destination guide | Colombia |
+| Friday | Founder Story | Why we travel | Personal |
+| Saturday | Carousel | Cultural luxury | Türkiye |
+| Sunday | Photo | Soft sales / CTA | Brand |
+""")
+
+    # ─── D: OWN POST REFERENCES ───────────────────────────────────────────────
+    with tab_d:
+        st.markdown("### 📁 Avalon Own Post References")
+        st.markdown(
+            "<p style='color:#64748b;font-size:.85rem'>"
+            "Avalon's own published posts are the <strong>primary visual and copy reference</strong> "
+            "for all future content — ranked above influencer references. "
+            "Raw images are stored in <code>brand_assets/private/avalon_posts/</code> (gitignored).</p>",
+            unsafe_allow_html=True,
+        )
+
+        for ref in _STUDIO_OWN_POST_REFS:
+            with st.expander(f"📂 {ref['folder']} — {ref['post']}"):
+                c1, c2 = st.columns(2)
+                with c1:
+                    st.markdown(f"**Content type:** {ref['type']}")
+                    st.markdown(f"**Mood:** {ref['mood']}")
+                    st.markdown(f"**Visual tags:** {ref['visual_tags']}")
+                with c2:
+                    st.markdown(f"**Reusable pattern:**")
+                    st.markdown(f"> {ref['reusable_pattern']}")
+                    st.markdown(f"**Best use:** {ref['best_use']}")
+
+        st.markdown("---")
+        st.markdown("#### 📋 Pattern Quick Reference")
+        pattern_data = [
+            {"Pattern": "Navy overlay on authorial photo", "Appears in": "All 3 post sets", "Priority": "Always"},
+            {"Pattern": "Montserrat Black + Amore Christmas italic (two-layer)", "Appears in": "All 3 post sets", "Priority": "Always"},
+            {"Pattern": "Gold for labels/tags/values only", "Appears in": "All 3 post sets", "Priority": "Always"},
+            {"Pattern": "Butterfly isotype whisper (top/bottom right)", "Appears in": "All 3 post sets", "Priority": "Always"},
+            {"Pattern": "Full imagotype on end/CTA slide only", "Appears in": "1st Post set", "Priority": "Always"},
+            {"Pattern": "◆ WORD · WORD · WORD ◆ footer tag", "Appears in": "Definiton + 1st Post", "Priority": "High"},
+            {"Pattern": "Question hook + DESLIZA/SWIPE instruction", "Appears in": "Definiton set", "Priority": "High"},
+            {"Pattern": "MEET [NAME] / CO-FOUNDER / circular headshot", "Appears in": "Founders set", "Priority": "High"},
+            {"Pattern": "3-beat declaration cover: X. X. X.", "Appears in": "Founders set", "Priority": "High"},
+            {"Pattern": "ESCRÍBENOS outlined CTA button", "Appears in": "Definiton set", "Priority": "High"},
+            {"Pattern": "Gold headline (rare exception)", "Appears in": "1st Post (slide 7 only)", "Priority": "Rare — impactful"},
+            {"Pattern": "Photo collage destination proof", "Appears in": "Founders set", "Priority": "Occasional"},
+        ]
+        st.dataframe(
+            pd.DataFrame(pattern_data),
+            use_container_width=True,
+            hide_index=True,
+        )
+
+        st.markdown("---")
+        st.markdown("#### 🖼️ Authorial Photo Tags Available")
+        photo_tags = [
+            {"Tag": "founder_beach_golden_hour", "Destination": "Tropical coast", "Best use": "Founder story, personal content"},
+            {"Tag": "founder_diving_gear", "Destination": "Maldives / Ocean", "Best use": "Sofia's story, ocean content, dive travel"},
+            {"Tag": "founder_city_monument", "Destination": "Istanbul, Rio, India, Sri Lanka", "Best use": "Cultural content, destination desire"},
+            {"Tag": "founder_beach_duo", "Destination": "Tropical beach", "Best use": "Partnership story, two-founders content"},
+            {"Tag": "ocean_underwater_coral", "Destination": "Maldives / Ocean", "Best use": "Dive travel, services, ocean pillar"},
+            {"Tag": "tropical_boat_beach", "Destination": "Thailand/SE Asia, coastal", "Best use": "Destination desire, world awaits"},
+            {"Tag": "maldives_sunset_palms", "Destination": "Maldives", "Best use": "End cards, desire content, luxury"},
+            {"Tag": "batu_caves_temple", "Destination": "Malaysia / Sri Lanka", "Best use": "Mission / transformation content"},
+            {"Tag": "singapore_night_cityscape", "Destination": "Singapore", "Best use": "Promise / premium content"},
+            {"Tag": "christ_redeemer_sky", "Destination": "Brazil", "Best use": "Brand declaration, Latin America pillar"},
+        ]
+        st.dataframe(
+            pd.DataFrame(photo_tags),
+            use_container_width=True,
+            hide_index=True,
+        )
+
+        st.caption(
+            "To add new photo tags, update `brand_system/avalon_post_asset_index.md` "
+            "and sync new assets to `brand_assets/private/`."
+        )
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # PAGE: PLAYBOOK
 # ─────────────────────────────────────────────────────────────────────────────
 def page_playbook():
@@ -3696,6 +4262,8 @@ elif page == "simulator":
     page_simulator()
 elif page == "plan":
     page_content_plan()
+elif page == "studio":
+    page_content_studio()
 elif page == "frameworks":
     page_frameworks()
 elif page == "playbook":

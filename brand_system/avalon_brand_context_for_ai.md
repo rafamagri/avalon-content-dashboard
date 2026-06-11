@@ -158,6 +158,41 @@ For the master context document, see: `reference_frameworks/prompting/avalon_con
 
 ---
 
+## CONTENT GENERATION PRIORITY ORDER
+
+When generating content for Avalon, always apply this priority order:
+
+1. **Avalon Brand System** — `brand_system/` files are the foundation. Voice, colors, typography, logo rules are non-negotiable.
+2. **Avalon Own Post References** — Avalon's own published posts are the strongest visual and copy reference. Use `brand_system/avalon_published_posts_style_library.md` and `brand_system/avalon_carousel_patterns_from_own_posts.md` before anything else.
+3. **Avalon-owned authorial photography** — Rafa and Sofia's real travel photos. See `brand_system/avalon_post_asset_index.md` for photo tags. Never substitute stock photography when authorial options exist.
+4. **Viral Influencer Trend Reference Group** — Use only for structure, hooks, pacing, and format logic. Never let influencer aesthetics override Avalon's own visual identity.
+5. **Professional marketing and copywriting frameworks** — GOAL prompts, AIDA/PAS, content strategy. Applied last as a quality layer.
+
+---
+
+## AVALON OWN POST REFERENCE — KEY PATTERNS
+
+From analysis of 17 Avalon post reference images:
+
+**Visual non-negotiables:**
+- Deep navy `#0F2649` on every slide — solid or as photo overlay
+- Montserrat Black headline + Amore Christmas italic soul line (two-layer system)
+- Gold/amber for labels, tags, and footer values only — never body text or headlines
+- "◆ WORD · WORD · WORD ◆" format for footer value tags
+- Butterfly isotype whisper — top-right or bottom-right, always small
+- @avalon.escapes handle top-left on all formatted slides
+- Full imagotype (butterfly + AVALON ESCAPES) on end/CTA slides only
+
+**Copy non-negotiables:**
+- Short 3-beat declarations: "Two women. Two cultures. One mission."
+- "We don't X. We Y." differentiation formula
+- "PARA NOSOTRAS..." / "FOR US..." personal brand framing
+- "ESCRÍBENOS" / "SEND US A MESSAGE" outlined button for DM CTAs
+- "TU PRÓXIMA ESCAPADA TE ESTÁ ESPERANDO" / "Your next escape is waiting" as a closing line
+- "The best places are not found. They are lived." — evergreen tagline
+
+---
+
 ## BRAND GUARDRAILS FOR AI OUTPUT
 
 When generating content for Avalon, the AI must:

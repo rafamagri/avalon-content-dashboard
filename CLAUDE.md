@@ -156,6 +156,18 @@ tokens, raw private data, or external repos to GitHub. The repo is public for St
 | `scripts/05_collect_references.py` | Collect reference creator posts |
 | `scripts/06_analyze_references.py` | Analyze reference creators + cross-reference synthesis |
 
+## Content Generation Priority Order
+
+When generating content for Avalon — carousels, captions, Reels, weekly plans — always apply in this order:
+
+1. **Avalon Brand System** — `brand_system/` files. Voice, colors, typography, and visual identity are non-negotiable.
+2. **Avalon Own Post References** — Avalon's own published posts and local reference files are the strongest creative reference. Use these before influencer references. (`brand_system/avalon_published_posts_style_library.md`, `brand_system/avalon_carousel_patterns_from_own_posts.md`)
+3. **Avalon-owned authorial photography** — Rafa and Sofia's real travel photos are owned creative assets. Use them first. (`brand_system/avalon_post_asset_index.md`)
+4. **Viral Influencer Trend Reference Group** — Use only for structure, hooks, pacing, and format logic. Never let influencer aesthetics override Avalon's own visual identity.
+5. **Professional marketing and copywriting frameworks** — GOAL prompts, AIDA/PAS, content strategy. Applied last as a quality and structure layer.
+
+Do not invert this order. Influencer trends inform Avalon's structure, not Avalon's identity.
+
 ## Brand System (source of truth for all content generation)
 
 `brand_system/` contains the official brand reference files — committed to GitHub as safe markdown summaries.
@@ -169,6 +181,9 @@ The original brand manual PDF and all logo/design files are in `brand_assets/pri
 | `brand_system/avalon_carousel_style_guide.md` | Carousel structure, first-slide rules, save/share/comment triggers, caption format, carousel types | Carousel planning, slide copy, first-slide hooks |
 | `brand_system/avalon_asset_index_template.md` | Living index of all brand assets (logos, photos, templates) | Finding or tracking brand asset files |
 | `brand_system/avalon_brand_context_for_ai.md` | Complete AI-ready brand context for content generation | Use as the Assets (A) block in GOAL prompts; Content Simulator; caption rewriting; weekly calendar brief |
+| `brand_system/avalon_published_posts_style_library.md` | Visual + copy patterns from Avalon's own published posts | Before any carousel or visual design task |
+| `brand_system/avalon_carousel_patterns_from_own_posts.md` | Slide-by-slide breakdown of Avalon's own carousel post sets | Carousel planning, slide structure, pattern reference |
+| `brand_system/avalon_post_asset_index.md` | Index of local post reference folders + photo tags | Finding authorial photos, planning carousel visuals |
 
 **Dashboard brand integration — apply brand_system/ across all sections:**
 - **Content Simulator:** brand voice rules from `avalon_brand_summary.md` apply to hook/caption scoring and improvement
@@ -177,6 +192,7 @@ The original brand manual PDF and all logo/design files are in `brand_assets/pri
 - **GOAL prompt builder:** `avalon_brand_context_for_ai.md` is the default Assets (A) block
 - **Caption rewriting / brand voice tasks:** always apply the voice guardrails from `avalon_brand_summary.md`
 - **Carousel generation:** structure and first-slide design must follow `avalon_carousel_style_guide.md`
+- **Avalon Content Studio:** the dashboard section that integrates all of the above into a practical generation tool
 
 **Key brand facts for quick reference:**
 - Primary bg color: `#0F2649` (Deep Navy)
@@ -189,3 +205,30 @@ The original brand manual PDF and all logo/design files are in `brand_assets/pri
 
 Drop exported Instagram analytics CSV files into `data/analytics/` when available.
 See `data/analytics/README.md` for expected format.
+
+## Dashboard Analytics Layer
+
+The dashboard is currently **local and static** — no live API connections, no credentials required.
+It is designed to support a future live analytics layer without structural changes.
+
+Future analytics sources (not yet connected):
+- **Instagram Analytics CSV** — manual export, drop into `data/analytics/`
+- **Google Sheets** — running performance log maintained by Rafa/Sofia
+- **Windsor.ai** — aggregates social analytics across platforms (requires API key in `secrets.toml`)
+- **Meta Instagram Graph API** — real-time Business account analytics (requires access token in `secrets.toml`)
+
+When connecting live analytics: all credentials go in `.streamlit/secrets.toml` (gitignored — never committed).
+
+## Avalon Own Post References
+
+Post reference images are stored locally in `brand_assets/private/avalon_posts/` (gitignored).
+Safe summaries are in `brand_system/` (committed).
+
+| Folder | Contents |
+|---|---|
+| `brand_assets/private/avalon_posts/Avalon Definiton/` | "¿Qué significa Avalon?" carousel — 4 slides |
+| `brand_assets/private/avalon_posts/Avalon - Founders/` | Founders intro carousel — 6 slides |
+| `brand_assets/private/avalon_posts/Avalon Escapes - 1st Post/` | Brand launch carousel — 13+ slides (4 observed) |
+
+These are Avalon's own posts and authorial assets. They are not stock. They are not influencer references.
+They are the primary visual and copy reference for all future content generation.

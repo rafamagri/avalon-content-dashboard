@@ -142,3 +142,46 @@ Before publishing any carousel, ask:
 > "Would I save this if someone else posted it?"
 
 If no: the hook isn't strong enough, the tips aren't specific enough, or the value isn't clear enough.
+
+---
+
+## Avalon Own Post References
+
+**Avalon's own published Instagram posts and local post reference files are the strongest visual
+and copy reference for all future carousels — ranked above influencer references.**
+
+Reference these before looking at the viral influencer trend group:
+
+| File | What it contains |
+|---|---|
+| `brand_system/avalon_published_posts_style_library.md` | Recurring visual/copy patterns from all 17 analyzed Avalon post images |
+| `brand_system/avalon_carousel_patterns_from_own_posts.md` | Slide-by-slide breakdown of each Avalon carousel post set |
+| `brand_system/avalon_post_asset_index.md` | Index of local post reference folders with photo tags and mood |
+
+### What Avalon's own carousels establish as non-negotiable:
+
+1. **Two-layer typography:** Montserrat Black headline + Amore Christmas italic soul line — every carousel
+2. **Navy overlay:** `#0F2649` on every photo slide — not optional, it's the atmosphere
+3. **Gold accent system:** Labels, tags, footer values only — never headlines (except rare gold headline for contrast)
+4. **"◆ WORD · WORD · WORD ◆" footer tag:** Use for brand values, category labels, destination tags
+5. **Butterfly isotype whisper:** Top-right or bottom-right on every slide — always small
+6. **@avalon.escapes top-left:** On all formatted slides
+7. **ESCRÍBENOS / SEND US A MESSAGE:** Outlined button for DM CTAs — not "link in bio"
+8. **3-beat cover declarations:** "Two women. Two cultures. One mission." rhythm for opener slides
+9. **Question hook + DESLIZA/SWIPE:** For carousels where intrigue is the lead
+10. **Full imagotype end card:** Butterfly + AVALON ESCAPES + short CTA on the final slide of every carousel
+
+### Photos first:
+Avalon's authorial photos are owned creative assets, not stock.
+Always use Rafa and Sofia's real travel photos as the foundation before considering stock or generic imagery.
+See: `brand_system/avalon_post_asset_index.md` → photo tags section.
+
+### Influencer reference priority:
+Use the viral influencer trend reference group (12 accounts) only to improve:
+- Structural hooks and pacing
+- Carousel arc logic
+- Save/share trigger language
+- Format variety
+
+**Never** let influencer aesthetics override Avalon's own visual identity.
+Avalon's deep navy + two-layer typography + gold accent system is non-negotiable.
