@@ -156,6 +156,35 @@ tokens, raw private data, or external repos to GitHub. The repo is public for St
 | `scripts/05_collect_references.py` | Collect reference creator posts |
 | `scripts/06_analyze_references.py` | Analyze reference creators + cross-reference synthesis |
 
+## Brand System (source of truth for all content generation)
+
+`brand_system/` contains the official brand reference files — committed to GitHub as safe markdown summaries.
+The original brand manual PDF and all logo/design files are in `brand_assets/private/` (gitignored, never committed).
+
+| File | Purpose | Use when |
+|---|---|---|
+| `brand_system/avalon_brand_summary.md` | Brand personality, voice, promise, founder roles | Any content generation or caption writing |
+| `brand_system/avalon_design_system.md` | Color palette (#0F2649, #213A3E, #265196, #FFFFFF), typography (Amore Christmas + Montserrat), iconography | Visual direction, slide design, color references |
+| `brand_system/avalon_logo_rules.md` | Logo anatomy, proportions, 4 color variants, incorrect uses | Any logo placement or branding decision |
+| `brand_system/avalon_carousel_style_guide.md` | Carousel structure, first-slide rules, save/share/comment triggers, caption format, carousel types | Carousel planning, slide copy, first-slide hooks |
+| `brand_system/avalon_asset_index_template.md` | Living index of all brand assets (logos, photos, templates) | Finding or tracking brand asset files |
+| `brand_system/avalon_brand_context_for_ai.md` | Complete AI-ready brand context for content generation | Use as the Assets (A) block in GOAL prompts; Content Simulator; caption rewriting; weekly calendar brief |
+
+**Dashboard brand integration — apply brand_system/ across all sections:**
+- **Content Simulator:** brand voice rules from `avalon_brand_summary.md` apply to hook/caption scoring and improvement
+- **Content Simulator (improvement):** visual direction from `avalon_design_system.md` informs carousel/Reel recommendations
+- **Weekly Calendar:** carousel format hints reference `avalon_carousel_style_guide.md` (save triggers, first-slide rules)
+- **GOAL prompt builder:** `avalon_brand_context_for_ai.md` is the default Assets (A) block
+- **Caption rewriting / brand voice tasks:** always apply the voice guardrails from `avalon_brand_summary.md`
+- **Carousel generation:** structure and first-slide design must follow `avalon_carousel_style_guide.md`
+
+**Key brand facts for quick reference:**
+- Primary bg color: `#0F2649` (Deep Navy)
+- Brand fonts: Amore Christmas (AVALON wordmark) + Montserrat Medium/Bold/Black (everything else)
+- Logo type: Imagotype — butterfly+compass symbol + "AVALON - ESCAPES -" wordmark (always together unless isotype-only context)
+- Voice test: "Does this sound like Rafa or Sofia wrote it?" + "Does this feel like it costs money?"
+- Save test for carousels: "Would I save this if someone else posted it?"
+
 ## Analytics CSV
 
 Drop exported Instagram analytics CSV files into `data/analytics/` when available.

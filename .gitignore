@@ -9,3 +9,15 @@ data/raw/
 
 # External repos cloned for local reference only — do not push to public GitHub
 reference_frameworks/marketing_skills/
+
+# Private Avalon brand assets
+brand_assets/private/
+brand_assets/raw/
+photo_library/private/
+photo_library/raw/
+*.ai
+*.psd
+*.indd
+*.fig
+.env
+.streamlit/secrets.toml
