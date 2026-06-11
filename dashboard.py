@@ -28,11 +28,12 @@ st.set_page_config(
 # PATHS
 # ─────────────────────────────────────────────────────────────────────────────
 ROOT = Path(__file__).parent
-DATA_PROCESSED  = ROOT / "data" / "processed"
-ANALYSIS_DIR    = ROOT / "analysis"
-CONTENT_PLANS   = ROOT / "content_plans"
-PATTERN_LIB     = ANALYSIS_DIR / "viral_reference_group" / "viral_pattern_library.md"
-REF_GROUP_POSTS = DATA_PROCESSED / "viral_reference_group" / "group_posts.json"
+DATA_PROCESSED       = ROOT / "data" / "processed"
+ANALYSIS_DIR         = ROOT / "analysis"
+CONTENT_PLANS        = ROOT / "content_plans"
+WEEKLY_CALENDAR_FILE = CONTENT_PLANS / "weekly_calendar.json"
+PATTERN_LIB          = ANALYSIS_DIR / "viral_reference_group" / "viral_pattern_library.md"
+REF_GROUP_POSTS      = DATA_PROCESSED / "viral_reference_group" / "group_posts.json"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # CUSTOM CSS  (layered over the dark base theme from .streamlit/config.toml)
@@ -488,6 +489,127 @@ DESTINATION_HASHTAGS = {
         "#luxurytravelblogger", "#avalon_escapes", "#luxescapes", "#intentionaltravel",
     ],
 }
+
+# ─────────────────────────────────────────────────────────────────────────────
+# WEEKLY CALENDAR CONSTANTS
+# ─────────────────────────────────────────────────────────────────────────────
+WEEKDAYS       = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+CONTENT_FORMATS = ["", "Reel", "Carousel", "Photo", "Story", "Founder Story", "Destination Guide", "Trend Adaptation"]
+POST_STATUSES   = ["Idea", "Draft", "Needs improvement", "Ready", "Posted"]
+DESTINATIONS_LIST = ["", "Maldives", "Colombia", "Brazil", "Türkiye", "Sri Lanka", "Global / Other Curated Escapes"]
+
+FORMAT_HINTS = {
+    "Reel":               "🎬 Plan first 3 seconds, visual pacing, text overlay, and share trigger.",
+    "Carousel":           "📱 Strong first-slide hook = saves. Plan slide sequence, guide value, and save CTA. Reference @travelcroats.",
+    "Photo":              "📸 One strong image. Match caption emotion to image energy. End with a comment prompt.",
+    "Story":              "📲 Behind-the-scenes tone. Use a poll, question sticker, or swipe-up link.",
+    "Founder Story":      "🎤 Rafa or Sofia speaking directly. Personal and specific — not agency language.",
+    "Destination Guide":  "🗺️ Numbered hook → specific tips → save trigger → keyword CTA.",
+    "Trend Adaptation":   "🔥 Identify Tier 1/2 trend first. Adapt the structure — not the exact words or footage.",
+}
+
+_STATUS_STYLE = {
+    "Idea":              ("#64748b", "#1e2a3a"),
+    "Draft":             ("#0284c7", "#0c2340"),
+    "Needs improvement": ("#d97706", "#2d1e04"),
+    "Ready":             ("#16a34a", "#0a2614"),
+    "Posted":            ("#7c3aed", "#1e0a3a"),
+}
+
+SAMPLE_AVALON_WEEK = [
+    {
+        "format": "Reel",
+        "content_pillar": "Ocean & Island Adventures",
+        "destination_package": "Maldives",
+        "idea": "The Fuvahmulah experience — what it actually feels like to dive with 20 tiger sharks and come back changed",
+        "hook": "This is what it feels like to dive with 20 tiger sharks and come back completely changed.",
+        "visual_plan": "Open underwater on a tiger shark approaching camera. Cut to surface reflection. Cut to reaction face post-dive. Slow-mo coral. End on island sunset with text CTA overlay.",
+        "caption": "No one prepares you for Fuvahmulah.\n\nYou go because you heard about the tiger sharks.\nYou stay because of everything else.\n\nThe silence underwater. The colour of the atoll at 6am. The feeling that you've arrived somewhere the world hasn't quite found yet.\n\nThis is the Maldives we design trips around. Not the overwater bungalow brochure version. The real one.\n\nComment 'FUVA' and we'll send you our Maldives diving guide. 🌊",
+        "cta": "Comment 'FUVA' for our Maldives diving guide →",
+        "hashtags": "#maldives #fuvahmulah #divingmaldives #tigershark #oceanlover #luxurytravel #avalonescapes",
+        "status": "Draft",
+        "notes": "Needs underwater footage from Fuvahmulah. If unavailable, adapt for any Maldives diving content.",
+        "visual_plan_short": "",
+    },
+    {
+        "format": "Carousel",
+        "content_pillar": "Destination Guide",
+        "destination_package": "Sri Lanka",
+        "idea": "5 things no one tells you about Sri Lanka before you go",
+        "hook": "5 things no one tells you about Sri Lanka (save this before your trip)",
+        "visual_plan": "Slide 1: Bold text — '5 things no one tells you about Sri Lanka'. Slide 2: Hill country train — 'The train is the journey, not just the transport'. Slide 3: Temple at dawn — 'Go before 7am'. Slide 4: East coast beach — 'The south and east coast are completely different countries'. Slide 5: Local food — 'Sri Lankan food is the secret everyone misses'. Slide 6: Avalon brand slide with CTA.",
+        "caption": "Sri Lanka will surprise you — but only if you know what to look for.\n\nSave this before your trip →\n\nWe design bespoke Sri Lanka escapes: cultural triangle, tea hills, east coast, and the parts no guidebook covers. DM 'SRILANKA' to start yours.",
+        "cta": "DM 'SRILANKA' for our bespoke Sri Lanka itinerary →",
+        "hashtags": "#srilanka #srilankatravel #travelguide #asiatravel #luxurytravel #avalonescapes",
+        "status": "Idea",
+        "notes": "Reference @travelcroats for carousel structure and first-slide hook style. High save potential.",
+    },
+    {
+        "format": "Photo",
+        "content_pillar": "Founder Story",
+        "destination_package": "Colombia",
+        "idea": "A quiet morning in Cartagena — why Rafa keeps going back",
+        "hook": "Cartagena at 6am is a completely different city.",
+        "visual_plan": "Single editorial frame: colonial street at dawn, warm orange light, no tourists yet. Rafa walking away from camera or standing still. Clean, warm, intimate feel.",
+        "caption": "Cartagena at 6am is a completely different city.\n\nBefore the heat. Before the crowds. Before the day has decided what it wants to be.\n\nI've been here a dozen times and this hour still stops me.\n\nThis is the Colombia we introduce people to. Not the surface. The underneath.\n\nWhere should we take you this year?",
+        "cta": "Where should we take you this year? ↓",
+        "hashtags": "#cartagena #colombia #colombiatravel #founderstory #boutiquetraveler #avalonescapes",
+        "status": "Idea",
+        "notes": "Best with a genuinely quiet, golden-hour Cartagena shot. No heavy filter — keep it real and editorial.",
+    },
+    {
+        "format": "Reel",
+        "content_pillar": "Travel Philosophy",
+        "destination_package": "Global / Other Curated Escapes",
+        "idea": "Philosophical Reel — what travel actually costs you (not money)",
+        "hook": "No one tells you what travel actually costs you. And I don't mean money.",
+        "visual_plan": "[0–3s] Static wide shot — airport or empty road. Text overlay: 'No one tells you what travel actually costs you.' [3–15s] Quick cuts: meaningful moments — people, landscapes, meals. [15–35s] Slower pace — one face, one place, stillness. [35–50s] Return shot — back home but different. [50–60s] Final line on screen + Avalon CTA.",
+        "caption": "No one tells you what travel actually costs you.\nAnd I don't mean money.\n\nIt costs you the comfortable version of yourself.\nThe one that knew what to expect.\nThe one that had a clean answer to every question.\n\nYou go. You see something you can't unsee.\nAnd you come back as someone the old version of you would find slightly confusing.\n\nThat's the point. That's what we design.\n\nComment 'AVALON' if you're ready. 🌍",
+        "cta": "Comment 'AVALON' if you're ready →",
+        "hashtags": "#travelphilosophy #whyitravel #travelmindset #conscioustravel #luxurytraveler #avalonescapes",
+        "status": "Idea",
+        "notes": "Tier 2 structural replication — philosophical essay format. @jords.media + @noareserrunt reference. Strong share/save potential.",
+    },
+    {
+        "format": "Destination Guide",
+        "content_pillar": "Destination Guide",
+        "destination_package": "Türkiye",
+        "idea": "The Türkiye no one shows you — beyond Istanbul and the balloon photos",
+        "hook": "Türkiye has 3 versions. Most tourists only see 1.",
+        "visual_plan": "Slide 1: Bold — 'Türkiye has 3 versions. Most tourists only see 1.' Slide 2: Istanbul skyline — 'The one everyone knows'. Slide 3: Cappadocia balloons — 'The one Instagram made famous'. Slide 4: Lycian coast/Kaş — 'The one that actually stays with you'. Slide 5: Boutique hotel detail shot. Slide 6: Avalon CTA.",
+        "caption": "Türkiye has 3 versions.\nMost tourists only see 1.\n\nSave this — then ask us to show you the third one.\n\nDM 'TURKEY' for our custom Türkiye escape design.",
+        "cta": "DM 'TURKEY' for our custom Türkiye escape →",
+        "hashtags": "#turkiye #turkey #istanbul #cappadocia #kastravel #aegeancoast #boutiquetraveler #avalonescapes",
+        "status": "Idea",
+        "notes": "Three-part reveal structure. Inspired by @travelcroats carousel format. Needs footage across all three regions.",
+    },
+    {
+        "format": "Reel",
+        "content_pillar": "Luxury Escapes",
+        "destination_package": "Brazil",
+        "idea": "A boutique stay in Trancoso — luxury that stops trying to impress you",
+        "hook": "This is what luxury looks like when it stops trying to impress you.",
+        "visual_plan": "[0–3s] Trancoso quadrado at golden hour. [3–15s] Boutique property detail — handmade textiles, hammock, outdoor shower. [15–35s] Atlantic forest, red cliffs, ocean. [35–50s] Guest walking slowly. [50–60s] Final frame: ocean through a door frame. Avalon text CTA.",
+        "caption": "This is what luxury looks like when it stops trying to impress you.\n\nNo marble lobbies. No dress code. No pretense.\n\nJust space. Light. The sound of the Atlantic forest at 5am.\n\nTrancoso is the version of Brazil most people never find.\n\nWe design private escapes there. DM us 'TRANCOSO' if you want the full picture. 🌿",
+        "cta": "DM 'TRANCOSO' for our Trancoso escape design →",
+        "hashtags": "#trancoso #brazil #brasil #boutiquehotel #luxurytravel #atlanticforest #avalonescapes",
+        "status": "Idea",
+        "notes": "Expectation subversion format — redefining luxury. Tier 2 structural replication. Needs non-generic Trancoso footage.",
+    },
+    {
+        "format": "Story",
+        "content_pillar": "Founder Story",
+        "destination_package": "Global / Other Curated Escapes",
+        "idea": "Sunday behind-the-scenes: how Rafa or Sofia actually plans a custom escape",
+        "hook": "This is what building a custom trip actually looks like on a Sunday.",
+        "visual_plan": "Story series: (1) Rafa/Sofia at desk with maps or mood board. (2) Zoomed shot of route being planned. (3) Poll sticker: 'Would you want to see more behind-the-scenes?' (4) Question sticker: 'Where should we take you in 2026?'",
+        "caption": "Not a Reel today. Just a Sunday process peek.\n\nThis is how an Avalon escape gets built — before it becomes the trip someone tells their friends about for years.\n\nSlide 2 → our current favourite route.\nSlide 3 → vote on what we share next.\nSlide 4 → the one that matters. 👇",
+        "cta": "Question sticker: Where should we take you in 2026?",
+        "hashtags": "#behindthescenes #founderstory #customtravel #travelagency #avalonescapes",
+        "status": "Idea",
+        "notes": "Stories don't need high production value — raw is better. Poll + question sticker are the engagement drivers. Use to research audience destination preferences.",
+    },
+]
 
 # ─────────────────────────────────────────────────────────────────────────────
 # DATA LOADING  (graceful — never crashes on missing files)
@@ -1298,6 +1420,217 @@ def generate_format_advice(fmt: str, idea: str, destination: str, emotion: str, 
             "key_metric":             "Likes + comments are primary. Caption emotional depth drives saves and shares when available.",
         }
     return {"format": fmt or "Unknown", "note": "Select Reel, Carousel, or Photo for format-specific advice."}
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# WEEKLY CALENDAR HELPERS
+# ─────────────────────────────────────────────────────────────────────────────
+_WC_FIELDS = ["format", "content_pillar", "destination_package", "idea", "hook",
+              "visual_plan", "caption", "cta", "hashtags", "status", "notes"]
+
+def _wc_key(day_idx: int, field: str) -> str:
+    return f"wc_{day_idx}_{field}"
+
+def _default_day(i: int) -> dict:
+    return {
+        "day": f"Day {i + 1}", "weekday": WEEKDAYS[i],
+        "format": "", "content_pillar": "", "destination_package": "",
+        "idea": "", "hook": "", "visual_plan": "", "caption": "",
+        "cta": "", "hashtags": "", "status": "Idea", "notes": "",
+    }
+
+def default_weekly_calendar() -> dict:
+    return {"week_label": "Current Week", "days": [_default_day(i) for i in range(7)]}
+
+def _load_wc_json() -> dict:
+    try:
+        if WEEKLY_CALENDAR_FILE.exists():
+            return json.loads(WEEKLY_CALENDAR_FILE.read_text(encoding="utf-8"))
+    except Exception:
+        pass
+    return default_weekly_calendar()
+
+def _wc_save_json(data: dict):
+    CONTENT_PLANS.mkdir(parents=True, exist_ok=True)
+    WEEKLY_CALENDAR_FILE.write_text(
+        json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8"
+    )
+
+def _sanitise_day(raw: dict, i: int) -> dict:
+    pillar_opts = [""] + list(CONTENT_PILLARS.keys())
+    fmt    = raw.get("format", "")
+    pillar = raw.get("content_pillar", "")
+    dest   = raw.get("destination_package", "")
+    status = raw.get("status", "Idea")
+    return {
+        "format":             fmt    if fmt    in CONTENT_FORMATS   else "",
+        "content_pillar":     pillar if pillar in pillar_opts       else "",
+        "destination_package":dest   if dest   in DESTINATIONS_LIST else "",
+        "idea":               raw.get("idea",        ""),
+        "hook":               raw.get("hook",        ""),
+        "visual_plan":        raw.get("visual_plan", ""),
+        "caption":            raw.get("caption",     ""),
+        "cta":                raw.get("cta",         ""),
+        "hashtags":           raw.get("hashtags",    ""),
+        "status":             status if status in POST_STATUSES else "Idea",
+        "notes":              raw.get("notes",       ""),
+    }
+
+def _wc_write_day_to_state(i: int, day: dict):
+    clean = _sanitise_day(day, i)
+    for field in _WC_FIELDS:
+        st.session_state[_wc_key(i, field)] = clean[field]
+
+def _ensure_wc_state():
+    if _wc_key(0, "idea") not in st.session_state:
+        data = _load_wc_json()
+        days = data.get("days", [])
+        for i in range(7):
+            _wc_write_day_to_state(i, days[i] if i < len(days) else {})
+        st.session_state["wc_week_label"] = data.get("week_label", "Current Week")
+
+def _wc_load_sample():
+    for i, sample in enumerate(SAMPLE_AVALON_WEEK):
+        _wc_write_day_to_state(i, sample)
+    st.session_state["wc_week_label"] = "Sample Avalon Week"
+
+def _wc_load_defaults():
+    for i in range(7):
+        _wc_write_day_to_state(i, {})
+    st.session_state["wc_week_label"] = "Current Week"
+
+def _wc_collect() -> dict:
+    days = []
+    for i in range(7):
+        day = {"day": f"Day {i + 1}", "weekday": WEEKDAYS[i]}
+        for field in _WC_FIELDS:
+            day[field] = st.session_state.get(_wc_key(i, field), "")
+        days.append(day)
+    return {"week_label": st.session_state.get("wc_week_label", "Current Week"), "days": days}
+
+def _wc_overview() -> dict:
+    ideas    = [st.session_state.get(_wc_key(i, "idea"),        "") for i in range(7)]
+    statuses = [st.session_state.get(_wc_key(i, "status"),      "") for i in range(7)]
+    pillars  = [st.session_state.get(_wc_key(i, "content_pillar"), "") for i in range(7)]
+    dests    = [st.session_state.get(_wc_key(i, "destination_package"), "") for i in range(7)]
+
+    planned = sum(1 for v in ideas if v.strip())
+    empty   = 7 - planned
+    ready   = statuses.count("Ready")
+    draft   = statuses.count("Draft")
+    p_counts = {}
+    for p in pillars:
+        if p: p_counts[p] = p_counts.get(p, 0) + 1
+    d_counts = {}
+    for d in dests:
+        if d: d_counts[d] = d_counts.get(d, 0) + 1
+    return {
+        "planned":    planned,
+        "empty":      empty,
+        "ready":      ready,
+        "draft":      draft,
+        "top_pillar": max(p_counts, key=p_counts.get) if p_counts else "—",
+        "top_dest":   max(d_counts, key=d_counts.get) if d_counts else "—",
+    }
+
+def _wc_export_markdown() -> str:
+    lines = [
+        "# Avalon Escapes — Weekly Content Plan\n",
+        f"**Week:** {st.session_state.get('wc_week_label', 'Current Week')}  ",
+        f"**Exported:** {datetime.now().strftime('%Y-%m-%d')}\n",
+        "---\n",
+    ]
+    field_labels = [
+        ("format",               "Format"),
+        ("content_pillar",       "Pillar"),
+        ("destination_package",  "Destination"),
+        ("idea",                 "Idea"),
+        ("hook",                 "Hook"),
+        ("visual_plan",          "Visual Plan"),
+        ("caption",              "Caption"),
+        ("cta",                  "CTA"),
+        ("hashtags",             "Hashtags"),
+        ("status",               "Status"),
+        ("notes",                "Notes"),
+    ]
+    for i in range(7):
+        lines.append(f"## Day {i + 1} / {WEEKDAYS[i]}\n")
+        for field, label in field_labels:
+            val = st.session_state.get(_wc_key(i, field), "") or "—"
+            if field == "caption":
+                indented = val.replace("\n", "\n  ")
+                lines.append(f"- **{label}:**\n\n  {indented}\n")
+            else:
+                lines.append(f"- **{label}:** {val}")
+        lines.append("\n---\n")
+    return "\n".join(lines)
+
+def _render_wc_day(i: int):
+    weekday  = WEEKDAYS[i]
+    day_num  = i + 1
+    status_v = st.session_state.get(_wc_key(i, "status"), "Idea")
+    s_col, s_bg = _STATUS_STYLE.get(status_v, ("#64748b", "#1e2a3a"))
+
+    st.markdown(
+        f"<div style='background:#0d1117;border:1.5px solid #1e293b;border-radius:12px;"
+        f"padding:.55rem 1rem;margin-bottom:.75rem;display:flex;"
+        f"justify-content:space-between;align-items:center'>"
+        f"<span style='font-size:1.02rem;font-weight:700;color:#e2e8f0'>"
+        f"Day {day_num} — {weekday}</span>"
+        f"<span style='font-size:.73rem;font-weight:700;color:{s_col};"
+        f"background:{s_bg};padding:.16rem .55rem;border-radius:20px;"
+        f"border:1px solid {s_col}55'>{status_v}</span>"
+        f"</div>",
+        unsafe_allow_html=True,
+    )
+
+    # Row 1: format + pillar
+    fa_col, pi_col = st.columns(2)
+    with fa_col:
+        st.selectbox("Format", CONTENT_FORMATS, key=_wc_key(i, "format"))
+    with pi_col:
+        pillar_opts = [""] + list(CONTENT_PILLARS.keys())
+        st.selectbox("Content pillar", pillar_opts, key=_wc_key(i, "content_pillar"))
+
+    # Destination
+    st.selectbox("Destination / Package", DESTINATIONS_LIST, key=_wc_key(i, "destination_package"))
+
+    # Text inputs
+    st.text_input("Content idea / concept", key=_wc_key(i, "idea"),
+                  placeholder="What is this post about?")
+    st.text_input("Hook — first line or first 3 seconds", key=_wc_key(i, "hook"),
+                  placeholder="The opening line that stops the scroll...")
+    st.text_input("Visual plan", key=_wc_key(i, "visual_plan"),
+                  placeholder="Shots, slides, or scenes...")
+    st.text_area("Caption draft", key=_wc_key(i, "caption"), height=110,
+                 placeholder="Draft your caption here...")
+
+    cta_col, ht_col = st.columns(2)
+    with cta_col:
+        st.text_input("CTA", key=_wc_key(i, "cta"),
+                      placeholder="Comment 'WORD' / DM 'AVALON'...")
+    with ht_col:
+        st.text_input("Hashtags", key=_wc_key(i, "hashtags"),
+                      placeholder="#maldives #luxurytravel...")
+
+    st.selectbox("Status", POST_STATUSES, key=_wc_key(i, "status"))
+    st.text_input("Notes (internal)", key=_wc_key(i, "notes"),
+                  placeholder="Internal reminders, feedback, or ideas...")
+
+    # Format hint
+    fmt_now = st.session_state.get(_wc_key(i, "format"), "")
+    if fmt_now and fmt_now in FORMAT_HINTS:
+        st.markdown(
+            f"<div style='background:#0f1f35;border-left:3px solid #0369a1;border-radius:0 6px 6px 0;"
+            f"padding:.38rem .8rem;margin:.25rem 0 .15rem;font-size:.8rem;color:#7dd3fc'>"
+            f"{FORMAT_HINTS[fmt_now]}</div>",
+            unsafe_allow_html=True,
+        )
+
+    # Simulator link hint
+    idea_now = st.session_state.get(_wc_key(i, "idea"), "")
+    if idea_now.strip():
+        st.caption("📊 _Copy idea + hook into the **Content Simulator** to score and improve it._")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -2353,34 +2686,124 @@ def page_simulator():
 # PAGE: WEEKLY CONTENT PLAN
 # ─────────────────────────────────────────────────────────────────────────────
 def page_content_plan():
-    st.markdown("## 📅 Weekly Content Plan")
+    st.markdown("## 📅 Weekly Content Calendar")
 
+    # ── Initialise session state ──────────────────────────────────────────────
+    _ensure_wc_state()
+
+    # ── Action bar ────────────────────────────────────────────────────────────
+    btn1, btn2, btn3, btn4 = st.columns([1, 1.3, 1.5, 1])
+
+    with btn1:
+        if st.button("💾 Save plan", use_container_width=True, type="primary"):
+            _wc_save_json(_wc_collect())
+            st.success("Saved → content_plans/weekly_calendar.json")
+
+    with btn2:
+        if st.button("✨ Load sample week", use_container_width=True):
+            _wc_load_sample()
+            st.rerun()
+
+    with btn3:
+        md_data = _wc_export_markdown()
+        fname   = f"avalon_weekly_{datetime.now().strftime('%Y%m%d')}.md"
+        st.download_button(
+            "📋 Export as Markdown",
+            data=md_data,
+            file_name=fname,
+            mime="text/markdown",
+            use_container_width=True,
+        )
+
+    with btn4:
+        if st.button("🗑️ Clear plan", use_container_width=True):
+            st.session_state["_wc_pending_clear"] = True
+
+    # Confirmation for clear
+    if st.session_state.get("_wc_pending_clear"):
+        st.warning("This will erase all 7 days. This cannot be undone unless you saved first.")
+        cc1, cc2, _ = st.columns([1, 1, 5])
+        with cc1:
+            if st.button("✅ Yes, clear", key="_wc_confirm_yes"):
+                _wc_load_defaults()
+                _wc_save_json(default_weekly_calendar())
+                st.session_state["_wc_pending_clear"] = False
+                st.rerun()
+        with cc2:
+            if st.button("Cancel", key="_wc_confirm_no"):
+                st.session_state["_wc_pending_clear"] = False
+                st.rerun()
+
+    st.markdown("---")
+
+    # ── Weekly overview bar ───────────────────────────────────────────────────
+    ov = _wc_overview()
+    tp = ov["top_pillar"]
+    td = ov["top_dest"]
+    ov_cols = st.columns(6)
+    for col, (label, val, color) in zip(ov_cols, [
+        ("Planned",   str(ov["planned"]),          "#00b4d8"),
+        ("Ready",     str(ov["ready"]),             "#4ade80"),
+        ("Draft",     str(ov["draft"]),             "#facc15"),
+        ("Empty",     str(ov["empty"]),             "#475569"),
+        ("Top pillar", tp[:14] + "…" if len(tp) > 15 else tp, "#a78bfa"),
+        ("Top dest",  td[:14] + "…" if len(td) > 15 else td,  "#c9a84c"),
+    ]):
+        with col:
+            st.markdown(
+                f"<div style='background:#0f172a;border:1px solid #1e293b;border-radius:8px;"
+                f"padding:.55rem .65rem;text-align:center'>"
+                f"<div style='font-size:.68rem;color:#475569;letter-spacing:.07em;"
+                f"text-transform:uppercase;margin-bottom:.1rem'>{label}</div>"
+                f"<div style='font-size:1.05rem;font-weight:700;color:{color}'>{val or '—'}</div>"
+                f"</div>",
+                unsafe_allow_html=True,
+            )
+
+    st.markdown("---")
+
+    # ── 7-day calendar grid (2-column) ────────────────────────────────────────
+    for pair in [(0, 1), (2, 3), (4, 5)]:
+        left_col, right_col = st.columns(2, gap="large")
+        with left_col:
+            _render_wc_day(pair[0])
+        with right_col:
+            _render_wc_day(pair[1])
+        st.markdown("<hr style='border-color:#1e293b;margin:1.2rem 0'>",
+                    unsafe_allow_html=True)
+
+    # Day 7 — Sunday (full width)
+    _render_wc_day(6)
+
+    st.markdown("---")
+
+    # ── Save reminder ─────────────────────────────────────────────────────────
+    st.markdown(
+        "<div style='background:#0f172a;border:1px solid #1e293b;border-radius:8px;"
+        "padding:.6rem 1rem;font-size:.82rem;color:#64748b'>"
+        "💾 Changes are <b style='color:#e2e8f0'>not saved automatically</b>. "
+        "Click <b style='color:#00b4d8'>Save plan</b> above to persist your edits to "
+        "<code>content_plans/weekly_calendar.json</code>."
+        "</div>",
+        unsafe_allow_html=True,
+    )
+
+    # ── Generated plan notes (legacy) ────────────────────────────────────────
     plan_files = sorted(
         [f for f in CONTENT_PLANS.glob("*.md") if f.name != "template.md"],
         reverse=True,
     )
-
-    if not plan_files:
-        st.info("No content plan generated yet.")
-        st.markdown(
-            "<div class='ac'><h4>How to generate a plan</h4>"
-            "<p>Ask Claude Code (in the terminal):</p>"
-            "<blockquote style='color:#e2e8f0;border-left:3px solid #00b4d8;padding-left:1rem;margin:.5rem 0'>"
-            "\"Generate a 7-day Avalon Escapes content plan using the founder analysis and "
-            "viral influencer trend reference group. Do not run Apify.\""
-            "</blockquote></div>",
-            unsafe_allow_html=True,
-        )
-        return
-
-    plan_labels = [f.stem for f in plan_files]
-    selected = st.selectbox("Select plan", plan_labels)
-    chosen   = plan_files[plan_labels.index(selected)]
-    content  = safe_load_markdown(chosen)
-    if content:
-        st.markdown(content)
-    else:
-        st.error("Could not read plan file.")
+    if plan_files:
+        st.markdown("---")
+        with st.expander("📄 Generated Plan Notes (AI-generated Markdown files)", expanded=False):
+            plan_labels = [f.stem for f in plan_files]
+            selected    = st.selectbox("Select plan", plan_labels, key="legacy_plan_select")
+            chosen      = plan_files[plan_labels.index(selected)]
+            content     = safe_load_markdown(chosen)
+            if content:
+                st.markdown(content)
+            else:
+                st.error("Could not read plan file.")
 
 
 # ─────────────────────────────────────────────────────────────────────────────

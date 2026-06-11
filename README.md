@@ -37,7 +37,7 @@ The dashboard opens automatically in your browser at `http://localhost:8501`.
 | 🏆 Top Performers | Sortable, filterable table across all accounts |
 | 📈 Pattern Charts | Format, pillar, destination, hook, caption length, and duration vs. performance |
 | 🎯 Content Simulator | Score a new post idea out of 100 + **Reference-Based Improvement** section |
-| 📅 Weekly Content Plan | Reads Markdown plans from `content_plans/` |
+| 📅 Weekly Content Calendar | Editable 7-day planning board — save, export, and clear locally |
 | 📖 Playbook | Always/Never rules, optimal specs, top hook formulas by tier |
 | 🔍 Data Quality | File status, what's available, what needs manual export |
 
@@ -206,6 +206,53 @@ The `score_format()` function (used in the 100-point Content Simulator scorer) i
 - **Reel:** rewards well-developed caption
 - **Carousel:** rewards guide/list framing with strong first-slide hook
 - **Photo:** rewards concise, high-impact caption
+
+---
+
+## Weekly Content Calendar
+
+The **📅 Weekly Content Calendar** section is a fully local, editable 7-day planning board.
+
+### Features
+
+- **Editable day cards** for all 7 days — format, content pillar, destination, idea, hook, visual plan, caption draft, CTA, hashtags, status, and internal notes
+- **Format-specific tips** appear inside each card when a format is selected (Reel → visual pacing; Carousel → save triggers; Photo → caption angle; etc.)
+- **Weekly overview bar** at the top shows: planned posts, ready, draft, empty days, most-used pillar, most-used destination
+- **Content Simulator link** — each card with an idea prompts you to copy it to the simulator for scoring and improvement
+
+### Buttons
+
+| Button | What it does |
+|---|---|
+| 💾 **Save plan** | Saves all edited fields to `content_plans/weekly_calendar.json` |
+| ✨ **Load sample week** | Fills the calendar with a complete 7-day Avalon sample plan (Reel, Carousel, Photo, Story, Guide across all priority destinations) |
+| 📋 **Export as Markdown** | Downloads a formatted `.md` file you can copy, share, or paste into Notion/docs |
+| 🗑️ **Clear plan** | Resets all 7 days after a two-step confirmation |
+
+### Where plans are saved
+
+`content_plans/weekly_calendar.json` — created automatically on first save. Local only; never leaves your machine.
+
+### Exporting
+
+Click **Export as Markdown** to download a formatted `avalon_weekly_YYYYMMDD.md` file. The file follows this structure:
+
+```markdown
+# Avalon Escapes — Weekly Content Plan
+## Day 1 / Monday
+- Format: Reel
+- Pillar: Ocean & Island Adventures
+- Destination: Maldives
+- Idea: ...
+- Hook: ...
+...
+```
+
+### Important notes
+
+- Changes are **not saved automatically** — click **Save plan** to persist edits
+- If you navigate away and return, the dashboard reloads the last saved state from JSON
+- The calendar is **fully local** — no Apify, no credits, no external APIs
 
 ---
 
