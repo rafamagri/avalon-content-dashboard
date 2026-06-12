@@ -456,7 +456,7 @@ VIRAL_PATTERNS = [
 # ── Hashtag sets per Avalon destination (used by simulator improvement engine) ─
 DESTINATION_HASHTAGS = {
     "Maldives": [
-        "#maldives", "#fuvahmulah", "#divingmaldives", "#tigersh ark",
+        "#maldives", "#fuvahmulah", "#divingmaldives", "#tigershark",
         "#freediving", "#indianocean", "#maldivesislands", "#oceanlife",
         "#luxurymaldives", "#islandescape", "#luxurytravel", "#avalon_escapes",
         "#curatedtravel", "#boutiquetravel",
@@ -2438,6 +2438,207 @@ def _caption_hook_cs(arc, dest, language="English"):
                    else f"O {dest} que ainda não descobriste.")
 
 
+def parse_content_idea_brief(brief: str) -> dict:
+    """Parse a natural-language content idea into simulator parameters. Rule-based — no API."""
+    b = brief.lower()
+
+    # ── Destination ──────────────────────────────────────────────────────────
+    dest = "Global / Curated Escapes"
+    if any(w in b for w in ["maldives","maldive","fuvahmulah","fuvah","atoll","tiger shark","whale shark","hammerhead","manta ray"]):
+        dest = "Maldives"
+    elif any(w in b for w in ["colombia","colombian","cartagena","providencia","medellín","medellin","bogotá","bogota","eje cafetero"]):
+        dest = "Colombia"
+    elif any(w in b for w in ["brazil","brasil","rio","fernando de noronha","bahia","florianópolis","noronha","ipanema","copacabana"]):
+        dest = "Brazil"
+    elif any(w in b for w in ["türkiye","turkey","turkish","istanbul","cappadocia","kaş","kas","aegean","bodrum","bosphorus","oludeniz"]):
+        dest = "Türkiye"
+    elif any(w in b for w in ["sri lanka","srilanka","sigiriya","mirissa","ella","kandy","arugam","galle"]):
+        dest = "Sri Lanka"
+
+    # ── Format ───────────────────────────────────────────────────────────────
+    fmt = "Reel"
+    if any(w in b for w in ["carousel","slides","save this","swipe","itinerary carousel","guide carousel"]):
+        fmt = "Carousel"
+    elif any(w in b for w in ["story","poll","question box","instagram story"]):
+        fmt = "Story"
+    elif any(w in b for w in [" photo "," image "," photograph ","static","single image"]):
+        fmt = "Static Photo"
+    elif any(w in b for w in ["founder story","founder reel","why we started","origin story","why we created"]):
+        fmt = "Founder Story"
+    elif any(w in b for w in ["destination guide","guide to","things to know","what you need to know about"]):
+        fmt = "Destination Guide"
+
+    # ── Emotion ──────────────────────────────────────────────────────────────
+    emotion = "curiosity → longing → trust"
+    if any(w in b for w in ["intense","intensity","adrenaline","wild","raw","extreme","heart racing"]):
+        emotion = "intensity → awe → transformation"
+    elif any(w in b for w in ["transform","transformation","change","shift","different person","grew","growth","life changing"]):
+        emotion = "curiosity → transformation → belonging"
+    elif any(w in b for w in ["peace","calm","still","quiet","serene","meditative","slow travel"]):
+        emotion = "peace → stillness → desire for calm"
+    elif any(w in b for w in ["aspir","dream","luxury","premium","high-end","bucket list","beautiful"]):
+        emotion = "aspiration → desire → trust → inquiry"
+    elif any(w in b for w in ["surprise","unexpected","didn't expect","shocked","shocking","unbelievable"]):
+        emotion = "surprise → curiosity → delight"
+    elif any(w in b for w in ["founder","personal","honest","real","authentic","behind the scenes","personal story"]):
+        emotion = "trust → connection → belonging"
+    elif any(w in b for w in ["emotional","emotion","deep","moving","touch"]):
+        emotion = "emotional depth → wonder → connection"
+
+    # ── Content pillar ───────────────────────────────────────────────────────
+    pillar = "Destination Guide"
+    if any(w in b for w in ["diving","dive","shark","ocean","underwater","freediving","coral","marine","atoll","manta"]):
+        pillar = "Ocean & Island Adventures"
+    elif any(w in b for w in ["founder","rafa","sofia","co-founder","why we started","our story","behind the scenes","we created"]):
+        pillar = "Founder Story"
+    elif any(w in b for w in ["meaning","mythology","celtic","brand","what avalon","why avalon","origin","history of avalon"]):
+        pillar = "Brand Mythology"
+    elif any(w in b for w in ["colombia","brazil","cartagena","providencia","culture","local","hidden gem","authentic","latin"]):
+        pillar = "Latin America & Cultural Discovery"
+    elif any(w in b for w in ["türkiye","turkey","istanbul","cappadocia","crossroads","kaş","aegean","ottoman"]):
+        pillar = "Türkiye & Crossroads Travel"
+    elif any(w in b for w in ["wellness","retreat","mindful","slow travel","mountains","jungle","nature","retreat"]):
+        pillar = "Nature & Transformation"
+    elif any(w in b for w in ["luxury","boutique","hotel","resort","villa","elevated","curated","bespoke","romantic","honeymoon"]):
+        pillar = "Luxury Escapes"
+    elif any(w in b for w in ["itinerary","custom","tailor","private tour","group trip","special occasion","honeymoon"]):
+        pillar = "Tailor-Made Journeys"
+    elif any(w in b for w in ["pov","send this to","invitation","reminder","this is your sign","trend","viral"]):
+        pillar = "Viral Travel Inspiration"
+
+    # ── Viral pattern ─────────────────────────────────────────────────────────
+    pattern = "Curiosity-Gap Hook"
+    if any(w in b for w in ["tiger shark","whale shark","hammerhead","freediving","underwater","ocean","marine","shark dive"]):
+        pattern = "Transformation Story + Ocean Authority"
+    elif any(w in b for w in ["no one tells","what no one","secret","hidden","most people","what most travelers","nobody talks"]):
+        pattern = "Curiosity-Gap Hook + Expectation Flip"
+    elif any(w in b for w in ["founder","rafa","sofia","personal story","why we started","origin","we created"]):
+        pattern = "Founder POV + Trust Build"
+    elif any(w in b for w in ["transform","changed me","different","shift","became","clarity"]):
+        pattern = "Transformation Story"
+    elif any(w in b for w in ["save","guide","itinerary","list","top","tips","things to know"]):
+        pattern = "Saveable Guide"
+    elif any(w in b for w in ["meaning","mythology","celtic","brand","what avalon means","origin story"]):
+        pattern = "Myth / Meaning"
+    elif any(w in b for w in ["before","after","thought","expected","reality check"]):
+        pattern = "Before/After Feeling"
+    elif any(w in b for w in ["aspir","dream","luxury","premium","beautiful","stunning","escape list","waitlist"]):
+        pattern = "Aspirational Soft Sell"
+    elif any(w in b for w in ["emotional","emotion","moving","touch","feeling","alive","connection"]):
+        pattern = "Emotional Contrast"
+    elif any(w in b for w in ["beyond","not just","more than","different side","another side"]):
+        pattern = "Expectation Flip + Destination Love"
+
+    # ── Adaptation tier ───────────────────────────────────────────────────────
+    tier = "Tier 2 — Structural Replication"
+    if any(w in b for w in ["pov","send this to","reminder","comment keyword","type","drop","trend","viral trend","this is your sign"]):
+        tier = "Tier 1 — Direct Trend Adaptation"
+    elif any(w in b for w in ["founder story","personal story","origin story","mythology","brand story","why we","manifesto"]):
+        tier = "Tier 3 — Inspiration Only"
+    elif any(w in b for w in ["original","unique","avalon only","not a trend","our own"]):
+        tier = "Original Avalon Concept"
+
+    # ── CTA ───────────────────────────────────────────────────────────────────
+    cta = "DM us to design your escape"
+    m = re.search(r'comment\s+["\']?([a-z0-9_]+)["\']?\s+for', b)
+    if m:
+        kw = m.group(1).upper()
+        cta = f"Comment '{kw}' for the guide"
+    elif any(w in b for w in ["dm us","dm me","send us a message","escríbenos","message us","write to us"]):
+        cta = "DM us to plan your escape"
+    elif any(w in b for w in ["waitlist","escape list","join the list","join avalon","newsletter"]):
+        cta = "Join the Avalon Escape List"
+    elif any(w in b for w in ["save this","save before","bookmark"]):
+        cta = "Save this before planning your trip"
+    elif any(w in b for w in ["share","send this to","tag someone"]):
+        cta = "Send this to whoever needs this trip"
+
+    # ── Draft hook ────────────────────────────────────────────────────────────
+    dest_short = dest.split(" /")[0].rstrip()
+    if any(w in b for w in ["tiger shark","whale shark","hammerhead"]):
+        hook = f"No one tells you what it feels like to dive with tiger sharks in {dest_short}."
+    elif any(w in b for w in ["founder","rafa","sofia","why we started","we created"]):
+        hook = "We didn't start a travel agency."
+    elif any(w in b for w in ["meaning","mythology","what avalon","why avalon"]):
+        hook = "There's a reason we named it Avalon."
+    elif "escape list" in b or "waitlist" in b:
+        hook = "We don't sell trips. We design escapes."
+    elif any(w in b for w in ["beyond","not just","more than","different side"]):
+        hook = f"Most people think they know {dest_short}. They've seen the postcard version."
+    elif any(w in b for w in ["secret","hidden","no one talks","nobody talks"]):
+        hook = f"There's a side of {dest_short} most travelers never find."
+    else:
+        hook = f"There's a version of {dest_short} most people never see."
+
+    # ── Audience intent ───────────────────────────────────────────────────────
+    intent = "Discovery & Inspiration"
+    if any(w in b for w in ["book","booking","inquiry","plan","package","itinerary guide","dm"]):
+        intent = "Research & Planning → Inquiry"
+    elif any(w in b for w in ["save","guide","itinerary","tips","know before"]):
+        intent = "Save for Later"
+    elif any(w in b for w in ["share","send","tag","viral"]):
+        intent = "Share with someone"
+    elif any(w in b for w in ["join","waitlist","escape list","community","follow"]):
+        intent = "Community / Brand Loyalty"
+
+    # ── Suggested visual direction ────────────────────────────────────────────
+    if any(w in b for w in ["tiger shark","whale shark","diving","underwater","ocean","marine","coral","reef","freediving"]):
+        visual = "Underwater footage or photo · Close shark approach · Deep blue tones · Minimal text · Audio: ambient ocean depth"
+    elif any(w in b for w in ["founder","rafa","sofia","personal"]):
+        visual = "Rafa or Sofia on location · Authentic moment, not posed · Short punchy cuts · Navy text overlay"
+    elif dest == "Colombia":
+        visual = "Providencia turquoise water or Cartagena color · Navy overlay · Gold labels · Warm terracotta contrast"
+    elif dest == "Türkiye":
+        visual = "Cappadocia sky or Kaş coast · Navy overlay · Gold footer tags · Terracotta + teal palette"
+    elif dest == "Maldives":
+        visual = "Overwater sunrise or underwater shot · Navy `#0F2649` overlay · White Montserrat Black headline"
+    elif dest == "Brazil":
+        visual = "Noronha coastline or Rio energy · Navy overlay · Warm color contrast · Ocean blues"
+    elif dest == "Sri Lanka":
+        visual = "Temple or tea country or Mirissa ocean · Navy overlay · Cultural depth + ocean light"
+    else:
+        visual = "Strong hero destination shot · Navy `#0F2649` overlay · White Montserrat Black headline · Butterfly isotype top-right"
+
+    # ── Hashtag direction ─────────────────────────────────────────────────────
+    hashtag_dir = DESTINATION_HASHTAGS.get(dest, DESTINATION_HASHTAGS["Global / Curated Escapes"])[:8]
+
+    return {
+        "idea":        brief,
+        "hook":        hook,
+        "destination": dest,
+        "format":      fmt,
+        "emotion":     emotion,
+        "caption":     "",
+        "cta":         cta,
+        "tier":        tier,
+        "pattern":     pattern,
+        "pillar":      pillar,
+        "intent":      intent,
+        "visual":      visual,
+        "hashtags":    hashtag_dir,
+    }
+
+
+def _save_to_idea_vault(idea_data: dict) -> bool:
+    """Append idea to data/content_idea_vault.json. Returns True on success."""
+    try:
+        vault_path = ROOT / "data" / "content_idea_vault.json"
+        vault: list = []
+        if vault_path.exists():
+            try:
+                vault = json.loads(vault_path.read_text(encoding="utf-8"))
+                if not isinstance(vault, list):
+                    vault = []
+            except Exception:
+                vault = []
+        idea_data["saved_at"] = datetime.now().strftime("%Y-%m-%d %H:%M")
+        vault.append(idea_data)
+        vault_path.write_text(json.dumps(vault, ensure_ascii=False, indent=2), encoding="utf-8")
+        return True
+    except Exception:
+        return False
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # SIDEBAR  NAVIGATION
 # ─────────────────────────────────────────────────────────────────────────────
@@ -3132,61 +3333,183 @@ def page_charts():
 def page_simulator():
     st.markdown("## 🎯 Avalon Content Simulator")
     st.markdown(
-        "Score a new content idea **before** creating it. Uses the rule-based scoring rubric "
-        "from the Viral Influencer Trend Pattern Library (out of 100)."
+        "<p style='color:#64748b;font-size:.88rem'>"
+        "Describe a content idea in plain language — the simulator infers everything and scores it against "
+        "Avalon's brand standards and the viral influencer reference group.</p>",
+        unsafe_allow_html=True,
     )
-    # FUTURE: replace the rule-based scorer below with a Claude API call
-    # using anthropic.Anthropic().messages.create() for richer, context-aware feedback.
 
-    with st.form("content_form"):
-        st.markdown("#### Content Idea")
+    # ── Quick Idea Mode: main input ──────────────────────────────────────────
+    brief_text = st.text_area(
+        "Describe the content idea",
+        placeholder=(
+            "e.g. Create a Reel idea about diving with tiger sharks in Fuvahmulah. "
+            "It should feel intense, emotional, and transformative. "
+            "CTA: comment FUVAH for the guide.\n\n"
+            "Other examples:\n"
+            "• I want a carousel about Colombia beyond Cartagena, focused on hidden islands, culture, and boutique luxury.\n"
+            "• Score this: a founder story reel about why Rafa and Sofia created Avalon.\n"
+            "• Make a soft sales reel for the Avalon Escape List, inviting people to join without sounding pushy."
+        ),
+        height=130,
+        key="sim_brief_input",
+    )
+
+    # ── Auto-parse: update adv-settings when brief changes ──────────────────
+    if brief_text.strip() and brief_text != st.session_state.get("_sim_brief_prev", ""):
+        st.session_state["_sim_brief_prev"] = brief_text
+        _inf = parse_content_idea_brief(brief_text)
+        st.session_state["sim_adv_idea"]    = _inf["idea"]
+        st.session_state["sim_adv_hook"]    = _inf["hook"]
+        st.session_state["sim_adv_dest"]    = _inf["destination"]
+        st.session_state["sim_adv_fmt"]     = _inf["format"]
+        st.session_state["sim_adv_emotion"] = _inf["emotion"]
+        st.session_state["sim_adv_caption"] = _inf["caption"]
+        st.session_state["sim_adv_cta"]     = _inf["cta"]
+        st.session_state["sim_adv_tier"]    = _inf["tier"]
+        st.session_state["sim_adv_pattern"] = _inf["pattern"]
+
+    # ── Inferred summary card ────────────────────────────────────────────────
+    if brief_text.strip():
+        _idc = parse_content_idea_brief(brief_text)
+        _tier_color = {"Tier 1":"#4ade80","Tier 2":"#60a5fa","Tier 3":"#a78bfa","Original":"#f59e0b"}.get(
+            _idc["tier"].split("—")[0].strip(), "#64748b")
+        st.markdown(
+            f"<div style='background:#0a1520;border:1px solid #1a3a5f;border-radius:8px;"
+            f"padding:.75rem 1.1rem;margin:.3rem 0 .6rem 0'>"
+            f"<p style='color:#60a5fa;font-weight:700;font-size:.78rem;margin:0 0 .45rem 0'>"
+            f"✅ Inferred — override in Advanced Settings if needed</p>"
+            f"<div style='display:flex;flex-wrap:wrap;gap:.35rem'>"
+            f"<span style='background:#1e3a5f;color:#93c5fd;font-size:.74rem;padding:.2rem .55rem;border-radius:20px'>📍 {_idc['destination']}</span>"
+            f"<span style='background:#1e3a5f;color:#93c5fd;font-size:.74rem;padding:.2rem .55rem;border-radius:20px'>🎬 {_idc['format']}</span>"
+            f"<span style='background:#1a2e1a;color:#86efac;font-size:.74rem;padding:.2rem .55rem;border-radius:20px'>🧭 {_idc['pillar']}</span>"
+            f"<span style='background:#2a1a2a;color:#d8b4fe;font-size:.74rem;padding:.2rem .55rem;border-radius:20px'>💫 {_idc['emotion']}</span>"
+            f"<span style='background:#2a1a10;color:#fcd34d;font-size:.74rem;padding:.2rem .55rem;border-radius:20px'>🎯 {_idc['cta']}</span>"
+            f"<span style='background:#1a1a2a;color:#c4b5fd;font-size:.74rem;padding:.2rem .55rem;border-radius:20px'>📐 {_idc['pattern']}</span>"
+            f"<span style='background:#1a1a1a;border:1px solid {_tier_color}44;color:{_tier_color};font-size:.74rem;padding:.2rem .55rem;border-radius:20px'>{_idc['tier']}</span>"
+            f"</div>"
+            f"<p style='color:#475569;font-size:.73rem;margin:.4rem 0 0 0'>"
+            f"<b style='color:#64748b'>Hook:</b> {_idc['hook']}</p>"
+            f"</div>",
+            unsafe_allow_html=True,
+        )
+
+    # ── Seed defaults for adv fields ─────────────────────────────────────────
+    _fmt_opts  = ["Reel","Carousel","Static Photo","Story","Founder Story","Destination Guide","Trend Adaptation"]
+    _tier_opts = ["Tier 1 — Direct Trend Adaptation","Tier 2 — Structural Replication",
+                  "Tier 3 — Inspiration Only","Original Avalon Concept"]
+    _sim_defs = {
+        "sim_adv_idea": "", "sim_adv_hook": "", "sim_adv_dest": "",
+        "sim_adv_fmt": "Reel", "sim_adv_emotion": "curiosity → longing → trust",
+        "sim_adv_caption": "", "sim_adv_cta": "",
+        "sim_adv_tier": "Tier 2 — Structural Replication", "sim_adv_pattern": "",
+    }
+    for _k, _v in _sim_defs.items():
+        if _k not in st.session_state:
+            st.session_state[_k] = _v
+
+    # ── Advanced Settings expander ────────────────────────────────────────────
+    with st.expander("⚙️ Advanced Settings — auto-filled from brief, override if needed"):
         col1, col2 = st.columns(2)
         with col1:
-            idea        = st.text_area("Content Idea / Concept ✱", height=90,
-                                       placeholder="e.g. Reel showing tiger shark dive at Fuvahmulah at sunrise")
-            destination = st.text_input("Destination", placeholder="e.g. Fuvahmulah, Maldives")
-            fmt         = st.selectbox("Format", ["Reel","Carousel","Static Photo","Story","Video"])
-            emotion     = st.text_input("Intended Emotion / Feeling",
-                                        placeholder="e.g. awe, peace, longing to be there")
+            st.text_area("Content Idea / Concept", key="sim_adv_idea", height=75)
+            st.text_input("Destination", placeholder="e.g. Fuvahmulah, Maldives", key="sim_adv_dest")
+            _fmt_idx = _fmt_opts.index(st.session_state["sim_adv_fmt"]) if st.session_state["sim_adv_fmt"] in _fmt_opts else 0
+            st.selectbox("Format", _fmt_opts, index=_fmt_idx, key="sim_adv_fmt_w")
+            st.text_input("Intended Emotion", placeholder="e.g. awe → transformation", key="sim_adv_emotion")
         with col2:
-            hook    = st.text_area("Draft Hook (first line / first 3 seconds)", height=80,
-                                   placeholder="e.g. No one tells you the Maldives you see on Instagram isn't real.")
-            caption = st.text_area("Draft Caption / Script (optional)", height=120,
-                                   placeholder="Paste your draft caption or Reel narration here...")
-            cta     = st.text_input("Call to Action",
-                                    placeholder="e.g. Comment 'FUVAH' for our full guide 🦈")
+            st.text_area("Draft Hook (first line / first 3 sec)", height=75, key="sim_adv_hook")
+            st.text_area("Draft Caption / Script (optional)", height=100, key="sim_adv_caption")
+            st.text_input("CTA", placeholder="e.g. Comment 'FUVAH' for the guide", key="sim_adv_cta")
+            _tier_idx = _tier_opts.index(st.session_state["sim_adv_tier"]) if st.session_state["sim_adv_tier"] in _tier_opts else 1
+            st.selectbox("Adaptation Tier", _tier_opts, index=_tier_idx, key="sim_adv_tier_w")
+            st.text_input("Closest Pattern (optional)", placeholder="e.g. Curiosity-Gap Hook", key="sim_adv_pattern")
 
-        st.markdown("#### Classification")
-        col3, col4 = st.columns(2)
-        with col3:
-            tier = st.selectbox("Adaptation Tier", [
-                "Tier 1 — Direct Trend Adaptation",
-                "Tier 2 — Structural Replication",
-                "Tier 3 — Inspiration Only",
-                "Original Avalon Concept",
-            ])
-        with col4:
-            pattern = st.text_input("Closest Pattern from Library (optional)",
-                                    placeholder="e.g. Curiosity-Gap Hook + Expectation Flip")
+    # ── Analyze button ────────────────────────────────────────────────────────
+    submitted = st.button("🔍 Analyze Content Idea", key="sim_analyze_btn", type="primary")
+    if submitted:
+        _idea    = st.session_state.get("sim_adv_idea") or brief_text
+        _hook    = st.session_state.get("sim_adv_hook", "")
+        _dest    = st.session_state.get("sim_adv_dest", "")
+        _fmt     = st.session_state.get("sim_adv_fmt_w", st.session_state.get("sim_adv_fmt", "Reel"))
+        _emotion = st.session_state.get("sim_adv_emotion", "")
+        _caption = st.session_state.get("sim_adv_caption", "")
+        _cta     = st.session_state.get("sim_adv_cta", "")
+        _tier    = st.session_state.get("sim_adv_tier_w", st.session_state.get("sim_adv_tier", "Tier 2 — Structural Replication"))
 
-        submitted = st.form_submit_button("Score this idea →", type="primary")
+        if _idea or _hook:
+            _result      = run_scoring(_idea, _dest, _fmt, _emotion, _hook, _caption, _cta, _tier)
+            _improvement = generate_improvement(_idea, _hook, _caption, _dest, _fmt, _emotion, _cta, _tier)
+            _inferred    = parse_content_idea_brief(brief_text) if brief_text.strip() else {}
+            st.session_state.update({
+                "_sim_result": _result, "_sim_improvement": _improvement,
+                "_sim_inferred": _inferred,
+                "_sim_idea": _idea, "_sim_hook": _hook, "_sim_dest": _dest,
+                "_sim_fmt": _fmt, "_sim_emotion": _emotion, "_sim_caption": _caption,
+                "_sim_cta": _cta, "_sim_tier": _tier,
+            })
+        else:
+            st.warning("Please describe a content idea above, or fill in the Content Idea field in Advanced Settings.")
 
-    if submitted and (idea or hook or caption):
-        result = run_scoring(idea, destination, fmt, emotion, hook, caption, cta, tier)
+    # ── Results (persist in session state) ───────────────────────────────────
+    if "_sim_result" in st.session_state:
+        result      = st.session_state["_sim_result"]
+        improvement = st.session_state["_sim_improvement"]
+        inferred    = st.session_state.get("_sim_inferred", {})
+        idea        = st.session_state.get("_sim_idea", "")
+        hook        = st.session_state.get("_sim_hook", "")
+        destination = st.session_state.get("_sim_dest", "")
+        fmt         = st.session_state.get("_sim_fmt", "Reel")
+        emotion     = st.session_state.get("_sim_emotion", "")
+        caption     = st.session_state.get("_sim_caption", "")
+        cta         = st.session_state.get("_sim_cta", "")
+        tier        = st.session_state.get("_sim_tier", "")
 
         st.markdown("---")
-        st.markdown("### Results")
 
-        # total score + recommendation
+        # ── SECTION 1: Inferred Content Brief ────────────────────────────────
+        if inferred:
+            _tc = {"Tier 1":"#4ade80","Tier 2":"#60a5fa","Tier 3":"#a78bfa","Original":"#f59e0b"}
+            _t_col = _tc.get(inferred.get("tier","").split("—")[0].strip(), "#64748b")
+            st.markdown("#### 1. Content Brief")
+            st.markdown(
+                f"<div style='display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.7rem'>"
+                f"<span style='background:#1e3a5f;color:#93c5fd;font-size:.78rem;padding:.25rem .65rem;border-radius:20px'>📍 {inferred.get('destination','—')}</span>"
+                f"<span style='background:#1e3a5f;color:#93c5fd;font-size:.78rem;padding:.25rem .65rem;border-radius:20px'>🎬 {inferred.get('format','—')}</span>"
+                f"<span style='background:#1a2e1a;color:#86efac;font-size:.78rem;padding:.25rem .65rem;border-radius:20px'>🧭 {inferred.get('pillar','—')}</span>"
+                f"<span style='background:#2a1a2a;color:#d8b4fe;font-size:.78rem;padding:.25rem .65rem;border-radius:20px'>💫 {inferred.get('emotion','—')}</span>"
+                f"<span style='background:#2a1a10;color:#fcd34d;font-size:.78rem;padding:.25rem .65rem;border-radius:20px'>🎯 {inferred.get('cta','—')}</span>"
+                f"<span style='background:#1a1a2a;color:#c4b5fd;font-size:.78rem;padding:.25rem .65rem;border-radius:20px'>📐 {inferred.get('pattern','—')}</span>"
+                f"<span style='background:#111;border:1px solid {_t_col}44;color:{_t_col};font-size:.78rem;padding:.25rem .65rem;border-radius:20px'>{inferred.get('tier','—')}</span>"
+                f"</div>"
+                f"<div style='background:#0a1520;border-left:3px solid #1e3a5f;padding:.55rem .9rem;border-radius:0 6px 6px 0;margin-bottom:.3rem'>"
+                f"<span style='color:#64748b;font-size:.75rem;font-weight:600'>HOOK DRAFT · </span>"
+                f"<span style='color:#e2e8f0;font-size:.85rem;font-style:italic'>{inferred.get('hook','—')}</span>"
+                f"</div>"
+                f"<div style='background:#0a1520;border-left:3px solid #1e3a5f;padding:.55rem .9rem;border-radius:0 6px 6px 0'>"
+                f"<span style='color:#64748b;font-size:.75rem;font-weight:600'>AUDIENCE INTENT · </span>"
+                f"<span style='color:#94a3b8;font-size:.82rem'>{inferred.get('intent','—')}</span>"
+                f"</div>",
+                unsafe_allow_html=True,
+            )
+            st.markdown("")
+
+        # ── SECTION 2: Score Summary ──────────────────────────────────────────
+        score_pct = result["total"]
+        _s_color  = "#4ade80" if score_pct >= 80 else "#facc15" if score_pct >= 60 else "#fb923c" if score_pct >= 40 else "#f87171"
+        _s_label  = ("Strong viral candidate" if score_pct >= 90
+                     else "Good idea — needs tightening" if score_pct >= 75
+                     else "Usable but not strong yet" if score_pct >= 60
+                     else "Needs rework")
+        st.markdown("#### 2. Score Summary")
         score_col, rec_col = st.columns([1, 2])
         with score_col:
-            score_pct = result["total"]
-            color     = "#4ade80" if score_pct >= 80 else "#facc15" if score_pct >= 60 else "#fb923c" if score_pct >= 40 else "#f87171"
             st.markdown(
-                f"<div style='background:#111827;border:2px solid {color};border-radius:12px;"
+                f"<div style='background:#111827;border:2px solid {_s_color};border-radius:12px;"
                 f"padding:1.5rem;text-align:center'>"
-                f"<div style='font-size:3.5rem;font-weight:800;color:{color}'>{score_pct}</div>"
+                f"<div style='font-size:3.5rem;font-weight:800;color:{_s_color}'>{score_pct}</div>"
                 f"<div style='color:#64748b;font-size:.9rem;margin-top:.25rem'>out of 100</div>"
+                f"<div style='color:{_s_color};font-size:.8rem;font-weight:700;margin-top:.4rem;letter-spacing:.03em'>{_s_label}</div>"
                 f"</div>",
                 unsafe_allow_html=True,
             )
@@ -3195,61 +3518,193 @@ def page_simulator():
                 f"<div style='background:#111827;border:1px solid #1e3a5f;border-radius:12px;"
                 f"padding:1.5rem;height:100%'>"
                 f"<div style='color:#94a3b8;font-size:.8rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase'>Recommendation</div>"
-                f"<div style='font-size:1.4rem;font-weight:700;margin-top:.4rem;color:{result['rec_color']}'>{result['recommendation']}</div>"
+                f"<div style='font-size:1.3rem;font-weight:700;margin-top:.4rem;color:{result['rec_color']}'>{result['recommendation']}</div>"
                 f"</div>",
                 unsafe_allow_html=True,
             )
 
         st.markdown("")
-        st.markdown("#### Criterion Breakdown")
+        with st.expander("📊 Criterion Breakdown", expanded=False):
+            score_rows = []
+            for criterion, (pts, note) in result["scores"].items():
+                max_pts = int(re.search(r'\((\d+)\)', criterion).group(1))
+                score_rows.append({"Criterion": criterion, "Score": pts, "Max": max_pts, "Notes": note})
+            score_df = pd.DataFrame(score_rows)
+            fig = px.bar(
+                score_df, x="Score", y="Criterion", orientation="h",
+                template=PLOTLY_TMPL, color="Score",
+                color_continuous_scale=["#f87171","#facc15","#4ade80"],
+                range_color=[0, 20], text="Score",
+            )
+            fig.update_traces(textposition="outside")
+            fig.update_layout(margin=dict(l=0,r=0,t=10,b=0), height=280, showlegend=False)
+            st.plotly_chart(fig, use_container_width=True)
+            st.dataframe(score_df[["Criterion","Score","Max","Notes"]], use_container_width=True, hide_index=True)
 
-        score_rows = []
-        for criterion, (pts, note) in result["scores"].items():
-            max_pts = int(re.search(r'\((\d+)\)', criterion).group(1))
-            score_rows.append({"Criterion": criterion, "Score": pts, "Max": max_pts, "Notes": note})
+        # ── SECTION 3: Why This Works ─────────────────────────────────────────
+        _strengths = [(c, pts, note) for c, (pts, note) in result["scores"].items()
+                      if pts >= int(re.search(r'\((\d+)\)', c).group(1)) * 0.75]
+        _dest_show  = destination or (inferred.get("destination","") if inferred else "this destination")
+        _fmt_show   = fmt or (inferred.get("format","") if inferred else "this format")
+        _emot_show  = emotion or (inferred.get("emotion","") if inferred else "curiosity and longing")
+        _pillar_show = inferred.get("pillar","travel content") if inferred else "travel content"
+        st.markdown("#### 3. Why This Works")
+        _why_lines = []
+        if any("Ocean" in p or "Island" in p for p in [_pillar_show]):
+            _why_lines.append(f"**Ocean authority signal** — Sofia's real diving experience in {_dest_show} makes this non-replicable by generic travel accounts.")
+        if "Founder" in _pillar_show or "founder" in (idea or "").lower():
+            _why_lines.append("**Founder credibility** — personal story format builds trust faster than brand content. Audiences engage with real people, not brands.")
+        if "transform" in _emot_show.lower() or "awe" in _emot_show.lower() or "intense" in _emot_show.lower():
+            _why_lines.append(f"**High-emotion arc** — `{_emot_show}` is a proven viral emotional structure. Audiences save or share content that gives them a feeling they want to revisit.")
+        if "Curiosity" in (inferred.get("pattern","") if inferred else ""):
+            _why_lines.append("**Curiosity-gap hook** — creates an information gap that drives swipe/watch behavior. One of the highest-converting hook types in the reference group.")
+        if "Carousel" in _fmt_show:
+            _why_lines.append("**Carousel format** — saveable content with specific insider knowledge has the highest organic reach potential in Avalon's format mix.")
+        if "Reel" in _fmt_show:
+            _why_lines.append(f"**Reel format** — first-3-seconds stop-scroll potential. {_dest_show} underwater or dramatic footage can generate replay loops.")
+        if _strengths:
+            best = max(_strengths, key=lambda x: x[1])
+            _why_lines.append(f"**Strong scoring signal** — highest-scoring dimension: `{best[0]}` ({best[1]}/{int(re.search(r'.(.\\d+).', best[0]).group(1))}).")
+        if not _why_lines:
+            _why_lines.append(f"This idea touches a strong Avalon content pillar ({_pillar_show}). Specificity and a sharper hook will unlock its full potential.")
+        for line in _why_lines:
+            st.markdown(
+                f"<div style='background:#0a1520;border-left:3px solid #1e4d7f;border-radius:0 6px 6px 0;"
+                f"padding:.5rem .9rem;margin-bottom:.3rem;font-size:.86rem;color:#94a3b8'>{line}</div>",
+                unsafe_allow_html=True,
+            )
 
-        score_df = pd.DataFrame(score_rows)
-        fig = px.bar(
-            score_df, x="Score", y="Criterion", orientation="h",
-            template=PLOTLY_TMPL, color="Score",
-            color_continuous_scale=["#f87171","#facc15","#4ade80"],
-            range_color=[0, 20],
-            text="Score",
-        )
-        fig.update_traces(textposition="outside")
-        fig.update_layout(margin=dict(l=0,r=0,t=10,b=0), height=300, showlegend=False)
-        st.plotly_chart(fig, use_container_width=True)
-        st.dataframe(score_df[["Criterion","Score","Max","Notes"]], use_container_width=True, hide_index=True)
-
-        # Quick improvement tips
+        # ── SECTION 4: Weak Points ────────────────────────────────────────────
         weak = [(c, pts, note) for c, (pts, note) in result["scores"].items()
                 if pts < int(re.search(r'\((\d+)\)', c).group(1)) * 0.6]
+        st.markdown("#### 4. Weak Points")
         if weak:
-            st.markdown("#### Quick Improvements")
             for criterion, pts, note in weak:
                 max_pts = int(re.search(r'\((\d+)\)', criterion).group(1))
                 st.markdown(
-                    f"<div class='ac'><h4>⚠️ {criterion} — {pts}/{max_pts}</h4><p>{note}</p></div>",
+                    f"<div style='background:#1a0e0e;border:1px solid #7f1d1d;border-radius:8px;"
+                    f"padding:.6rem 1rem;margin-bottom:.35rem'>"
+                    f"<span style='color:#fca5a5;font-size:.77rem;font-weight:700;letter-spacing:.05em'>⚠️ {criterion} — {pts}/{max_pts}</span>"
+                    f"<div style='color:#f87171;font-size:.83rem;margin-top:.2rem'>{note}</div>"
+                    f"</div>",
                     unsafe_allow_html=True,
                 )
+        else:
+            st.markdown(
+                "<div style='background:#0a1f0a;border:1px solid #1a4a1a;border-radius:8px;"
+                "padding:.6rem 1rem;color:#86efac;font-size:.85rem'>✅ No major weak points. Focus on execution quality and visual specificity.</div>",
+                unsafe_allow_html=True,
+            )
 
-        # ── Reference-Based Improvement ────────────────────────────────────────
+        # ── SECTION 5: Improved Version ───────────────────────────────────────
         st.markdown("---")
-        st.markdown("### 🔍 Reference-Based Improvement")
+        st.markdown("#### 5. Improved Version")
+        proj_score = improvement["projected_score"]
+        proj_color = "#4ade80" if proj_score >= 80 else "#facc15" if proj_score >= 60 else "#fb923c"
         st.markdown(
-            "<div class='ac'><p>Suggestions below are rule-based, drawn from the "
-            "<b style='color:#00b4d8'>Viral Influencer Trend Reference Group</b> pattern library. "
-            "They show which viral patterns match your idea and how to adapt the structure into Avalon's voice — "
-            "without copying any creator's exact content.</p></div>",
+            f"Projected score with improvements: "
+            f"<b style='color:{proj_color};font-size:1.1rem'>{proj_score}/100</b>",
             unsafe_allow_html=True,
         )
 
-        improvement = generate_improvement(idea, hook, caption, destination, fmt, emotion, cta, tier)
+        imp_t1, imp_t2, imp_t3, imp_t4 = st.tabs(["🪝 5 Hooks", "🎬 Reel / Slide Structure", "📣 3 CTAs", "#️⃣ Hashtags"])
+
+        with imp_t1:
+            for i, h in enumerate(improvement["hooks"], 1):
+                tn = str(h.get("tier_num", 2))
+                tc = f"t{tn}"
+                st.markdown(
+                    f"<div class='ac'>"
+                    f"<h4>Hook {i} &nbsp;<span class='{tc}'>{h['tier']}</span></h4>"
+                    f"<p style='color:#e2e8f0;font-size:.97rem;font-style:italic'>"
+                    f"&ldquo;{h['text']}&rdquo;</p>"
+                    f"<p style='font-size:.78rem;color:#64748b;margin-top:.3rem'>Pattern: {h['pattern']}</p>"
+                    f"</div>",
+                    unsafe_allow_html=True,
+                )
+
+        with imp_t2:
+            st.markdown("**Best-fit structure based on matched patterns:**")
+            st.code(improvement["reel_structure"], language=None)
+            if inferred and inferred.get("visual"):
+                st.markdown(
+                    f"<div style='background:#0f172a;border-left:3px solid #c9a84c;border-radius:0 6px 6px 0;"
+                    f"padding:.55rem .9rem;margin-top:.5rem;font-size:.85rem;color:#fde68a'>"
+                    f"<b>Suggested visual direction:</b> {inferred['visual']}</div>",
+                    unsafe_allow_html=True,
+                )
+
+        with imp_t3:
+            for c in improvement["ctas"]:
+                st.markdown(f"→ {c}")
+
+        with imp_t4:
+            hashtag_str = "  ".join(improvement["hashtags"])
+            st.text_area("Copy this hashtag set:", value=hashtag_str, height=75, label_visibility="visible")
+            st.caption("1–3 highly targeted hashtags often outperform generic hashtag spam.")
+
+        # ── SECTION 6: Save / Use Actions ─────────────────────────────────────
+        st.markdown("---")
+        st.markdown("#### 6. Save & Use")
+        act_col1, act_col2, act_col3 = st.columns(3)
+
+        with act_col1:
+            if st.button("♡  Save to Idea Vault", key="sim_save_vault", use_container_width=True):
+                _vault_entry = {
+                    "title":       (idea or brief_text)[:80],
+                    "brief":       brief_text,
+                    "format":      fmt or (inferred.get("format","") if inferred else ""),
+                    "destination": destination or (inferred.get("destination","") if inferred else ""),
+                    "pillar":      inferred.get("pillar","") if inferred else "",
+                    "hook":        hook or (inferred.get("hook","") if inferred else ""),
+                    "cta":         cta or (inferred.get("cta","") if inferred else ""),
+                    "score":       score_pct,
+                    "status":      "Liked",
+                    "priority":    "Medium",
+                    "source":      "Content Simulator",
+                    "notes":       "",
+                }
+                if _save_to_idea_vault(_vault_entry):
+                    st.success("Saved to data/content_idea_vault.json ✓")
+                else:
+                    st.error("Could not save — check data/ folder permissions.")
+
+        with act_col2:
+            _dl_content = f"# Avalon Content Idea\n\n**Brief:** {brief_text}\n\n**Score:** {score_pct}/100 — {_s_label}\n\n**Hook:** {hook or (inferred.get('hook','') if inferred else '')}\n\n**CTA:** {cta or (inferred.get('cta','') if inferred else '')}\n\n**Format:** {fmt}\n\n**Destination:** {destination}\n\n## Improved Hooks\n" + "\n".join(f"- {h['text']}" for h in improvement["hooks"]) + f"\n\n## Hashtags\n{hashtag_str if 'hashtag_str' in dir() else ''}\n"
+            st.download_button(
+                "📋 Download as Markdown",
+                data=_dl_content,
+                file_name=f"avalon_idea_{datetime.now().strftime('%Y%m%d_%H%M')}.md",
+                mime="text/markdown",
+                key="sim_dl_md",
+                use_container_width=True,
+            )
+
+        with act_col3:
+            # TODO: "Turn into Carousel" → pre-fill Carousel Builder with these values
+            # TODO: "Turn into Reel Script" → generate full Reel script structure
+            # TODO: "Add to Weekly Plan" → pre-fill next available day in calendar
+            st.markdown(
+                "<div style='background:#0f172a;border:1px solid #1e293b;border-radius:8px;"
+                "padding:.5rem .8rem;text-align:center;color:#475569;font-size:.75rem'>"
+                "🔜 Turn into Carousel / Reel Script / Add to Plan — coming soon</div>",
+                unsafe_allow_html=True,
+            )
+
+        # ── Reference-Based Improvement (detailed — collapsible) ──────────────
+        st.markdown("---")
+        with st.expander("📚 Pattern Reference — Viral Group Analysis", expanded=False):
+            st.markdown(
+                "<p style='color:#64748b;font-size:.83rem'>"
+                "Rule-based analysis from the Viral Influencer Trend Reference Group. "
+                "Use these to inform structure — not to copy content.</p>",
+                unsafe_allow_html=True,
+            )
+
         matched_pats = improvement["matched_patterns"]
         creators     = improvement["relevant_creators"]
 
-        # ── 1. Matched patterns ────────────────────────────────────────────────
-        st.markdown("#### 1. Matching Viral Patterns")
+        st.markdown("**Matching Viral Patterns**")
         if matched_pats:
             for pattern, score in matched_pats:
                 tc = f"t{pattern['tier']}"
@@ -3265,9 +3720,8 @@ def page_simulator():
         else:
             st.info("No strong pattern match. Add more detail to the idea, hook, or caption to get specific suggestions.")
 
-        # ── 2. Relevant creators ───────────────────────────────────────────────
         if creators:
-            st.markdown("#### 2. Most Relevant Reference Creators")
+            st.markdown("**Most Relevant Reference Creators**")
             crows = []
             for c in creators:
                 crows.append({
@@ -3287,8 +3741,7 @@ def page_simulator():
                         unsafe_allow_html=True,
                     )
 
-        # ── 3. How to adapt for Avalon ─────────────────────────────────────────
-        st.markdown("#### 3. How to Adapt for Avalon")
+        st.markdown("**How to Adapt for Avalon**")
         guide = improvement["caption_guide"]
         st.markdown(
             f"<div class='ac'>"
@@ -3300,8 +3753,7 @@ def page_simulator():
             unsafe_allow_html=True,
         )
 
-        # ── 4. What NOT to copy ────────────────────────────────────────────────
-        st.markdown("#### 4. What NOT to Copy")
+        st.markdown("**What NOT to Copy**")
         for w in improvement["warnings"]:
             st.markdown(
                 f"<div style='background:#1a0e0e;border:1px solid #7f1d1d;border-radius:8px;"
@@ -3313,52 +3765,13 @@ def page_simulator():
                 unsafe_allow_html=True,
             )
 
-        # ── 5. Improved version ────────────────────────────────────────────────
-        st.markdown("#### 5. Improved Version")
-        proj_score = improvement["projected_score"]
-        proj_color = "#4ade80" if proj_score >= 80 else "#facc15" if proj_score >= 60 else "#fb923c"
-        st.markdown(
-            f"Projected score with improved hook: "
-            f"<b style='color:{proj_color};font-size:1.1rem'>{proj_score}/100</b>",
-            unsafe_allow_html=True,
-        )
-
-        imp_t1, imp_t2, imp_t3, imp_t4 = st.tabs(["🪝 5 Hooks", "🎬 Reel Structure", "📣 3 CTAs", "#️⃣ Hashtags"])
-
-        with imp_t1:
-            for i, h in enumerate(improvement["hooks"], 1):
-                tn  = str(h.get("tier_num", 2))
-                tc  = f"t{tn}"
-                st.markdown(
-                    f"<div class='ac'>"
-                    f"<h4>Hook {i} &nbsp;<span class='{tc}'>{h['tier']}</span></h4>"
-                    f"<p style='color:#e2e8f0;font-size:.97rem;font-style:italic'>"
-                    f"&ldquo;{h['text']}&rdquo;</p>"
-                    f"<p style='font-size:.78rem;color:#64748b;margin-top:.3rem'>Pattern: {h['pattern']}</p>"
-                    f"</div>",
-                    unsafe_allow_html=True,
-                )
-
-        with imp_t2:
-            st.markdown("**Best-fit Reel structure based on matched patterns:**")
-            st.code(improvement["reel_structure"], language=None)
-
-        with imp_t3:
-            for c in improvement["ctas"]:
-                st.markdown(f"→ {c}")
-
-        with imp_t4:
-            hashtag_str = "  ".join(improvement["hashtags"])
-            st.text_area("Copy this hashtag set:", value=hashtag_str, height=75, label_visibility="visible")
-            st.caption("Edit as needed. 1–3 highly targeted hashtags often outperform generic hashtag spam.")
-
-        # ── 6. Format-Specific Advice ─────────────────────────────────────────
+        # ── Format-Specific Advice ────────────────────────────────────────────
         st.markdown("---")
         fa = improvement.get("format_advice", {})
         fa_fmt = fa.get("format", "")
 
         if fa_fmt == "Carousel":
-            st.markdown("#### 6. Carousel Improvement Ideas")
+            st.markdown("**Carousel Improvement Ideas**")
             st.caption(
                 "⚠️ **Public data note:** Save counts, share counts, reach, and impressions are "
                 "not available from public Instagram scraping. Carousel scoring uses text-based "
@@ -3434,7 +3847,7 @@ def page_simulator():
                 )
 
         elif fa_fmt == "Reel":
-            st.markdown("#### 6. Reel Format Advice")
+            st.markdown("**Reel Format Advice**")
             st.caption(
                 "⚠️ **Public data note:** Share counts, saves, reach, and impressions are not "
                 "available from public scraping. Reel scoring primarily uses plays/views and "
@@ -3461,7 +3874,7 @@ def page_simulator():
                     )
 
         elif fa_fmt == "Photo":
-            st.markdown("#### 6. Photo Format Advice")
+            st.markdown("**Photo Format Advice**")
             st.caption(
                 "⚠️ **Public data note:** Save counts, shares, reach, and impressions are not "
                 "available from public scraping. Photo scoring uses likes + comments + caption length."
@@ -3485,7 +3898,7 @@ def page_simulator():
             if fa.get("note"):
                 st.info(f"Format advice: {fa['note']}")
 
-        # ── 7. Professional Marketing Lens ────────────────────────────────────
+        # ── Professional Marketing Lens ───────────────────────────────────────
         st.markdown("---")
         st.markdown("#### 7. Professional Marketing Lens")
         st.caption("Which marketing skill applies, how it improves this content, and a GOAL framework diagnosis.")
@@ -3547,9 +3960,6 @@ def page_simulator():
                 st.session_state["sim_goal_prompt"] = prompt
             if st.session_state.get("sim_goal_prompt"):
                 st.text_area("Copy →", value=st.session_state["sim_goal_prompt"], height=300, key="sim_goal_display", label_visibility="collapsed")
-
-    elif submitted:
-        st.warning("Please fill in at least the Content Idea field.")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
