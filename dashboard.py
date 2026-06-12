@@ -1291,6 +1291,12 @@ def score_format(fmt: str, caption: str, idea: str = "") -> tuple[int, str]:
 
     return 3, "Specify format (Reel / Carousel / Photo) for format-specific scoring"
 
+def _crit_max(criterion: str, default: int = 10) -> int:
+    """Safely extract the max score from a criterion label like 'Hook Strength (20)'."""
+    m = re.search(r'\((\d+)\)', criterion)
+    return int(m.group(1)) if m else default
+
+
 def run_scoring(idea, destination, fmt, emotion, hook, caption, cta, tier):
     """Run all 8 scoring criteria. Returns dict of scores and notes."""
     s1, n1 = score_hook(hook, idea)
@@ -3527,7 +3533,7 @@ def page_simulator():
         with st.expander("📊 Criterion Breakdown", expanded=False):
             score_rows = []
             for criterion, (pts, note) in result["scores"].items():
-                max_pts = int(re.search(r'\((\d+)\)', criterion).group(1))
+                max_pts = _crit_max(criterion)
                 score_rows.append({"Criterion": criterion, "Score": pts, "Max": max_pts, "Notes": note})
             score_df = pd.DataFrame(score_rows)
             fig = px.bar(
@@ -3543,7 +3549,7 @@ def page_simulator():
 
         # ── SECTION 3: Why This Works ─────────────────────────────────────────
         _strengths = [(c, pts, note) for c, (pts, note) in result["scores"].items()
-                      if pts >= int(re.search(r'\((\d+)\)', c).group(1)) * 0.75]
+                      if pts >= _crit_max(c) * 0.75]
         _dest_show  = destination or (inferred.get("destination","") if inferred else "this destination")
         _fmt_show   = fmt or (inferred.get("format","") if inferred else "this format")
         _emot_show  = emotion or (inferred.get("emotion","") if inferred else "curiosity and longing")
@@ -3564,7 +3570,12 @@ def page_simulator():
             _why_lines.append(f"**Reel format** — first-3-seconds stop-scroll potential. {_dest_show} underwater or dramatic footage can generate replay loops.")
         if _strengths:
             best = max(_strengths, key=lambda x: x[1])
-            _why_lines.append(f"**Strong scoring signal** — highest-scoring dimension: `{best[0]}` ({best[1]}/{int(re.search(r'.(.\\d+).', best[0]).group(1))}).")
+            _why_lines.append(
+                f"**Strong scoring signal** — highest-scoring dimension: "
+                f"`{best[0]}` ({best[1]}/{_crit_max(best[0])})."
+                if best else
+                "**Strong scoring signal** — this idea has clear Avalon alignment through its destination, emotion, hook, and CTA."
+            )
         if not _why_lines:
             _why_lines.append(f"This idea touches a strong Avalon content pillar ({_pillar_show}). Specificity and a sharper hook will unlock its full potential.")
         for line in _why_lines:
@@ -3576,11 +3587,11 @@ def page_simulator():
 
         # ── SECTION 4: Weak Points ────────────────────────────────────────────
         weak = [(c, pts, note) for c, (pts, note) in result["scores"].items()
-                if pts < int(re.search(r'\((\d+)\)', c).group(1)) * 0.6]
+                if pts < _crit_max(c) * 0.6]
         st.markdown("#### 4. Weak Points")
         if weak:
             for criterion, pts, note in weak:
-                max_pts = int(re.search(r'\((\d+)\)', criterion).group(1))
+                max_pts = _crit_max(criterion)
                 st.markdown(
                     f"<div style='background:#1a0e0e;border:1px solid #7f1d1d;border-radius:8px;"
                     f"padding:.6rem 1rem;margin-bottom:.35rem'>"
